@@ -15,8 +15,8 @@
 
 #### Linux
 
-- Red Hat et dérivés: `sudo yum install docker `
-- Debian et dérivés: `sudo apt install docker.io`
+- Red Hat: `sudo yum install docker `
+- Debian: `sudo apt install docker.io`
 - From the installation script: `curl −s https://get.docker.com/ | sudo sh`
 - Install Docker Compose: `sudo apt install docker-compose`
 

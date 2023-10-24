@@ -66,6 +66,8 @@ Run the following command in the root folder of this project : `docker-compose u
 
 Run `mvn clean package`
 
+In IntelliJ for example, you can click on the "m" letter in the right menu panel, open the Lifecycle list and right click on "package" and select "Modify run configuration". Finally, click on Ok and you will be able to simply- press the green Run button in the top menu to compile your project and deploy it in Tomcat (it's automatically deployed in Tomcat thanks to the container here) 
+
 ## Run
 
 ### Containers
@@ -80,15 +82,32 @@ Open in a web browser: http://localhost:8082/J2EE_Project-1.0-SNAPSHOT/
 
 ### To edit the database (admin)
 
-**(copied from one of my project, needs to be updated)**
+#### Using PHP Admin
+
+Go to http://localhost:8081/ and use the username and password defined in docker-compose.yml
+
+#### Using the terminal
 
 1. Run <code>docker ps</code>
 2. Get the CONTAINER ID (1st column) of the mysql IMAGE
 3. Replace CONTAINER_ID with what you got in (2.), in <code>docker exec -ti CONTAINER_ID bash</code> and run it
 4. Enter <code>mysql -p</code>
 6. Enter the password that was defined in the environment variable MYSQL_ROOT_PASSWORD in docker-compose.yml
-7. Enter <code>use usersdata;</code>
+7. Enter <code>use j2ee_project_db;</code>
 8. Enter the queries you want to do
+
+## Notes
+
+When the code changed you need to :
+
+1. If the container isn't running, you need to run it with docker-compose (see previous explanations)
+2. Compile with Maven (see the Compile section above)
+3. Go to the tomcat URL (http://localhost:8082/J2EE_Project-1.0-SNAPSHOT/)
+
+## Connect to the database through your IDE
+
+On IntelliJ for instance you can go to the right menu panel and click on "Database".<br>
+Then, click on "+" and fill in the username and password of the MYSQL server (the root user) and finally add the URL: `jdbc:mysql://localhost:3307/j2ee_project_db`
 
 ## Authors
 

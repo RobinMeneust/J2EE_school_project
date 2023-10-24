@@ -3,13 +3,13 @@ services:
     db:
         image: mysql:5.7
         volumes:
-            - /opt/test:/var/lib/mysql
-            - ./mysql-dump:/docker-entrypoint-initdb.d
+            - ./mysql-dump/init.sql:/docker-entrypoint-initdb.d/init.sql
         environment:
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: testdb1
+            MYSQL_ROOT_PASSWORD: root_password
+            MYSQL_DATABASE: j2ee_project_db
             MYSQL_USER: testuser
             MYSQL_PASSWORD: root
+        restart: always
         ports:
             - 3307:3306
     phpmyadmin:

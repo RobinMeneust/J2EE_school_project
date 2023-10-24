@@ -73,6 +73,7 @@ Run `mvn clean package`
 Before opening the website the containers need to be running (with `docker-compose up -d`).
 If you want to stop all the containers of this project, run `docker-compose down`
 
+
 ### To open the website
 
 Open in a web browser: http://localhost:8082/J2EE_Project-1.0-SNAPSHOT/

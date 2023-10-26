@@ -3,30 +3,53 @@
 ```mermaid
 classDiagram
     User <|-- Client
-    User <|-- Administrator
+    User <|-- Moderator
+    Moderator <|-- Administrator
     Client --> Address
-    FidelityAccount "*" --> "1" Promotion : -Promotions
-    
-    class User{
+    Client --> LoyaltyAccount
+    %%LoyaltyAccount "*" --> "1" Discount : -discounts%%
+    Product --> Category : -category
+    Category --> Discount : -discount
+    LoyaltyAccount o--> "*" LoyaltyProgram : loyaltyProgram
+    LoyaltyProgram o--> "*" LoyaltyLevel : loyaltyLevel
+
+
+
+
+class User{
         <<abstract>>
         -int id
         -String firstName
         -String lastName
         -String email
         -String phone_number
-        +connect()
     }
     
     class Client{
         -Address address
         -FidelityAccount fidelityAccount
-        +connect()
     }
     
     class Administrator{
-        +connect()
-        +getClients()
+        +getClients() List~Client~
         +cancelSubscription(Client client)
+        +addModerator(...)
+        +addDiscount(...)
+    }
+    
+    class Moderator{
+        commentaire : suppression, mise en avance
+        fidélité ?
+        promo
+        ajouter client
+    }
+    
+    class AuthService{
+        +logIn(String email, String password) User | boolean
+        +logOut()
+        +registerClient()
+        +registerAdmin()
+        +registerModo()
     }
     
     class Address{
@@ -40,29 +63,49 @@ classDiagram
         
     }
     
-    class FidelityAccount{
+    class LoyaltyAccount{
         -int fidelityPoints
         -Date startDate
-        -Date endDate
+        -Set~LoyaltyLevel~ levelsUsed
         +getReductionFromPoints()
         +getDuration()
+        +isLevelUsed(LoyaltyLevel level) boolean
+        +claimLevel(LoyaltyLevel level)
+        +levelAvailable() List~LoyaltyLevel~
     }
     
-    class Promotion{
+    class LoyaltyLevel{
+        -int id
+        -int requiredPoints
+    }
+    
+    class loyaltyProgram{
+        -Duration duration    
+    }  
+    
+    class Discount{
+        -String name
         -Date startDate
         -Date endDate
         -int fixedValue
         -int percentValue
         -Category category | null
+        +getRemainingTime() Duration
     }
     
     class Product{
-        -Category category
-        
+        -String name
+        -int stock
+        -float price
+        -String description
+        -String image
+        +addStock(int quantity)
+        +decrementStock(int quantity)
     }
     
     class Category{
-        
+        String name
+        String description
     }
     
     

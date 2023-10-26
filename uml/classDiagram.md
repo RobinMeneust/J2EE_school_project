@@ -12,11 +12,12 @@ classDiagram
     Category --> Discount : -discount
     LoyaltyAccount o--> "*" LoyaltyProgram : loyaltyProgram
     LoyaltyProgram o--> "*" LoyaltyLevel : loyaltyLevel
+    Category "-discount" --> Discount
+    Cart "-discount" --> Discount
+    Cart "-items" o--> "*" CartItem
+    CartItem "-product" o--> Product
 
-
-
-
-class User{
+    class User{
         <<abstract>>
         -int id
         -String firstName
@@ -59,10 +60,6 @@ class User{
         -String country
     }
     
-    class Order{
-        
-    }
-    
     class LoyaltyAccount{
         -int fidelityPoints
         -Date startDate
@@ -79,7 +76,7 @@ class User{
         -int requiredPoints
     }
     
-    class loyaltyProgram{
+    class LoyaltyProgram{
         -Duration duration    
     }  
     
@@ -107,8 +104,23 @@ class User{
         String name
         String description
     }
+
+    class CartItem {
+        -quantity : int
+    }
     
+    class Cart {
+        +getTotal() : Float
+        +addProduct(Product)
+        +removeProduct(Product)
+        +incrementQuantity(Product)
+        +decrementQuantity(Product)
+    }
+
+
+    class Invoice { }
     
+    class Order { }
 ```
 
 A voir pour les modérateurs plus tard si on a le temps.

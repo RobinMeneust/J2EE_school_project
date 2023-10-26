@@ -8,9 +8,63 @@
 	<meta http-equiv="Content-Type" name="viewport" content="width=device-width; initial-scale=1; text/html; charset=UTF-8">
 	<jsp:include page="include.jsp" />
 	<title>Home</title>
+	<style>
+		#hide-checkbox {
+			opacity: 0;
+			height: 0;
+			width: 0;
+		}
+
+		.toggle {
+			position: relative;
+			cursor: pointer;
+			display: inline-block;
+			width: 100px;
+			height: 50px;
+			background: #211042;
+			border-radius: 50px;
+			transition: 500ms;
+			overflow: hidden;
+		}
+
+		.toggle-button {
+			position: absolute;
+			display: inline-block;
+			top: 7px;
+			left: 6px;
+			width: 35px;
+			height: 35px;
+			border-radius: 50%;
+			background: white;
+			overflow: hidden;
+			transition: all 500ms ease-out;
+		}
+
+		#hide-checkbox:checked + .toggle {
+			background: lightgrey;
+		}
+
+
+		#hide-checkbox:checked + .toggle .toggle-button {
+			background: black;
+			transform: translateX(50px);
+		}
+	</style>
 </head>
 <body>
 	<p>Test</p>
+	<div class="form-check form-switch">
+		<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+		<label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
+	</div>
+
+	<i class="bi bi-moon-fill"></i>
+	<div>
+		<input type="checkbox" id="hide-checkbox">
+		<label for="hide-checkbox" class="toggle">
+			<span class="toggle-button bi bi-moon-fill"></span>
+		</label>
+	</div>
 
 	<div class="jumbotron text-center">
 		<h1>My First Bootstrap Page</h1>

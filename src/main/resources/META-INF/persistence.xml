@@ -5,16 +5,46 @@
              https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
 
     <persistence-unit name="jpa-hibernate-mysql">
+        <class>j2ee_project.model.Address</class>
+        <class>j2ee_project.model.Administrator</class>
+        <class>j2ee_project.model.Cart</class>
+        <class>j2ee_project.model.CartItem</class>
+        <class>j2ee_project.model.Category</class>
+        <class>j2ee_project.model.Customer</class>
+        <class>j2ee_project.model.Discount</class>
+        <class>j2ee_project.model.LoyaltyAccount</class>
+        <class>j2ee_project.model.LoyaltyLevel</class>
+        <class>j2ee_project.model.LoyaltyProgram</class>
+        <class>j2ee_project.model.Orders</class>
+        <class>j2ee_project.model.Product</class>
+        <class>j2ee_project.model.ShippingMethod</class>
+        <class>j2ee_project.model.User</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
-            <property name="jakarta.persistence.jdbc.url"    value="jdbc:mysql://localhost:3306/j2ee" />
-            <property name="jakarta.persistence.jdbc.user"   value="j2eeUser" />
-            <property name="jakarta.persistence.jdbc.password" value="j2eePassword" />
+            <property name="jakarta.persistence.jdbc.url"    value="jdbc:mysql://localhost:3307/j2ee_project_db" />
+            <property name="jakarta.persistence.jdbc.user"   value="root" />
+            <property name="jakarta.persistence.jdbc.password" value="root_password" />
             <property name="jakarta.persistence.schema-generation.database.action" value="create" />
             <property name="hibernate.dialect"    value="org.hibernate.dialect.MySQLDialect" />
             <property name="hibernate.show_sql"   value="true" />
             <property name="hibernate.format_sql" value="true" />
+<!--            <property name="toplink.jdbc.url" value="jdbc:mysql://localhost:3307"/>-->
+<!--            <property name="toplink.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>-->
+<!--            <property name="toplink.jdbc.user" value="root"/>-->
+<!--            <property name="toplink.jdbc.password" value="root_password"/>-->
+<!--            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3307"/>-->
+<!--            <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>-->
+<!--            <property name="hibernate.connection.username" value="root"/>-->
+<!--            <property name="hibernate.connection.password" value="root_password"/>-->
+<!--            <property name="openjpa.ConnectionURL" value="jdbc:mysql://localhost:3307"/>-->
+<!--            <property name="openjpa.ConnectionDriverName" value="com.mysql.cj.jdbc.Driver"/>-->
+<!--            <property name="openjpa.ConnectionUserName" value="root"/>-->
+<!--            <property name="openjpa.ConnectionPassword" value="root_password"/>-->
+<!--            <property name="eclipselink.jdbc.url" value="jdbc:mysql://localhost:3307"/>-->
+<!--            <property name="eclipselink.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>-->
+<!--            <property name="eclipselink.jdbc.user" value="root"/>-->
+<!--            <property name="eclipselink.jdbc.password" value="root_password"/>-->
         </properties>
     </persistence-unit>
 </persistence>

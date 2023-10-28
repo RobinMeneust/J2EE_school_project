@@ -25,6 +25,14 @@ CREATE TABLE IF NOT EXISTS Administrator (
     FOREIGN KEY (idUser) REFERENCES User(id)
 );
 
+CREATE TABLE IF NOT EXISTS Discount (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(30),
+    startDate DATE,
+    endDate DATE,
+    discountPercentage INT
+);
+
 CREATE TABLE IF NOT EXISTS Category (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30),
@@ -38,14 +46,6 @@ CREATE TABLE IF NOT EXISTS LoyaltyAccount (
     loyaltyPoints INT,
     startDate DATE,
     description VARCHAR(300)
-);
-
-CREATE TABLE IF NOT EXISTS Discount (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(30),
-    startDate DATE,
-    endDate DATE,
-    discountPercentage INT
 );
 
 CREATE TABLE IF NOT EXISTS LoyaltyProgram (

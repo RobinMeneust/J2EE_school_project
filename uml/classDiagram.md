@@ -5,6 +5,7 @@ classDiagram
     User <|-- Customer
     User <|-- Moderator
     Moderator <|-- Administrator
+    Moderator "-permissions" o--> "*" Permission
     Customer "-address" --> Address
     Customer "-loyaltyAccount" --> LoyaltyAccount
     Product "-category" --> Category
@@ -53,6 +54,14 @@ classDiagram
     }
     
     class Moderator { }
+    
+    class Permission {
+        <<enumeration>>
+        +CAN_CREATE_USER
+        +CAN_DELETE_USER
+        +CAN_CREATE_DISCOUNT
+        +CAN_MANAGE_LOYALTY
+    }
     
     class AuthService{
         +logIn(String email, String password) User
@@ -164,5 +173,3 @@ classDiagram
         +ShippingMethodStandard(String, int, int)
     }
 ```
-
-Moderator might (not) be added depending on how much time we have

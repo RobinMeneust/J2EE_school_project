@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS User (
     firstName VARCHAR(30),
     lastName VARCHAR(30),
     email VARCHAR(50),
+    password VARCHAR(30),
     phoneNumber VARCHAR(15)
 );
 
@@ -27,7 +28,9 @@ CREATE TABLE IF NOT EXISTS Administrator (
 CREATE TABLE IF NOT EXISTS Category (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30),
-    description VARCHAR(300)
+    description VARCHAR(300),
+    idDiscount INT,
+    FOREIGN KEY (idDiscount) REFERENCES Discount(id)
 );
 
 CREATE TABLE IF NOT EXISTS LoyaltyAccount (
@@ -42,11 +45,7 @@ CREATE TABLE IF NOT EXISTS Discount (
     name VARCHAR(30),
     startDate DATE,
     endDate DATE,
-    discountPercentage INT,
-    categoryId INT,
-    idDiscount INT,
-    FOREIGN KEY (categoryId) REFERENCES Category(id),
-    FOREIGN KEY (idDiscount) REFERENCES Discount(id)
+    discountPercentage INT
 );
 
 CREATE TABLE IF NOT EXISTS LoyaltyProgram (
@@ -112,7 +111,9 @@ CREATE TABLE IF NOT EXISTS Orders (
 CREATE TABLE IF NOT EXISTS Cart (
     id INT PRIMARY KEY AUTO_INCREMENT,
     idDiscount INT,
-    FOREIGN KEY (idDiscount) REFERENCES Discount(id)
+    idCustomer INT,
+    FOREIGN KEY (idDiscount) REFERENCES Discount(id),
+    FOREIGN KEY (idCustomer) REFERENCES Customer(id)
 );
 
 CREATE TABLE IF NOT EXISTS CartItem (

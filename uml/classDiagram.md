@@ -9,18 +9,13 @@ classDiagram
     Customer "-address" --> Address
     Customer "-loyaltyAccount" --> LoyaltyAccount
     Product "-category" --> Category
-    LoyaltyAccount "<u>-loyaltyProgram</u>" o--> "*" LoyaltyProgram
-    LoyaltyProgram "<u>-loyaltyLevel</u>" o--> "*" LoyaltyLevel
+    LoyaltyAccount "<u>-loyaltyProgram {readOnly}</u>" o--> LoyaltyProgram
+    LoyaltyProgram "<u>-loyaltyLevels</u>" o--> "*" LoyaltyLevel
     Category "-discount" --> Discount
-    Cart "-discount" --> Discount
-    Cart "-items" o--> "*" CartItem
     CartItem "-product" o--> Product
     LoyaltyLevel "-discount" --> Discount
-    Order "-customer" --> Customer
-    Order "-status" --> OrderStatus
     Order "-items" o--> "*" CartItem
-    Order "-shippingMethod" --> ShippingMethod
-    Order "-address" --> Address
+    Cart "-items" o--> "*" CartItem
     ShippingMethodStandard --|> ShippingMethod
     ShippingMethodPremium --|> ShippingMethod
     
@@ -28,12 +23,13 @@ classDiagram
     note for Moderator "comments/reviews : deletion, pin comments...
         loyalty ?
         discount
-        add customer"
+        add customer
+        permissions is a Set of Permission objects"
     note for LoyaltyProgram "Singleton
-    -loyaltyLevel is final"
-    note for LoyaltyAccount "-loyaltyProgram is final"
+        instance, getInstance(), createInstance() are static"
     note for ShippingMethod "Premium = quicker and cheaper"
-    
+    note for Administrator "the list of permissions contains all
+     the available permissions here"
 
     class User{
         <<abstract>>
@@ -42,33 +38,43 @@ classDiagram
         -lastName : String
         -email : String
         -phoneNumber : String
+        -password : String
     }
     
     class Customer{ }
     
     class Administrator{
-        +getCustomers() List~Customer~
-        +cancelSubscription(Customer customer)
         +addModerator(...)
-        +addDiscount(...)
+        +removeModerator(...)
+        +addPermissionModerator(...)
+        +removePermissionModerator(...)
     }
     
-    class Moderator { }
+    note for Moderator "Moderator constructor add default
+    permissions to the Moderator object"
+    
+    class Moderator {
+        +getCustomers() List~Customer~
+        +cancelSubscription(Customer customer)
+        +addDiscount(...)
+        +createCustomer(...)
+        +deleteCustomer(...)
+        +createLoyaltyProgram(...)
+    }
     
     class Permission {
         <<enumeration>>
-        +CAN_CREATE_USER
-        +CAN_DELETE_USER
+        +CAN_CREATE_CUSTOMER
+        +CAN_DELETE_CUSTOMER
         +CAN_CREATE_DISCOUNT
-        +CAN_MANAGE_LOYALTY
+        +CAN_MANAGE_LOYALTY 
     }
     
     class AuthService{
         +logIn(String email, String password) User
         +logOut()
-        +registerCustomer()
-        +registerAdmin()
-        +registerModo()
+        +registerCustomer(String firstName, String lastName, String email, String phoneNumber, String password)
+        +registerModo(String firstName, String lastName, String email, String phoneNumber, String password)
     }
     
     class Address{
@@ -84,7 +90,7 @@ classDiagram
         -loyaltyPoints : int
         -startDate : Date
         -levelsUsed : Set~LoyaltyLevel~
-        +getDuration()
+        +getDuration() int
         +isLevelUsed(LoyaltyLevel level) boolean
         +claimLevel(LoyaltyLevel level)
         +getAvailableLevels() List~LoyaltyLevel~
@@ -97,8 +103,12 @@ classDiagram
     
     class LoyaltyProgram{
         -id : int
-        -duration : Duration
-    }  
+        -duration : int
+        -instance : LoyaltyProgram
+        +getInstance() LoyaltyProgram
+        +createInstance(int duration, Set~LoyaltyLevel~ loyaltyLevels)
+        -LoyaltyProgram(int duration, Set~LoyaltyLevel~ loyaltyLevels)
+    }
     
     class Discount{
         -id : int
@@ -107,8 +117,7 @@ classDiagram
         -endDate : Date
         -fixedValue : int
         -percentValue : int
-        -category : Category
-        +getRemainingTime()  Duration
+        +getRemainingTime()  int
     }
     
     class Product{
@@ -119,7 +128,7 @@ classDiagram
         -description : String
         -imageUrl : String
         -weight : float
-        +setStock(int quantity)
+        +setStockQuantity(int quantity)
     }
     
     class Category{
@@ -133,7 +142,9 @@ classDiagram
     }
     
     class Cart {
-        +getTotal() : float
+        -discount : Discount
+        -customer : Customer
+        +getTotal() float
         +addProduct(Product)
         +removeProduct(Product)
         +incrementQuantity(Product)
@@ -144,6 +155,10 @@ classDiagram
         -id : int
         -total : int
         -date : Date
+        -customer : Customer
+        -status : OrderStatus
+        -shippingMethod : ShippingMethod
+        -address : Address
     }
     
     class OrderStatus {

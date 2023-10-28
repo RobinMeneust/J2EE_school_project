@@ -1,7 +1,7 @@
 package j2ee_project;
 
-import j2ee_project.model.Category;
-import j2ee_project.model.Product;
+import j2ee_project.model.catalog.Category;
+import j2ee_project.model.catalog.Product;
 import org.hibernate.Session;
 
 public class TestBDD {
@@ -9,7 +9,6 @@ public class TestBDD {
 	private Session session;
 
 	public static void main(String[] args) {
-
 		new TestBDD().run();
 	}
 

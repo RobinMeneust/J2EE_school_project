@@ -6,19 +6,19 @@
 
     <persistence-unit name="jpa-hibernate-mysql">
         <class>j2ee_project.model.Address</class>
-        <class>j2ee_project.model.Administrator</class>
-        <class>j2ee_project.model.Cart</class>
-        <class>j2ee_project.model.CartItem</class>
-        <class>j2ee_project.model.Category</class>
-        <class>j2ee_project.model.Customer</class>
+        <class>j2ee_project.model.user.Administrator</class>
+        <class>j2ee_project.model.order.Cart</class>
+        <class>j2ee_project.model.order.CartItem</class>
+        <class>j2ee_project.model.catalog.Category</class>
+        <class>j2ee_project.model.user.Customer</class>
         <class>j2ee_project.model.Discount</class>
-        <class>j2ee_project.model.LoyaltyAccount</class>
-        <class>j2ee_project.model.LoyaltyLevel</class>
-        <class>j2ee_project.model.LoyaltyProgram</class>
-        <class>j2ee_project.model.Orders</class>
-        <class>j2ee_project.model.Product</class>
-        <class>j2ee_project.model.ShippingMethod</class>
-        <class>j2ee_project.model.User</class>
+        <class>j2ee_project.model.loyalty.LoyaltyAccount</class>
+        <class>j2ee_project.model.loyalty.LoyaltyLevel</class>
+        <class>j2ee_project.model.loyalty.LoyaltyProgram</class>
+        <class>j2ee_project.model.order.Orders</class>
+        <class>j2ee_project.model.catalog.Product</class>
+        <class>j2ee_project.model.order.ShippingMethod</class>
+        <class>j2ee_project.model.user.User</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />

@@ -1,4 +1,4 @@
-package j2ee_project.model;
+package j2ee_project.model.user;
 
 import jakarta.persistence.*;
 

@@ -1,4 +1,4 @@
-package j2ee_project.model;
+package j2ee_project.model.order;
 
 import jakarta.persistence.*;
 

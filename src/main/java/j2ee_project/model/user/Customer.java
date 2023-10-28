@@ -1,18 +1,21 @@
-package j2ee_project.model;
+package j2ee_project.model.user;
 
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Entity
-public class LoyaltyProgram {
+public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
     private int id;
     @Basic
-    @Column(name = "durationNbDays", nullable = true)
-    private Integer durationNbDays;
+    @Column(name = "idUser", nullable = true)
+    private Integer idUser;
+    @Basic
+    @Column(name = "idAddress", nullable = false)
+    private int idAddress;
     @Basic
     @Column(name = "idLoyaltyAccount", nullable = true)
     private Integer idLoyaltyAccount;
@@ -25,12 +28,20 @@ public class LoyaltyProgram {
         this.id = id;
     }
 
-    public Integer getDurationNbDays() {
-        return durationNbDays;
+    public Integer getIdUser() {
+        return idUser;
     }
 
-    public void setDurationNbDays(Integer durationNbDays) {
-        this.durationNbDays = durationNbDays;
+    public void setIdUser(Integer idUser) {
+        this.idUser = idUser;
+    }
+
+    public int getIdAddress() {
+        return idAddress;
+    }
+
+    public void setIdAddress(int idAddress) {
+        this.idAddress = idAddress;
     }
 
     public Integer getIdLoyaltyAccount() {
@@ -45,12 +56,12 @@ public class LoyaltyProgram {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        LoyaltyProgram that = (LoyaltyProgram) o;
-        return id == that.id && Objects.equals(durationNbDays, that.durationNbDays) && Objects.equals(idLoyaltyAccount, that.idLoyaltyAccount);
+        Customer customer = (Customer) o;
+        return id == customer.id && idAddress == customer.idAddress && Objects.equals(idUser, customer.idUser) && Objects.equals(idLoyaltyAccount, customer.idLoyaltyAccount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, durationNbDays, idLoyaltyAccount);
+        return Objects.hash(id, idUser, idAddress, idLoyaltyAccount);
     }
 }

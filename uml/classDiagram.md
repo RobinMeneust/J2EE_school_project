@@ -59,6 +59,7 @@ classDiagram
         +addDiscount(...)
         +createCustomer(...)
         +deleteCustomer(...)
+        +setOrderStatus(...)
         +createLoyaltyProgram(...)
     }
     
@@ -68,6 +69,7 @@ classDiagram
         +CAN_DELETE_CUSTOMER
         +CAN_CREATE_DISCOUNT
         +CAN_MANAGE_LOYALTY 
+        +CAN_MANAGE_ORDER
     }
     
     class AuthService{

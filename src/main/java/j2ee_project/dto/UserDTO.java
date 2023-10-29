@@ -8,7 +8,7 @@ public class UserDTO {
 
     @NotBlank(message = "The first name can not be null")
     @Size(max = 30, message = "The first name must not exceed 30 characters.")
-    @Pattern(regexp = "^[a-zA-Z\\-]$", message = "The first name ")
+    @Pattern(regexp = "^[a-zA-Z\\-]$", message = "The first name is not valid.")
     private String firstName;
     private String lastName;
     private String email;

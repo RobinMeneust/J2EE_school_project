@@ -1,5 +1,6 @@
 package j2ee_project.service;
 
+import j2ee_project.dto.CustomerDTO;
 import j2ee_project.dto.UserDTO;
 import j2ee_project.model.user.User;
 import jakarta.validation.ConstraintViolation;
@@ -39,11 +40,10 @@ public class AuthService {
         String password = "TestPassword123";
         String phoneNumber = "0123456789";
 
-        UserDTO userDTO = new UserDTO(null, lastName, email, password, phoneNumber);
+        CustomerDTO customerDTO = new CustomerDTO(null, lastName, email, password, phoneNumber);
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         Validator validator = validatorFactory.getValidator();
-
-        Set<ConstraintViolation<UserDTO>> constraintViolations = validator.validate(userDTO);
+        Set<ConstraintViolation<UserDTO>> constraintViolations = validator.validate(customerDTO);
 
         for(ConstraintViolation<UserDTO> violation : constraintViolations){
             System.out.printf(violation.getMessage());

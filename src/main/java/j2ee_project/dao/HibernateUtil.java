@@ -1,4 +1,4 @@
-package j2ee_project;
+package j2ee_project.dao;
 
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;

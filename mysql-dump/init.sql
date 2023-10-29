@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS Address (
     city VARCHAR(60),
     country VARCHAR(60)
 );
-
 CREATE TABLE IF NOT EXISTS User (
     id INT PRIMARY KEY AUTO_INCREMENT,
     firstName VARCHAR(30),
@@ -25,13 +24,6 @@ CREATE TABLE IF NOT EXISTS Administrator (
     FOREIGN KEY (idUser) REFERENCES User(id)
 );
 
-CREATE TABLE IF NOT EXISTS Category (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(30),
-    description VARCHAR(300),
-    idDiscount INT,
-    FOREIGN KEY (idDiscount) REFERENCES Discount(id)
-);
 
 CREATE TABLE IF NOT EXISTS LoyaltyAccount (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -46,6 +38,14 @@ CREATE TABLE IF NOT EXISTS Discount (
     startDate DATE,
     endDate DATE,
     discountPercentage INT
+);
+
+CREATE TABLE IF NOT EXISTS Category (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(30),
+    description VARCHAR(300),
+    idDiscount INT,
+    FOREIGN KEY (idDiscount) REFERENCES Discount(id)
 );
 
 CREATE TABLE IF NOT EXISTS LoyaltyProgram (
@@ -127,3 +127,11 @@ CREATE TABLE IF NOT EXISTS CartItem (
     FOREIGN KEY (idOrder) REFERENCES Orders(id)
 );
 
+CREATE TABLE IF NOT EXISTS Mail (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    fromAddress VARCHAR(50),
+    toAddress VARCHAR(50),
+    subject VARCHAR(50),
+    body VARCHAR(300),
+    date Date
+);

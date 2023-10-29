@@ -5,7 +5,7 @@ classDiagram
     User <|-- Customer
     User <|-- Moderator
     Moderator <|-- Administrator
-    Moderator "-permissions" o--> "*" Permission
+    Moderator "-permissions" o--> "*" Permission;
     Customer "-address" --> Address
     Customer "-loyaltyAccount" --> LoyaltyAccount
     Product "-category" --> Category
@@ -188,5 +188,19 @@ classDiagram
 
     class ShippingMethodStandard {
         +ShippingMethodStandard(String, int, int)
+    }
+    
+    class Mail {
+        -id : int
+        -fromAddress : String
+        -toAddress : String
+        -subject : String
+        -body : String
+        -date : Date
+    }
+    
+    class MailManager {
+        +send(Mail)$
+        +delete(Mail)$
     }
 ```

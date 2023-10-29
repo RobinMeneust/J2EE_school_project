@@ -1,6 +1,7 @@
 package j2ee_project;
 
 import j2ee_project.dao.HibernateUtil;
+import j2ee_project.dao.MailDAO;
 import j2ee_project.model.Mail;
 import j2ee_project.model.catalog.Category;
 import j2ee_project.model.catalog.Product;
@@ -12,18 +13,19 @@ public class TestBDD {
 	private Session session;
 
 	public static void main(String[] args) {
-		MailManager mailManager = MailManager.getInstance();
-		Mail mail = new Mail();
-		mail.setSubject("j2ee project test");
-		mail.setBody("This is a test mail for a jakarta project");
-		mail.setFromAddress("jeewebproject@gmail.com");
-		mail.setToAddress("jeewebproject@gmail.com");
-		try {
-			mailManager.send(mail);
-		} catch(Exception e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
+//		MailManager mailManager = MailManager.getInstance();
+//		Mail mail = new Mail();
+//		mail.setSubject("j2ee project test");
+//		mail.setBody("This is a test mail for a jakarta project");
+//		mail.setFromAddress("jeewebproject@gmail.com");
+//		mail.setToAddress("jeewebproject@gmail.com");
+//		try {
+//			mailManager.send(mail);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//			System.exit(-1);
+//		}
+
 		new TestBDD().run();
 	}
 
@@ -35,6 +37,15 @@ public class TestBDD {
 
 		session.getTransaction().commit();
 		session.close();
+	}
+
+	public void runMailTest() {
+		Mail mail = new Mail();
+		mail.setSubject("j2ee project test");
+		mail.setBody("This is a test mail for a jakarta project");
+		mail.setFromAddress("jeewebproject@gmail.com");
+		mail.setToAddress("jeewebproject@gmail.com");
+		MailDAO.addMail(mail);
 	}
 
 	private<T>  T save(T o) {

@@ -1,6 +1,5 @@
 package j2ee_project.service;
 
-import j2ee_project.dao.SendMailFailureException;
 import j2ee_project.model.Mail;
 import jakarta.mail.Message;
 import jakarta.mail.PasswordAuthentication;
@@ -16,10 +15,28 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.Properties;
 
+/**
+ * Class that manage the mail server credentials and session.
+ * It's used to send mails.
+ * It's a singleton.
+ *
+ * @author Robin Meneust
+ */
 public class MailManager {
+    /**
+     * Unique instance of this class (lazy instantiation).
+     */
     private static MailManager instance;
+
+    /**
+     * Jakarta Mail session
+     */
     private final Session session;
 
+    /**
+     * Get this class instance.
+     * @return This class instance
+     */
     public static MailManager getInstance() {
         if(instance == null) {
             instance = new MailManager();
@@ -27,10 +44,18 @@ public class MailManager {
         return instance;
     }
 
+    /**
+     * Test if a String is null or empty or with only blank spaces
+     * @param s String tested
+     * @return True if the String is empty and false otherwise
+     */
     public static boolean isEmpty(String s) {
         return s == null || s.trim().isEmpty();
     }
 
+    /**
+     * Constructor of this class. Create the Jakarta Mail session
+     */
     private MailManager() {
         String host = "smtp.gmail.com";
 
@@ -69,6 +94,11 @@ public class MailManager {
     }
 
 
+    /**
+     * Send a mail by using the server defined in the session associated to this class
+     * @param mail Object containing the data of the mail to be sent
+     * @throws SendMailFailureException If the mail could not be sent (invalid session, invalid parameters...)
+     */
     public void send(Mail mail) throws SendMailFailureException {
         // Recipient's email ID needs to be mentioned.
         if(isEmpty(mail.getToAddress()) || isEmpty(mail.getFromAddress())) {

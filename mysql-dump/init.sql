@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS Address (
     city VARCHAR(60),
     country VARCHAR(60)
 );
+
 CREATE TABLE IF NOT EXISTS User (
     id INT PRIMARY KEY AUTO_INCREMENT,
     firstName VARCHAR(30),

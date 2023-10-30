@@ -1,168 +1,168 @@
-DROP DATABASE j2ee_project_db;
+-- DROP DATABASE j2ee_project_db;
 CREATE DATABASE IF NOT EXISTS j2ee_project_db;
 USE j2ee_project_db;
 
 CREATE TABLE IF NOT EXISTS Address (
-                                       id INT PRIMARY KEY AUTO_INCREMENT,
-                                       streetAddress VARCHAR(60) NOT NULL,
-                                       postalCode VARCHAR(30) NOT NULL,
-                                       city VARCHAR(60) NOT NULL,
-                                       country VARCHAR(60) NOT NULL,
-                                       UNIQUE(streetAddress, postalCode, city, country)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    streetAddress VARCHAR(60) NOT NULL,
+    postalCode VARCHAR(30) NOT NULL,
+    city VARCHAR(60) NOT NULL,
+    country VARCHAR(60) NOT NULL,
+    UNIQUE(streetAddress, postalCode, city, country)
 );
 
 CREATE TABLE IF NOT EXISTS User (
-                                    id INT PRIMARY KEY AUTO_INCREMENT,
-                                    firstName VARCHAR(30),
-                                    lastName VARCHAR(30),
-                                    email VARCHAR(50) NOT NULL UNIQUE,
-                                    password VARCHAR(30) NOT NULL,
-                                    phoneNumber VARCHAR(15) UNIQUE
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    firstName VARCHAR(30),
+    lastName VARCHAR(30),
+    email VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(30) NOT NULL,
+    phoneNumber VARCHAR(15) UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Administrator (
-                                             id INT PRIMARY KEY AUTO_INCREMENT,
-                                             idUser INT NOT NULL UNIQUE,
-                                             FOREIGN KEY (idUser) REFERENCES User(id)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    idUser INT NOT NULL UNIQUE,
+    FOREIGN KEY (idUser) REFERENCES User(id)
 );
 
 
 
 CREATE TABLE IF NOT EXISTS Discount (
-                                        id INT PRIMARY KEY AUTO_INCREMENT,
-                                        name VARCHAR(30),
-                                        startDate DATE NOT NULL,
-                                        endDate DATE NOT NULL,
-                                        discountPercentage INT NOT NULL,
-                                        CONSTRAINT valid_percentage CHECK (discountPercentage > 0 AND discountPercentage <= 100),
-                                        CONSTRAINT valid_dates CHECK (startDate <= endDate)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(30),
+    startDate DATE NOT NULL,
+    endDate DATE NOT NULL,
+    discountPercentage INT NOT NULL,
+    CONSTRAINT valid_percentage CHECK (discountPercentage > 0 AND discountPercentage <= 100),
+    CONSTRAINT valid_dates CHECK (startDate <= endDate)
 );
 
 CREATE TABLE IF NOT EXISTS Category (
-                                        id INT PRIMARY KEY AUTO_INCREMENT,
-                                        name VARCHAR(30) UNIQUE NOT NULL,
-                                        description VARCHAR(300),
-                                        idDiscount INT DEFAULT NULL,
-                                        FOREIGN KEY (idDiscount) REFERENCES Discount(id)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(30) UNIQUE NOT NULL,
+    description VARCHAR(300),
+    idDiscount INT DEFAULT NULL,
+    FOREIGN KEY (idDiscount) REFERENCES Discount(id)
 );
 
 CREATE TABLE IF NOT EXISTS LoyaltyProgram (
-                                              id INT PRIMARY KEY AUTO_INCREMENT,
-                                              durationNbDays INT NOT NULL,
-                                              CONSTRAINT valid_duration CHECK (durationNbDays > 0)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    durationNbDays INT NOT NULL,
+    CONSTRAINT valid_duration CHECK (durationNbDays > 0)
 );
 
 CREATE TABLE IF NOT EXISTS LoyaltyAccount (
-                                              id INT PRIMARY KEY AUTO_INCREMENT,
-                                              loyaltyPoints INT NOT NULL,
-                                              startDate DATE NOT NULL,
-                                              idLoyaltyProgram INT NOT NULL,
-                                              FOREIGN KEY (idLoyaltyProgram) REFERENCES LoyaltyProgram(id)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    loyaltyPoints INT NOT NULL,
+    startDate DATE NOT NULL,
+    idLoyaltyProgram INT NOT NULL,
+    FOREIGN KEY (idLoyaltyProgram) REFERENCES LoyaltyProgram(id)
 );
 
 CREATE TABLE IF NOT EXISTS LoyaltyLevel (
-                                            id INT PRIMARY KEY AUTO_INCREMENT,
-                                            requiredPoints INT NOT NULL,
-                                            idLoyaltyProgram INT NOT NULL,
-                                            idDiscount INT NOT NULL,
-                                            FOREIGN KEY (idLoyaltyProgram) REFERENCES LoyaltyProgram(id),
-                                            FOREIGN KEY (idDiscount) REFERENCES Discount(id),
-                                            CONSTRAINT valid_required_points_nb CHECK (requiredPoints >= 0)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    requiredPoints INT NOT NULL,
+    idLoyaltyProgram INT NOT NULL,
+    idDiscount INT NOT NULL,
+    FOREIGN KEY (idLoyaltyProgram) REFERENCES LoyaltyProgram(id),
+    FOREIGN KEY (idDiscount) REFERENCES Discount(id),
+    CONSTRAINT valid_required_points_nb CHECK (requiredPoints >= 0)
 );
 
 CREATE TABLE IF NOT EXISTS LoyaltyAccountLevelUsed (
-                                                       idLoyaltyAccount INT NOT NULL,
-                                                       idLoyaltyLevel INT NOT NULL,
-                                                       PRIMARY KEY(idLoyaltyAccount, idLoyaltyLevel)
+    idLoyaltyAccount INT NOT NULL,
+    idLoyaltyLevel INT NOT NULL,
+    PRIMARY KEY(idLoyaltyAccount, idLoyaltyLevel)
 );
 
 
 CREATE TABLE IF NOT EXISTS Product (
-                                       id INT PRIMARY KEY AUTO_INCREMENT,
-                                       name VARCHAR(30),
-                                       stockQuantity INT NOT NULL DEFAULT 0,
-                                       unitPrice FLOAT NOT NULL,
-                                       description VARCHAR(300),
-                                       imageUrl VARCHAR(500),
-                                       weight FLOAT,
-                                       idCategory INT NOT NULL,
-                                       FOREIGN KEY (idCategory) REFERENCES Category(id),
-                                       CONSTRAINT valid_unit_price CHECK(unitPrice >= 0),
-                                       CONSTRAINT valid_stock_quantity CHECK(stockQuantity >= 0)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(30),
+    stockQuantity INT NOT NULL DEFAULT 0,
+    unitPrice FLOAT NOT NULL,
+    description VARCHAR(300),
+    imageUrl VARCHAR(500),
+    weight FLOAT,
+    idCategory INT NOT NULL,
+    FOREIGN KEY (idCategory) REFERENCES Category(id),
+    CONSTRAINT valid_unit_price CHECK(unitPrice >= 0),
+    CONSTRAINT valid_stock_quantity CHECK(stockQuantity >= 0)
 );
 
 CREATE TABLE IF NOT EXISTS ShippingMethod (
-                                              id INT PRIMARY KEY AUTO_INCREMENT,
-                                              name VARCHAR(50) NOT NULL,
-                                              price FLOAT NOT NULL,
-                                              maxDaysTransit INT NOT NULL,
-                                              CONSTRAINT valid_price CHECK(price >= 0),
-                                              CONSTRAINT valid_duration CHECK(maxDaysTransit >= 0)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    price FLOAT NOT NULL,
+    maxDaysTransit INT NOT NULL,
+    CONSTRAINT valid_price CHECK(price >= 0),
+    CONSTRAINT valid_duration CHECK(maxDaysTransit >= 0)
 );
 
 CREATE TABLE IF NOT EXISTS Customer (
-                                        id INT PRIMARY KEY AUTO_INCREMENT,
-                                        idUser INT NOT NULL UNIQUE,
-                                        idAddress INT DEFAULT NULL,
-                                        idLoyaltyAccount INT DEFAULT NULL UNIQUE,
-                                        FOREIGN KEY (idUser) REFERENCES User(id),
-                                        FOREIGN KEY (idAddress) REFERENCES Address (id),
-                                        FOREIGN KEY (idLoyaltyAccount) REFERENCES LoyaltyAccount (id)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    idUser INT NOT NULL UNIQUE,
+    idAddress INT DEFAULT NULL,
+    idLoyaltyAccount INT DEFAULT NULL UNIQUE,
+    FOREIGN KEY (idUser) REFERENCES User(id),
+    FOREIGN KEY (idAddress) REFERENCES Address (id),
+    FOREIGN KEY (idLoyaltyAccount) REFERENCES LoyaltyAccount (id)
 );
 
 CREATE TABLE IF NOT EXISTS Orders (
-                                      id INT PRIMARY KEY AUTO_INCREMENT,
-                                      total INT NOT NULL,
-                                      date DATE NOT NULL,
-                                      orderStatus VARCHAR(30) NOT NULL,
-                                      idCustomer INT NOT NULL,
-                                      idShippingMethod INT NOT NULL,
-                                      idAddress INT NOT NULL,
-                                      FOREIGN KEY (idCustomer) REFERENCES Customer(id),
-                                      FOREIGN KEY (idShippingMethod) REFERENCES ShippingMethod(id),
-                                      FOREIGN KEY (idAddress) REFERENCES Address(id),
-                                      CONSTRAINT valid_total_price CHECK(total >= 0)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    total INT NOT NULL,
+    date DATE NOT NULL,
+    orderStatus VARCHAR(30) NOT NULL,
+    idCustomer INT NOT NULL,
+    idShippingMethod INT NOT NULL,
+    idAddress INT NOT NULL,
+    FOREIGN KEY (idCustomer) REFERENCES Customer(id),
+    FOREIGN KEY (idShippingMethod) REFERENCES ShippingMethod(id),
+    FOREIGN KEY (idAddress) REFERENCES Address(id),
+    CONSTRAINT valid_total_price CHECK(total >= 0)
 );
 
 CREATE TABLE IF NOT EXISTS Cart (
-                                    id INT PRIMARY KEY AUTO_INCREMENT,
-                                    idDiscount INT DEFAULT NULL,
-                                    idCustomer INT NOT NULL,
-                                    FOREIGN KEY (idDiscount) REFERENCES Discount(id),
-                                    FOREIGN KEY (idCustomer) REFERENCES Customer(id)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    idDiscount INT DEFAULT NULL,
+    idCustomer INT NOT NULL,
+    FOREIGN KEY (idDiscount) REFERENCES Discount(id),
+    FOREIGN KEY (idCustomer) REFERENCES Customer(id)
 );
 
 CREATE TABLE IF NOT EXISTS CartItem (
-                                        id INT PRIMARY KEY AUTO_INCREMENT,
-                                        quantity INT NOT NULL,
-                                        idCart INT,
-                                        idProduct INT NOT NULL,
-                                        idOrder INT,
-                                        FOREIGN KEY (idCart) REFERENCES Cart(id),
-                                        FOREIGN KEY (idProduct) REFERENCES Product(id),
-                                        FOREIGN KEY (idOrder) REFERENCES Orders(id),
-                                        CONSTRAINT valid_quantity CHECK(quantity >= 0)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    quantity INT NOT NULL,
+    idCart INT,
+    idProduct INT NOT NULL,
+    idOrder INT,
+    FOREIGN KEY (idCart) REFERENCES Cart(id),
+    FOREIGN KEY (idProduct) REFERENCES Product(id),
+    FOREIGN KEY (idOrder) REFERENCES Orders(id),
+    CONSTRAINT valid_quantity CHECK(quantity >= 0)
 );
 
 CREATE TABLE IF NOT EXISTS Mail (
-                                    id INT PRIMARY KEY AUTO_INCREMENT,
-                                    fromAddress VARCHAR(50) NOT NULL,
-                                    toAddress VARCHAR(50) NOT NULL,
-                                    subject VARCHAR(50) NOT NULL,
-                                    body VARCHAR(300) NOT NULL,
-                                    date Date NOT NULL
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    fromAddress VARCHAR(50) NOT NULL,
+    toAddress VARCHAR(50) NOT NULL,
+    subject VARCHAR(50) NOT NULL,
+    body VARCHAR(300) NOT NULL,
+    date Date NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Moderator (
-                                         id INT PRIMARY KEY AUTO_INCREMENT,
-                                         idUser INT NOT NULL UNIQUE,
-                                         FOREIGN KEY (idUser) REFERENCES User(id)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    idUser INT NOT NULL UNIQUE,
+    FOREIGN KEY (idUser) REFERENCES User(id)
 );
 
 CREATE TABLE IF NOT EXISTS ModeratorPermission (
-                                                   idModerator INT NOT NULL,
-                                                   permission VARCHAR(50) NOT NULL,
-                                                   PRIMARY KEY(idModerator, permission)
+    idModerator INT NOT NULL,
+    permission VARCHAR(50) NOT NULL,
+    PRIMARY KEY(idModerator, permission)
 );
 
 INSERT INTO LoyaltyProgram(durationNbDays) VALUES(365);

@@ -2,6 +2,7 @@ package j2ee_project.service;
 
 import j2ee_project.dto.CustomerDTO;
 import j2ee_project.dto.UserDTO;
+import j2ee_project.model.user.Customer;
 import j2ee_project.model.user.User;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -21,8 +22,8 @@ public class AuthService {
 
     }
 
-    public static void registerCustomer(String firsName, String lastName, String email, String phoneNumber, String password){
-
+    public static void registerCustomer(CustomerDTO customerDTO){
+        Customer customer = new Customer();
     }
 
     public static void registerModerator(String firsName, String lastName, String email, String phoneNumber, String password){

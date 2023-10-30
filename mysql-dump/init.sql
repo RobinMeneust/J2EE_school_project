@@ -1,4 +1,4 @@
-# DROP DATABASE j2ee_project_db;
+DROP DATABASE j2ee_project_db;
 CREATE DATABASE IF NOT EXISTS j2ee_project_db;
 USE j2ee_project_db;
 
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS LoyaltyAccountLevelUsed (
     idLoyaltyAccount INT NOT NULL,
     idLoyaltyLevel INT NOT NULL,
     PRIMARY KEY(idLoyaltyAccount, idLoyaltyLevel)
-)
+);
 
 
 CREATE TABLE IF NOT EXISTS Product (
@@ -163,39 +163,39 @@ CREATE TABLE IF NOT EXISTS ModeratorPermission (
     idModerator INT NOT NULL,
     permission VARCHAR(50) NOT NULL,
     PRIMARY KEY(idModerator, permission)
-)
+);
 
 INSERT INTO LoyaltyProgram(durationNbDays) VALUES(365);
 
-INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES("Loyalty level reward", STR_TO_DATE("28/10/2023", "%d/%m/%Y"), STR_TO_DATE("28/12/2023", "%d/%m/%Y"), 10); # This type of discount will be created only when it's claimed and will be filled with the current date to the current date + N days
-INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES("Loyalty level reward", STR_TO_DATE("28/10/2023", "%d/%m/%Y"), STR_TO_DATE("28/12/2023", "%d/%m/%Y"), 20);
+INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Loyalty level reward', STR_TO_DATE('28/10/2023', '%d/%m/%Y'), STR_TO_DATE('28/12/2023', '%d/%m/%Y'), 10); # This type of discount will be created only when it is claimed and will be filled with the current date to the current date + N days
+INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Loyalty level reward', STR_TO_DATE('28/10/2023', '%d/%m/%Y'), STR_TO_DATE('28/12/2023', '%d/%m/%Y'), 20);
 
-INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES("Halloween sales", STR_TO_DATE("31/10/2023", "%d/%m/%Y"), STR_TO_DATE("31/10/2023", "%d/%m/%Y"), 15)
+INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Halloween sales', STR_TO_DATE('31/10/2023', '%d/%m/%Y'), STR_TO_DATE('31/10/2023', '%d/%m/%Y'), 15);
 
 
 INSERT INTO LoyaltyLevel(requiredPoints, idLoyaltyProgram, idDiscount) VALUES(15,1,1);
 INSERT INTO LoyaltyLevel(requiredPoints, idLoyaltyProgram, idDiscount) VALUES(25,1,2);
 
-INSERT INTO LoyaltyAccount(loyaltyPoints, startDate, idLoyaltyProgram) VALUES(55, STR_TO_DATE("28/10/2023", "%d/%m/%Y"), 1);
-INSERT INTO LoyaltyAccount(loyaltyPoints, startDate, idLoyaltyProgram) VALUES(60, STR_TO_DATE("30/10/2023", "%d/%m/%Y"), 1);
+INSERT INTO LoyaltyAccount(loyaltyPoints, startDate, idLoyaltyProgram) VALUES(55, STR_TO_DATE('28/10/2023', '%d/%m/%Y'), 1);
+INSERT INTO LoyaltyAccount(loyaltyPoints, startDate, idLoyaltyProgram) VALUES(60, STR_TO_DATE('30/10/2023', '%d/%m/%Y'), 1);
 
-INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ("26 rue de la Mare", "34080", "Montpellier", "France");
-INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ("33 rue Sadi Carnot", "32000", "Auch", "France");
-INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ("60 rue de Lille", "91200", "Athis-mons", "France");
-INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ("6 avenue de Provence", "26000", "Valence", "France");
-INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ("18 Avenue Millies Lacroix", "78990", "Élancourt", "France");
+INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ('26 rue de la Mare', '34080', 'Montpellier', 'France');
+INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ('33 rue Sadi Carnot', '32000', 'Auch', 'France');
+INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ('60 rue de Lille', '91200', 'Athis-mons', 'France');
+INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ('6 avenue de Provence', '26000', 'Valence', 'France');
+INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ('18 Avenue Millies Lacroix', '78990', 'Élancourt', 'France');
 
-INSERT INTO User(firstName, lastName, email, password) VALUES ("root", "root", "jeewebproject@gmail.com", "root_password");
+INSERT INTO User(firstName, lastName, email, password) VALUES ('root', 'root', 'jeewebproject@gmail.com', 'root_password');
 
-INSERT INTO User(firstName, lastName, email, password) VALUES ("Robin", "Meneust", "robin@example.com", "p1");
-INSERT INTO User(firstName, lastName, email, password) VALUES ("Lucas", "Velay", "lucas@example.com", "p2");
-INSERT INTO User(firstName, lastName, email, password) VALUES ("Jérémy", "Saëlen", "jeremy@example.com", "p3");
-INSERT INTO User(firstName, lastName, email, password) VALUES ("Théo", "Gandy", "theo@example.com", "p4");
+INSERT INTO User(firstName, lastName, email, password) VALUES ('Robin', 'Meneust', 'robin@example.com', 'p1');
+INSERT INTO User(firstName, lastName, email, password) VALUES ('Lucas', 'Velay', 'lucas@example.com', 'p2');
+INSERT INTO User(firstName, lastName, email, password) VALUES ('Jérémy', 'Saëlen', 'jeremy@example.com', 'p3');
+INSERT INTO User(firstName, lastName, email, password) VALUES ('Théo', 'Gandy', 'theo@example.com', 'p4');
 
 INSERT INTO Administrator(idUser) VALUES (1);
 
 INSERT INTO Moderator(idUser) VALUES(5);
-INSERT INTO ModeratorPermission(idModerator, permission) VALUES(1,"CAN_CREATE_CUSTOMER");
+INSERT INTO ModeratorPermission(idModerator, permission) VALUES(1,'CAN_CREATE_CUSTOMER');
 
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(2,1,1);
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(3,2,2);
@@ -203,21 +203,21 @@ INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(4,3,NULL);
 
 INSERT INTO Cart(idCustomer) VALUES(1);
 
-INSERT INTO Category(name, description) VALUES("strategy", "A strategy game or strategic game is a game (e.g. a board game) in which the players' uncoerced, and often autonomous, decision-making skills have a high significance in determining the outcome.");
-INSERT INTO Category(name, description) VALUES("card game", "A card game is any game using playing cards as the primary device with which the game is played, be they traditional or game-specific.");
+INSERT INTO Category(name, description) VALUES('strategy', 'A strategy game or strategic game is a game (e.g. a board game) in which the players\' uncoerced, and often autonomous, decision-making skills have a high significance in determining the outcome.');
+INSERT INTO Category(name, description) VALUES('card game', 'A card game is any game using playing cards as the primary device with which the game is played, be they traditional or game-specific.');
 
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory) VALUES("Chess Board", 50, 15, "A chess board", 1);
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory) VALUES("UNO cards", 10, 5, "A deck of UNO cards", 2);
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory) VALUES('Chess Board', 50, 15, 'A chess board', 1);
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory) VALUES('UNO cards', 10, 5, 'A deck of UNO cards', 2);
 
 INSERT INTO CartItem(quantity, idCart, idProduct) VALUES(1,1,1);
 INSERT INTO CartItem(quantity, idCart, idProduct) VALUES(3,1,2);
 
 INSERT INTO LoyaltyAccountLevelUsed(idLoyaltyAccount, idLoyaltyLevel) VALUES(1,1);
 
-INSERT INTO Mail(fromAddress, toAddress, subject, body, date) VALUES("example@example.com", "example@example.com", "Test mail", "This is the body of a mail used for testing purposes", STR_TO_DATE("30/10/2023", "%d/%m/%Y"));
+INSERT INTO Mail(fromAddress, toAddress, subject, body, date) VALUES('example@example.com', 'example@example.com', 'Test mail', 'This is the body of a mail used for testing purposes', STR_TO_DATE('30/10/2023', '%d/%m/%Y'));
 
-INSERT INTO ShippingMethod(name, price, maxDaysTransit) VALUES("standard", 5, 10);
+INSERT INTO ShippingMethod(name, price, maxDaysTransit) VALUES('standard', 5, 10);
 
-INSERT INTO Orders(total, date, orderStatus, idCustomer, idShippingMethod, idAddress) VALUES(30, STR_TO_DATE("30/10/2023", "%d/%m/%Y"), "SHIPPED", 1, 1, 1);
+INSERT INTO Orders(total, date, orderStatus, idCustomer, idShippingMethod, idAddress) VALUES(30, STR_TO_DATE('30/10/2023', '%d/%m/%Y'), 'SHIPPED', 1, 1, 1);
 INSERT INTO CartItem(quantity, idOrder, idProduct) VALUES(2,1,1);
 

@@ -6,9 +6,12 @@ services:
             - ./mysql-dump/init.sql:/docker-entrypoint-initdb.d/init.sql
         environment:
             MYSQL_ROOT_PASSWORD: root_password
+            MYSQL_USER: j2ee_user
+            MYSQL_PASSWORD: j2ee_password
+            MYSQL_DATABASE: j2ee_project_db
         restart: always
         ports:
-            - 3307:3306
+            - '3307:3306'
     phpmyadmin:
         depends_on:
             - db

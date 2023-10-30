@@ -6,18 +6,19 @@ classDiagram
     User <|-- Moderator
     Moderator <|-- Administrator
     Moderator "-permissions" o--> "*" Permission
-    Customer "-address" --> Address
-    Customer "-loyaltyAccount" --> LoyaltyAccount
-    Product "-category" --> Category
+    Customer "-address" o--> Address
+    Customer "-loyaltyAccount" o--> LoyaltyAccount
+    Product "-category" o--> Category
     LoyaltyAccount "<u>-loyaltyProgram {readOnly}</u>" o--> LoyaltyProgram
     LoyaltyProgram "<u>-loyaltyLevels</u>" o--> "*" LoyaltyLevel
-    Category "-discount" --> Discount
+    Category "-discount" o--> Discount
     CartItem "-product" o--> Product
-    LoyaltyLevel "-discount" --> Discount
+    LoyaltyLevel "-discount" o--> Discount
     Order "-items" o--> "*" CartItem
     Cart "-items" o--> "*" CartItem
     ShippingMethodStandard --|> ShippingMethod
     ShippingMethodPremium --|> ShippingMethod
+    MailManager --> Mail
     
     note for AuthService "return null if doesn't exist"
     note for Moderator "comments/reviews : deletion, pin comments...
@@ -188,5 +189,25 @@ classDiagram
 
     class ShippingMethodStandard {
         +ShippingMethodStandard(String, int, int)
+    }
+    
+    class Mail {
+        -id : int
+        -fromAddress : String
+        -toAddress : String
+        -subject : String
+        -body : String
+        -date : Date
+    }
+    
+    note for MailManager "singleton
+    session is final"
+    class MailManager {
+        -instance : MailManager$
+        -session : Session
+        +getInstance()
+        +send(Mail)$
+        +delete(Mail)$
+        -MailManager()
     }
 ```

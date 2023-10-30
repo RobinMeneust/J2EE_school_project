@@ -27,7 +27,7 @@ public class Product {
     private String imageUrl;
     @Basic
     @Column(name = "weight", nullable = true, precision = 0)
-    private float weight;
+    private Float weight;
     @Basic
     @Column(name = "idCategory", nullable = true)
     private Integer idCategory;
@@ -35,7 +35,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, int stockQuantity, float unitPrice, String description, String imageUrl, float weight, Category category) {
+    public Product(String name, int stockQuantity, float unitPrice, String description, String imageUrl, Float weight, Category category) {
         this.name = name;
         this.stockQuantity = stockQuantity;
         this.unitPrice = unitPrice;
@@ -93,11 +93,11 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public float getWeight() {
+    public Float getWeight() {
         return weight;
     }
 
-    public void setWeight(float weight) {
+    public void setWeight(Float weight) {
         this.weight = weight;
     }
 

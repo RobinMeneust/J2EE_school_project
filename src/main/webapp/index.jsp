@@ -6,7 +6,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" name="viewport" content="width=device-width; initial-scale=1; text/html; charset=UTF-8">
-	<jsp:include page="include.jsp" />
+	<jsp:include page="WEB-INF/include.jsp" />
 	<title>Home</title>
 	<style>
 		#hide-checkbox {
@@ -53,6 +53,7 @@
 </head>
 <body>
 	<p>Test</p>
+	<a href="browse-products">Browse products</a>
 	<a href="mailTest.jsp">TEST MAIL</a>
 	<div class="form-check form-switch">
 		<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">

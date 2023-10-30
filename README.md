@@ -14,7 +14,7 @@ Example of an e-selling website coded in Java using Jakarta EE, Hibernate and Pe
 4. Go to the tomcat URL (http://localhost:8082/J2EE_Project-1.0-SNAPSHOT/)
 
 ## If the containers are running and the project has been compiled at least once (there is a WAR archive in the target folder):
-> run `mvn clean package` to update your changes and deploy the new version to the Tomcat server.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Run `mvn clean package` to update your changes and deploy the new version to the Tomcat server.
 
 ## Dependencies
 

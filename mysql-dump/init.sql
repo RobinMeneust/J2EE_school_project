@@ -169,7 +169,7 @@ CREATE TABLE IF NOT EXISTS ModeratorPermission (
 
 INSERT INTO LoyaltyProgram(durationNbDays) VALUES(365);
 
-INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Loyalty level reward', STR_TO_DATE('28/10/2023', '%d/%m/%Y'), STR_TO_DATE('28/12/2023', '%d/%m/%Y'), 10); # This type of discount will be created only when it's claimed and will be filled with the current date to the current date + N days
+INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Loyalty level reward', STR_TO_DATE('28/10/2023', '%d/%m/%Y'), STR_TO_DATE('28/12/2023', '%d/%m/%Y'), 10); -- This type of discount will be created only when it's claimed and will be filled with the current date to the current date + N days
 INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Loyalty level reward', STR_TO_DATE('28/10/2023', '%d/%m/%Y'), STR_TO_DATE('28/12/2023', '%d/%m/%Y'), 20);
 
 INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Halloween sales', STR_TO_DATE('31/10/2023', '%d/%m/%Y'), STR_TO_DATE('31/10/2023', '%d/%m/%Y'), 15);
@@ -205,11 +205,16 @@ INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(4,3,NULL);
 
 INSERT INTO Cart(idCustomer) VALUES(1);
 
-INSERT INTO Category(name, description) VALUES('strategy', 'A strategy game or strategic game is a game (e.g. a board game) in which the players\' uncoerced, and often autonomous, decision-making skills have a high significance in determining the outcome.');
+INSERT INTO Category(name, description) VALUES('strategy', "A strategy game or strategic game is a game (e.g. a board game) in which the players' uncoerced, and often autonomous, decision-making skills have a high significance in determining the outcome.");
 INSERT INTO Category(name, description) VALUES('card game', 'A card game is any game using playing cards as the primary device with which the game is played, be they traditional or game-specific.');
 
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory) VALUES('Chess Board', 50, 15, 'A chess board', 1);
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory) VALUES('UNO cards', 10, 5, 'A deck of UNO cards', 2);
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('Chess Board', 50, 15, 'A chess board', 1, 'https://upload.wikimedia.org/wikipedia/commons/c/c3/Chess_board_opening_staunton.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards2', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards3', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards4', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards5', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards6', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
 
 INSERT INTO CartItem(quantity, idCart, idProduct) VALUES(1,1,1);
 INSERT INTO CartItem(quantity, idCart, idProduct) VALUES(3,1,2);

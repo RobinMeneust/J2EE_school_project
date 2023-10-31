@@ -52,4 +52,12 @@ public class AuthService {
 
     }
 
+    // TODO permissions mapping
+    // TODO inheritance mapping
+    // TODO Address mapping in Customer
+    // TODO DAO to exchange with the db
+    // TODO finalize data verification and AuthService
+
+    //TODO see model generation with relationship
+
 }

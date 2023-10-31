@@ -1,4 +1,4 @@
-DROP DATABASE j2ee_project_db;
+# DROP DATABASE j2ee_project_db;
 CREATE DATABASE IF NOT EXISTS j2ee_project_db;
 USE j2ee_project_db;
 
@@ -25,8 +25,6 @@ CREATE TABLE IF NOT EXISTS Administrator (
     idUser INT NOT NULL UNIQUE,
     FOREIGN KEY (idUser) REFERENCES User(id)
 );
-
-
 
 CREATE TABLE IF NOT EXISTS Discount (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -159,15 +157,22 @@ CREATE TABLE IF NOT EXISTS Moderator (
     FOREIGN KEY (idUser) REFERENCES User(id)
 );
 
+CREATE TABLE IF NOT EXISTS Permission (
+   id INT PRIMARY KEY AUTO_INCREMENT,
+   permission VARCHAR(50) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS ModeratorPermission (
     idModerator INT NOT NULL,
-    permission VARCHAR(50) NOT NULL,
-    PRIMARY KEY(idModerator, permission)
+    idPermission INT NOT NULL,
+    FOREIGN KEY (idModerator) REFERENCES Moderator(id),
+    FOREIGN KEY (idPermission) REFERENCES Permission(id),
+    PRIMARY KEY(idModerator, idPermission)
 );
 
 INSERT INTO LoyaltyProgram(durationNbDays) VALUES(365);
 
-INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Loyalty level reward', STR_TO_DATE('28/10/2023', '%d/%m/%Y'), STR_TO_DATE('28/12/2023', '%d/%m/%Y'), 10); # This type of discount will be created only when it is claimed and will be filled with the current date to the current date + N days
+INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Loyalty level reward', STR_TO_DATE('28/10/2023', '%d/%m/%Y'), STR_TO_DATE('28/12/2023', '%d/%m/%Y'), 10); # This type of discount will be created only when it's claimed and will be filled with the current date to the current date + N days
 INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Loyalty level reward', STR_TO_DATE('28/10/2023', '%d/%m/%Y'), STR_TO_DATE('28/12/2023', '%d/%m/%Y'), 20);
 
 INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Halloween sales', STR_TO_DATE('31/10/2023', '%d/%m/%Y'), STR_TO_DATE('31/10/2023', '%d/%m/%Y'), 15);
@@ -195,7 +200,8 @@ INSERT INTO User(firstName, lastName, email, password) VALUES ('Théo', 'Gandy',
 INSERT INTO Administrator(idUser) VALUES (1);
 
 INSERT INTO Moderator(idUser) VALUES(5);
-INSERT INTO ModeratorPermission(idModerator, permission) VALUES(1,'CAN_CREATE_CUSTOMER');
+INSERT INTO Permission(permission) VALUES('CAN_CREATE_CUSTOMER');
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,1);
 
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(2,1,1);
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(3,2,2);

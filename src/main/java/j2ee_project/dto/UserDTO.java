@@ -1,18 +1,27 @@
 package j2ee_project.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class UserDTO {
 
-    @NotBlank(message = "The first name can not be null")
-    @Size(max = 30, message = "The first name must not exceed 30 characters.")
-    @Pattern(regexp = "^[a-zA-Z\\-]$", message = "The first name is not valid.")
+    @NotBlank()
+    @Size(max = 30)
+    @Pattern(regexp = "^[a-zA-Z\\-]$", message = "is not valid.")
     private String firstName;
+    @NotBlank()
+    @Size(max = 30)
+    @Pattern(regexp = "^[a-zA-Z\\-]{1,30}$", message = "is not valid.")
     private String lastName;
+    @Email()
     private String email;
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$", message = "is not valid.")
     private String password;
+    @NotBlank()
+    @Size(max = 30)
+    @Pattern(regexp = "^[0-9]{10}$", message = "is not valid.")
     private String phoneNumber;
 
     public UserDTO(String firstName, String lastName, String email, String password, String phoneNumber) {

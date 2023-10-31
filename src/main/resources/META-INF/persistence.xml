@@ -20,6 +20,7 @@
         <class>j2ee_project.model.order.ShippingMethod</class>
         <class>j2ee_project.model.user.User</class>
         <class>j2ee_project.model.Mail</class>
+        <class>j2ee_project.model.user.Moderator</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
             <property name="jakarta.persistence.jdbc.url"    value="jdbc:mysql://db:3306/j2ee_project_db" />
@@ -33,6 +34,10 @@
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
             <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3307/j2ee_project_db"/>
+            <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="hibernate.connection.username" value="j2ee_user"/>
+            <property name="hibernate.connection.password" value="j2ee_password"/>
         </properties>
     </persistence-unit>
 </persistence>

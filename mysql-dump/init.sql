@@ -73,7 +73,9 @@ CREATE TABLE IF NOT EXISTS LoyaltyLevel (
 CREATE TABLE IF NOT EXISTS LoyaltyAccountLevelUsed (
     idLoyaltyAccount INT NOT NULL,
     idLoyaltyLevel INT NOT NULL,
-    PRIMARY KEY(idLoyaltyAccount, idLoyaltyLevel)
+    PRIMARY KEY(idLoyaltyAccount, idLoyaltyLevel),
+    FOREIGN KEY(idLoyaltyAccount) REFERENCES LoyaltyAccount(id),
+    FOREIGN KEY(idLoyaltyLevel) REFERENCES LoyaltyLevel(id)
 );
 
 

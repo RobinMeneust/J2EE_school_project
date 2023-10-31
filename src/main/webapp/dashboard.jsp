@@ -1,4 +1,7 @@
 <%@ page import="java.util.List" %>
+<%@ page import="j2ee_project.dao.user.CustomerDAO" %>
+<%@ page import="j2ee_project.model.user.Customer" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
@@ -13,17 +16,12 @@
                 const buttonCategories = document.getElementById("nav-categories-tab");
                 buttonProducts.classList.toggle("hidden");
                 buttonCategories.classList.toggle("hidden");
-                button.classList.toggle("expand");
             }
         }
     </script>
     <style>
         .hidden{
             display:none;
-        }
-
-        #nav-catalogue-tab.expand{
-            background-color: green;
         }
     </style>
 </head>
@@ -41,7 +39,22 @@
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-customers" role="tabpanel" aria-labelledby="nav-customers-tab">Customers</div>
+                <div class="tab-pane fade show active" id="nav-customers" role="tabpanel" aria-labelledby="nav-customers-tab">
+                    <%
+                        List<Customer> customers = (List<Customer>) request.getAttribute("customers");
+                        if(customers == null){
+                            customers = new ArrayList<>();
+                        }
+                    %>
+                    <%= customers.size() %>
+                    <table>
+                        <c:forEach var = "customer" items = "${customers}">
+                            <tr>
+                                <td><c:out value = "${customer.getId}"/></td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                </div>
                 <div class="tab-pane fade" id="nav-moderators" role="tabpanel" aria-labelledby="nav-moderators-tab">Moderators</div>
                 <div class="tab-pane fade" id="nav-products" role="tabpanel" aria-labelledby="nav-products-tab">Products</div>
                 <div class="tab-pane fade" id="nav-categories" role="tabpanel" aria-labelledby="nav-discounts-tab">Categories</div>

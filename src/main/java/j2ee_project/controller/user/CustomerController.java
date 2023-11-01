@@ -1,7 +1,6 @@
 package j2ee_project.controller.user;
 
 import j2ee_project.dao.user.CustomerDAO;
-import j2ee_project.model.user.Customer;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;

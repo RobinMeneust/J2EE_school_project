@@ -13,6 +13,9 @@
 <head>
     <title>Products</title>
     <jsp:include page="../../include.jsp" />
+    <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/toolcool-range-slider.min.js"></script>
+    <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/tcrs-generated-labels.min.js"></script>
+    <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/tcrs-binding-labels.min.js"></script>
 </head>
 <body>
 <%
@@ -44,6 +47,40 @@
 <c:set var="totalPages" value="<%=totalPages%>"/>
 
 <div class="container mt-1 px-4">
+    <button class="btn btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
+        <span class="material-symbols-outlined">filter_alt</span>
+    </button>
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Search Filters</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form action="browse-products">
+                <label class="form-label" for="name">Name: </label> <input type="name" id="name" name="name"><br>
+                <label class="form-label" for="category">Category: </label> <input type="text" id="category" name="category"><br><br>
+                <label class="form-label">Price: </label>
+                <input type="hidden" class="value-1" id="min-price" name="min-price"/>
+                <input type="hidden" class="value-2" id="max-price" name="max-price"/>
+
+                <tc-range-slider
+                        id="priceSlider"
+                        min="-100"
+                        max="100"
+                        step="5"
+                        value1="0"
+                        value2="50"
+                        generate-labels="true"
+                        round="0"
+                        value1-label=".value-1"
+                        value2-label=".value-2"
+                ></tc-range-slider>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+
+    </div>
+
     <div class="row my-4">
         <c:forEach var = "product" items="${products}">
             <div class="col-4 my-2">

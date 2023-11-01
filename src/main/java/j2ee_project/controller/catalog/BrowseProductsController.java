@@ -9,6 +9,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * This class is a servlet used to browse products. It's a controller in the MVC architecture of this project.
@@ -38,10 +41,27 @@ public class BrowseProductsController extends HttpServlet
             } catch(Exception ignore) {}
         }
 
+        String name = request.getParameter("name");
+        String category = request.getParameter("category");
+        String minPrice = request.getParameter("min-price");
+        String maxPrice = request.getParameter("max-price");
+
+        HashMap<String,String> textMatchFilters = new HashMap<>(2);
+        HashMap<String,String[]> rangeFilters = new HashMap<>(2);
+
+        textMatchFilters.put("name", name);
+        textMatchFilters.put("category", category);
+        String[] range = {minPrice, maxPrice};
+        rangeFilters.put("price", range);
+
+        textMatchFilters.entrySet().removeIf(entry -> entry.getValue() == null || entry.getValue().trim().isEmpty());
+        rangeFilters.entrySet().removeIf(entry -> entry.getValue() == null || entry.getValue().length != 2 || entry.getValue()[0] == null || entry.getValue()[1] == null|| entry.getValue()[0].trim().isEmpty() || entry.getValue()[1].trim().isEmpty());
+
         request.setAttribute("page", page);
-        request.setAttribute("products", ProductDAO.getProducts(15*(page-1),15));
+        request.setAttribute("products", ProductDAO.getProducts(15*(page-1),15, ));
         long totalPages = ((ProductDAO.getSize()-1) / 15) + 1;
         request.setAttribute("totalPages", totalPages);
+
 
         if(page <= 1 && page > totalPages) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);

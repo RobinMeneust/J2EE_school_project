@@ -11,7 +11,7 @@
     <link href="dependencies/dataTables/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/hover_effects.css" rel="stylesheet" type="text/css">
-</head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 <body>
 </body>
 </html>

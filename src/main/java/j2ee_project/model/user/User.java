@@ -22,6 +22,9 @@ public class User {
     @Basic
     @Column(name = "phoneNumber", nullable = true, length = 15)
     private String phoneNumber;
+    @Basic
+    @Column(name = "password", nullable = true, length = 30)
+    private String password;
 
     public int getId() {
         return id;
@@ -63,6 +66,14 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,4 +86,5 @@ public class User {
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, email, phoneNumber);
     }
+
 }

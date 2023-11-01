@@ -2,17 +2,15 @@ package j2ee_project.dao.product;
 
 import j2ee_project.dao.HibernateUtil;
 import j2ee_project.model.catalog.Product;
-import j2ee_project.model.user.Administrator;
-import org.hibernate.Internal;
 import org.hibernate.Session;
 
 import java.util.List;
 
 public class ProductDAO {
-    public static List<Product> getProducts() {
+    public static List<Product> getProducts(int begin, int size) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        List<Product> products = session.createQuery("FROM Product", Product.class).getResultList();
+        List<Product> products = session.createQuery("FROM Product", Product.class).setFirstResult(begin).setMaxResults(size).getResultList();
         session.getTransaction().commit();
         session.close();
 
@@ -27,5 +25,15 @@ public class ProductDAO {
         session.close();
 
         return product;
+    }
+
+    public static Long getSize() {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        Long size = (Long) session.createQuery("SELECT COUNT(*) FROM Product", Long.class).uniqueResult();
+        session.getTransaction().commit();
+        session.close();
+
+        return size;
     }
 }

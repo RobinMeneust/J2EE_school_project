@@ -29,8 +29,24 @@ public class BrowseProductsController extends HttpServlet
     {
         // TODO : add search filters in the request params
 
-        request.setAttribute("products", ProductDAO.getProducts());
-        System.out.println("SIZE:"+ProductDAO.getProducts().size());
+        String pageStr = request.getParameter("page");
+        int page = 1;
+
+        if(pageStr != null && !pageStr.trim().isEmpty()) {
+            try {
+                page = Integer.parseInt(pageStr);
+            } catch(Exception ignore) {}
+        }
+
+        request.setAttribute("page", page);
+        request.setAttribute("products", ProductDAO.getProducts(15*(page-1),15));
+        long totalPages = ((ProductDAO.getSize()-1) / 15) + 1;
+        request.setAttribute("totalPages", totalPages);
+
+        if(page <= 1 && page > totalPages) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
 
         try {
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/browseProducts.jsp");

@@ -28,8 +28,6 @@ public class GetProductPageController extends HttpServlet
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        // TODO : add search filters in the request params
-
         String productIdStr = request.getParameter("id");
         int productId = -1;
 

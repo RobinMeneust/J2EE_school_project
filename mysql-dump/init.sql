@@ -215,6 +215,22 @@ INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, ima
 INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards4', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
 INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards5', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
 INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards6', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards7', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards8', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards9', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards10', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards11', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards12', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards13', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards14', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards15', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards16', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards17', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards18', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards19', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards20', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards21', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imageUrl) VALUES('UNO cards22', 10, 5, 'A deck of UNO cards', 2, 'https://upload.wikimedia.org/wikipedia/commons/2/28/Baraja_de_UNO.JPG');
 
 INSERT INTO CartItem(quantity, idCart, idProduct) VALUES(1,1,1);
 INSERT INTO CartItem(quantity, idCart, idProduct) VALUES(3,1,2);

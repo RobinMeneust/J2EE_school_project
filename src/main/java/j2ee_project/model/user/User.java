@@ -2,6 +2,8 @@ package j2ee_project.model.user;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class User {
@@ -24,9 +26,6 @@ public abstract class User {
     @Basic
     @Column(name = "phoneNumber", nullable = true, length = 15)
     private String phoneNumber;
-    @Basic
-    @Column(name = "password", nullable = true, length = 30)
-    private String password;
 
     public int getId() {
         return id;
@@ -76,14 +75,6 @@ public abstract class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -92,11 +83,11 @@ public abstract class User {
         User user = (User) o;
 
         if (id != user.id) return false;
-        if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
-        if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
-        if (email != null ? !email.equals(user.email) : user.email != null) return false;
-        if (password != null ? !password.equals(user.password) : user.password != null) return false;
-        if (phoneNumber != null ? !phoneNumber.equals(user.phoneNumber) : user.phoneNumber != null) return false;
+        if (!Objects.equals(firstName, user.firstName)) return false;
+        if (!Objects.equals(lastName, user.lastName)) return false;
+        if (!Objects.equals(email, user.email)) return false;
+        if (!Objects.equals(password, user.password)) return false;
+        if (!Objects.equals(phoneNumber, user.phoneNumber)) return false;
 
         return true;
     }
@@ -111,5 +102,4 @@ public abstract class User {
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
         return result;
     }
-
 }

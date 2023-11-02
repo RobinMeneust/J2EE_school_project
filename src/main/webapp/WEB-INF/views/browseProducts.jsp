@@ -15,7 +15,6 @@
     <jsp:include page="../../include.jsp" />
     <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/toolcool-range-slider.min.js"></script>
     <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/tcrs-generated-labels.min.js"></script>
-    <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/tcrs-binding-labels.min.js"></script>
 </head>
 <body>
 <%
@@ -40,11 +39,27 @@
     if(totalPages == null) {
         totalPages = 0L;
     }
+
+    String name = request.getParameter("name");
+    String category = request.getParameter("category");
+    String minPrice = request.getParameter("min-price");
+    String maxPrice = request.getParameter("min-price");
+
+    if(minPrice != null && minPrice.trim().isEmpty()) {
+        minPrice = null;
+    }
+    if(maxPrice != null && maxPrice.trim().isEmpty()) {
+        maxPrice = null;
+    }
 %>
 
 <c:set var="products" value="<%=products%>" />
 <c:set var="pageIndex" value="<%=pageIndex%>"/>
 <c:set var="totalPages" value="<%=totalPages%>"/>
+<c:set var="name" value="<%=name%>"/>
+<c:set var="category" value="<%=category%>"/>
+<c:set var="minPrice" value="<%=minPrice%>"/>
+<c:set var="maxPrice" value="<%=maxPrice%>"/>
 
 <div class="container mt-1 px-4">
     <button class="btn btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
@@ -56,12 +71,12 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-            <form action="browse-products">
-                <label class="form-label" for="name">Name: </label> <input type="name" id="name" name="name"><br>
-                <label class="form-label" for="category">Category: </label> <input type="text" id="category" name="category"><br><br>
+            <form action="browse-products" method="get">
+                <label class="form-label" for="name">Name: </label> <input value="${name}" type="text" id="name" name="name"><br>
+                <label class="form-label" for="category">Category: </label> <input value="${category}" type="text" id="category" name="category"><br><br>
                 <label class="form-label">Price: </label>
-                <input type="hidden" class="value-1" id="min-price" name="min-price"/>
-                <input type="hidden" class="value-2" id="max-price" name="max-price"/>
+                <input type="hidden" id="min-price" name="min-price"/>
+                <input type="hidden" id="max-price" name="max-price"/>
 
                 <tc-range-slider
                         id="priceSlider"
@@ -72,13 +87,23 @@
                         value2="50"
                         generate-labels="true"
                         round="0"
-                        value1-label=".value-1"
-                        value2-label=".value-2"
+                        <c:if test="${minPrice != null && maxPrice != null}">
+                            set="[${minPrice},${maxPrice}]"
+                        </c:if>
                 ></tc-range-slider>
                 <input type="submit" value="Submit">
             </form>
+            <script>
+                const priceSlider = document.getElementById('priceSlider');
+                const minPriceInput = document.getElementById('min-price');
+                const maxPriceInput = document.getElementById('max-price');
+                priceSlider.addEventListener('change', (evt) => {
+                    console.log(evt.detail.value1, evt.detail.value2);
+                    minPriceInput.setAttribute("value", evt.detail.value1);
+                    maxPriceInput.setAttribute("value", evt.detail.value2);
+                });
+            </script>
         </div>
-
     </div>
 
     <div class="row my-4">

@@ -9,49 +9,45 @@ import org.hibernate.query.Query;
 import java.util.*;
 
 public class ProductDAO {
-    public static List<Product> getProducts(int begin, int size, HashMap<String,String> textMatchFilters, HashMap<String, String[]> rangeFilters) {
-        HashSet<String> allowedKeys = new HashSet<>();
-        allowedKeys.add("name");
-        allowedKeys.add("category");
-        allowedKeys.add("minPrice");
-        allowedKeys.add("maxPrice");
-
+    public static List<Product> getProducts(int begin, int size, String name, String category, String minPrice, String maxPrice) {
         LinkedList<String> listParams = new LinkedList<>();
 
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
 
-        String queryStr = "FROM Product AS prdt";
-
-        if(!textMatchFilters.isEmpty() || !rangeFilters.isEmpty()) {
-            queryStr += " WHERE ";
-        }
-
+        String queryStr = "FROM Product AS p";
+        String queryStrPart2 = "";
         boolean isNotFirstFilter = false;
 
-        for(Map.Entry<String,String> entry : textMatchFilters.entrySet()) {
-            if(isNotFirstFilter) {
-                queryStr += " AND ";
-            } else {
-                isNotFirstFilter = true;
-            }
-            if(!entry.getKey().trim().isEmpty() && allowedKeys.contains(entry.getKey()) && !entry.getValue().trim().isEmpty()) {
-                queryStr += "prdt." + entry.getKey() + " LIKE \"%:p" + listParams.size() + "%\"";
-                listParams.add(entry.getValue());
-            }
+        if(name != null && !name.trim().isEmpty()) {
+            isNotFirstFilter = true;
+            queryStrPart2 += "p.name LIKE ?1";
+            listParams.add("%"+name+"%");
         }
 
-        for(Map.Entry<String,String[]> entry : rangeFilters.entrySet()) {
+        if(category != null && !category.trim().isEmpty()) {
             if(isNotFirstFilter) {
-                queryStr += " AND ";
+                queryStrPart2 += " AND ";
             } else {
                 isNotFirstFilter = true;
             }
-            if(!entry.getKey().trim().isEmpty() && allowedKeys.contains(entry.getKey()) && entry.getValue().length == 2) {
-                queryStr += "(prdt."+entry.getKey() + " BETWEEN :p" + listParams.size() + " AND :p" + listParams.size()+")" ;
-                listParams.add(entry.getValue()[0]);
-                listParams.add(entry.getValue()[1]);
+            queryStrPart2 += "p.category LIKE ?"+(listParams.size()+1);
+            listParams.add("%"+category+"%");
+        }
+
+        if(minPrice != null && !minPrice.trim().isEmpty() && maxPrice != null && !maxPrice.trim().isEmpty()) {
+            if(isNotFirstFilter) {
+                queryStrPart2 += " AND ";
+            } else {
+                isNotFirstFilter = true;
             }
+            queryStrPart2 += "(p.unitPrice BETWEEN ?"+(listParams.size()+1)+" AND ?"+(listParams.size()+2)+")";
+            listParams.add(minPrice);
+            listParams.add(maxPrice);
+        }
+
+        if(!queryStrPart2.isEmpty()) {
+            queryStr += " WHERE " + queryStrPart2;
         }
 
         System.out.println("LIST PARAM"+listParams.size());
@@ -62,8 +58,10 @@ public class ProductDAO {
         System.out.println(queryStr);
         Query<Product> query = session.createQuery(queryStr, Product.class);
         for(int i=0; i<listParams.size(); i++) {
-            query.setParameter("p"+i,listParams.get(i));
+            query.setParameter(i+1,listParams.get(i));
         }
+
+        System.out.println(query.getQueryString());
 
         List<Product> products =query.setFirstResult(begin).setMaxResults(size).getResultList();
         session.getTransaction().commit();

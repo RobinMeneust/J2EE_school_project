@@ -1,67 +1,74 @@
 package j2ee_project.model.user;
 
+import j2ee_project.model.Address;
+import j2ee_project.model.order.Cart;
+import j2ee_project.model.loyalty.LoyaltyAccount;
+import j2ee_project.model.order.Orders;
 import jakarta.persistence.*;
 
-import java.util.Objects;
+import java.util.Set;
 
 @Entity
-public class Customer {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id", nullable = false)
-    private int id;
-    @Basic
-    @Column(name = "idUser", nullable = true)
-    private Integer idUser;
-    @Basic
-    @Column(name = "idAddress", nullable = false)
-    private int idAddress;
-    @Basic
-    @Column(name = "idLoyaltyAccount", nullable = true)
-    private Integer idLoyaltyAccount;
+@PrimaryKeyJoinColumn(name = "idUser")
+public class Customer extends User{
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Integer getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(Integer idUser) {
-        this.idUser = idUser;
-    }
-
-    public int getIdAddress() {
-        return idAddress;
-    }
-
-    public void setIdAddress(int idAddress) {
-        this.idAddress = idAddress;
-    }
-
-    public Integer getIdLoyaltyAccount() {
-        return idLoyaltyAccount;
-    }
-
-    public void setIdLoyaltyAccount(Integer idLoyaltyAccount) {
-        this.idLoyaltyAccount = idLoyaltyAccount;
-    }
+    @OneToOne(mappedBy = "customer")
+    private Cart cart;
+    @ManyToOne
+    @JoinColumn(name = "idAddress", referencedColumnName = "id")
+    private Address address;
+    @ManyToOne
+    @JoinColumn(name = "idLoyaltyAccount", referencedColumnName = "id")
+    private LoyaltyAccount loyaltyAccount;
+    @OneToMany(mappedBy = "customer")
+    private Set<Orders> orders;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Customer customer = (Customer) o;
-        return id == customer.id && idAddress == customer.idAddress && Objects.equals(idUser, customer.idUser) && Objects.equals(idLoyaltyAccount, customer.idLoyaltyAccount);
+
+        if (this.getId() != customer.getId()) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, idUser, idAddress, idLoyaltyAccount);
+        return this.getId();
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public LoyaltyAccount getLoyaltyAccount() {
+        return loyaltyAccount;
+    }
+
+    public void setLoyaltyAccount(LoyaltyAccount loyaltyAccount) {
+        this.loyaltyAccount = loyaltyAccount;
+    }
+
+    public Set<Orders> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Orders> orders) {
+        this.orders = orders;
     }
 }

@@ -15,6 +15,12 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "idProduct", referencedColumnName = "id", nullable = false)
     private Product product;
+    @ManyToOne
+    @JoinColumn(name = "idOrder", referencedColumnName = "id", nullable = true)
+    private Orders order;
+    @ManyToOne
+    @JoinColumn(name = "idCart", referencedColumnName = "id", nullable = true)
+    private Cart cart;
 
     public int getId() {
         return id;

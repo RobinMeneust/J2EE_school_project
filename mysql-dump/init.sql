@@ -1,4 +1,4 @@
-DROP DATABASE j2ee_project_db;
+-- DROP DATABASE j2ee_project_db;
 CREATE DATABASE IF NOT EXISTS j2ee_project_db;
 USE j2ee_project_db;
 
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS User (
     firstName VARCHAR(30),
     lastName VARCHAR(30),
     email VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(30) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     phoneNumber VARCHAR(15) UNIQUE
 );
 

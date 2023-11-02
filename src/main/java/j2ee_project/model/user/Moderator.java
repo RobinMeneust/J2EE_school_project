@@ -1,5 +1,7 @@
 package j2ee_project.model.user;
 
+import j2ee_project.dto.ModeratorDTO;
+import j2ee_project.dto.UserDTO;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -15,6 +17,23 @@ public class Moderator extends User{
             inverseJoinColumns = @JoinColumn(name = "idPermission")
     )
     private Set<Permission> permissions = new HashSet<>();
+
+    public Moderator(){
+        super();
+    }
+
+    public Moderator(ModeratorDTO moderatorDTO) {
+        super(moderatorDTO);
+        this.permissions = moderatorDTO.getPermissions();
+    }
+
+    public Set<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void addPermission(Permission permission){
+        this.permissions.add(permission);
+    }
 
     @Override
     public boolean equals(Object o) {

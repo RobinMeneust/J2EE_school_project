@@ -14,11 +14,11 @@ public class Product {
     @Column(name = "name", nullable = true, length = 30)
     private String name;
     @Basic
-    @Column(name = "stockQuantity", nullable = false)
-    private int stockQuantity;
+    @Column(name = "stockQuantity", nullable = true)
+    private Integer stockQuantity;
     @Basic
-    @Column(name = "unitPrice", nullable = false, precision = 0)
-    private double unitPrice;
+    @Column(name = "unitPrice", nullable = true, precision = 0)
+    private float unitPrice;
     @Basic
     @Column(name = "description", nullable = true, length = 300)
     private String description;
@@ -27,22 +27,22 @@ public class Product {
     private String imageUrl;
     @Basic
     @Column(name = "weight", nullable = true, precision = 0)
-    private float weight;
-    @ManyToOne
-    @JoinColumn(name = "idCategory", referencedColumnName = "id", nullable = false)
-    private Category category;
+    private Float weight;
+    @Basic
+    @Column(name = "idCategory", nullable = true)
+    private Integer idCategory;
 
     public Product() {
     }
 
-    public Product(String name, int stockQuantity, float unitPrice, String description, String imageUrl, float weight, Category category) {
+    public Product(String name, int stockQuantity, float unitPrice, String description, String imageUrl, Float weight, Category category) {
         this.name = name;
         this.stockQuantity = stockQuantity;
         this.unitPrice = unitPrice;
         this.description = description;
         this.imageUrl = imageUrl;
         this.weight = weight;
-        this.category = category;
+        this.idCategory = category.getId();
     }
 
     public int getId() {
@@ -61,19 +61,19 @@ public class Product {
         this.name = name;
     }
 
-    public int getStockQuantity() {
+    public Integer getStockQuantity() {
         return stockQuantity;
     }
 
-    public void setStockQuantity(int stockQuantity) {
+    public void setStockQuantity(Integer stockQuantity) {
         this.stockQuantity = stockQuantity;
     }
 
-    public double getUnitPrice() {
+    public float getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(double unitPrice) {
+    public void setUnitPrice(float unitPrice) {
         this.unitPrice = unitPrice;
     }
 
@@ -93,42 +93,32 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public float getWeight() {
+    public Float getWeight() {
         return weight;
     }
 
-    public void setWeight(float weight) {
+    public void setWeight(Float weight) {
         this.weight = weight;
+    }
+
+    public Integer getIdCategory() {
+        return idCategory;
+    }
+
+    public void setIdCategory(Integer idCategory) {
+        this.idCategory = idCategory;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Product product = (Product) o;
-
-        if (id != product.id) return false;
-        if (stockQuantity != product.stockQuantity) return false;
-        if (Double.compare(unitPrice, product.unitPrice) != 0) return false;
-        if (!Objects.equals(name, product.name)) return false;
-        if (!Objects.equals(description, product.description)) return false;
-        if (!Objects.equals(imageUrl, product.imageUrl)) return false;
-        if (!Objects.equals(weight, product.weight)) return false;
-
-        return true;
+        return id == product.id && Objects.equals(name, product.name) && Objects.equals(stockQuantity, product.stockQuantity) && Objects.equals(unitPrice, product.unitPrice) && Objects.equals(description, product.description) && Objects.equals(imageUrl, product.imageUrl) && Objects.equals(weight, product.weight) && Objects.equals(idCategory, product.idCategory);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, stockQuantity, unitPrice, description, imageUrl, weight, category);
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
+        return Objects.hash(id, name, stockQuantity, unitPrice, description, imageUrl, weight, idCategory);
     }
 }

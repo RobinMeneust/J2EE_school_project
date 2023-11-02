@@ -2,9 +2,10 @@ package j2ee_project.model.user;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User {
+public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
@@ -16,17 +17,11 @@ public abstract class User {
     @Column(name = "lastName", nullable = true, length = 30)
     private String lastName;
     @Basic
-    @Column(name = "email", nullable = false, length = 50)
+    @Column(name = "email", nullable = true, length = 50)
     private String email;
-    @Basic
-    @Column(name = "password", nullable = false, length = 30)
-    private String password;
     @Basic
     @Column(name = "phoneNumber", nullable = true, length = 15)
     private String phoneNumber;
-    @Basic
-    @Column(name = "password", nullable = true, length = 30)
-    private String password;
 
     public int getId() {
         return id;
@@ -60,14 +55,6 @@ public abstract class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -76,40 +63,16 @@ public abstract class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         User user = (User) o;
-
-        if (id != user.id) return false;
-        if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
-        if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
-        if (email != null ? !email.equals(user.email) : user.email != null) return false;
-        if (password != null ? !password.equals(user.password) : user.password != null) return false;
-        if (phoneNumber != null ? !phoneNumber.equals(user.phoneNumber) : user.phoneNumber != null) return false;
-
-        return true;
+        return id == user.id && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(phoneNumber, user.phoneNumber);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
-        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
-        return result;
+        return Objects.hash(id, firstName, lastName, email, phoneNumber);
     }
-
 }

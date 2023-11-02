@@ -1,4 +1,4 @@
-DROP DATABASE j2ee_project_db;
+-- DROP DATABASE j2ee_project_db;
 CREATE DATABASE IF NOT EXISTS j2ee_project_db;
 USE j2ee_project_db;
 
@@ -20,17 +20,13 @@ CREATE TABLE IF NOT EXISTS User (
     phoneNumber VARCHAR(15) UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS Moderator (
-    -- id INT PRIMARY KEY AUTO_INCREMENT,
-    idUser INT PRIMARY KEY ,
+CREATE TABLE IF NOT EXISTS Administrator (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    idUser INT NOT NULL UNIQUE,
     FOREIGN KEY (idUser) REFERENCES User(id)
 );
 
-CREATE TABLE IF NOT EXISTS Administrator (
-    -- id INT PRIMARY KEY AUTO_INCREMENT,
-    idModerator INT PRIMARY KEY ,
-    FOREIGN KEY (idModerator) REFERENCES Moderator(idUser)
-);
+
 
 CREATE TABLE IF NOT EXISTS Discount (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -77,9 +73,9 @@ CREATE TABLE IF NOT EXISTS LoyaltyLevel (
 CREATE TABLE IF NOT EXISTS LoyaltyAccountLevelUsed (
     idLoyaltyAccount INT NOT NULL,
     idLoyaltyLevel INT NOT NULL,
-    FOREIGN KEY (idLoyaltyAccount) REFERENCES LoyaltyAccount(id),
-    FOREIGN KEY (idLoyaltyLevel) REFERENCES LoyaltyLevel(id),
-    PRIMARY KEY(idLoyaltyAccount, idLoyaltyLevel)
+    PRIMARY KEY(idLoyaltyAccount, idLoyaltyLevel),
+    FOREIGN KEY(idLoyaltyAccount) REFERENCES LoyaltyAccount(id),
+    FOREIGN KEY(idLoyaltyLevel) REFERENCES LoyaltyLevel(id)
 );
 
 
@@ -107,8 +103,8 @@ CREATE TABLE IF NOT EXISTS ShippingMethod (
 );
 
 CREATE TABLE IF NOT EXISTS Customer (
-    -- id INT PRIMARY KEY AUTO_INCREMENT,
-    idUser INT PRIMARY KEY ,
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    idUser INT NOT NULL UNIQUE,
     idAddress INT DEFAULT NULL,
     idLoyaltyAccount INT DEFAULT NULL UNIQUE,
     FOREIGN KEY (idUser) REFERENCES User(id),
@@ -124,7 +120,7 @@ CREATE TABLE IF NOT EXISTS Orders (
     idCustomer INT NOT NULL,
     idShippingMethod INT NOT NULL,
     idAddress INT NOT NULL,
-    FOREIGN KEY (idCustomer) REFERENCES Customer(idUser),
+    FOREIGN KEY (idCustomer) REFERENCES Customer(id),
     FOREIGN KEY (idShippingMethod) REFERENCES ShippingMethod(id),
     FOREIGN KEY (idAddress) REFERENCES Address(id),
     CONSTRAINT valid_total_price CHECK(total >= 0)
@@ -133,9 +129,9 @@ CREATE TABLE IF NOT EXISTS Orders (
 CREATE TABLE IF NOT EXISTS Cart (
     id INT PRIMARY KEY AUTO_INCREMENT,
     idDiscount INT DEFAULT NULL,
-    idCustomer INT NOT NULL UNIQUE,
+    idCustomer INT NOT NULL,
     FOREIGN KEY (idDiscount) REFERENCES Discount(id),
-    FOREIGN KEY (idCustomer) REFERENCES Customer(idUser)
+    FOREIGN KEY (idCustomer) REFERENCES Customer(id)
 );
 
 CREATE TABLE IF NOT EXISTS CartItem (
@@ -159,17 +155,16 @@ CREATE TABLE IF NOT EXISTS Mail (
     date Date NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Permission (
+CREATE TABLE IF NOT EXISTS Moderator (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    permission VARCHAR(50) NOT NULL
+    idUser INT NOT NULL UNIQUE,
+    FOREIGN KEY (idUser) REFERENCES User(id)
 );
 
 CREATE TABLE IF NOT EXISTS ModeratorPermission (
     idModerator INT NOT NULL,
-    idPermission INT NOT NULL,
-    FOREIGN KEY (idModerator) REFERENCES Moderator(idUser),
-    FOREIGN KEY (idPermission) REFERENCES Permission(id),
-    PRIMARY KEY(idModerator, idPermission)
+    permission VARCHAR(50) NOT NULL,
+    PRIMARY KEY(idModerator, permission)
 );
 
 INSERT INTO LoyaltyProgram(durationNbDays) VALUES(365);
@@ -199,18 +194,16 @@ INSERT INTO User(firstName, lastName, email, password) VALUES ('Lucas', 'Velay',
 INSERT INTO User(firstName, lastName, email, password) VALUES ('Jérémy', 'Saëlen', 'jeremy@example.com', 'p3');
 INSERT INTO User(firstName, lastName, email, password) VALUES ('Théo', 'Gandy', 'theo@example.com', 'p4');
 
-INSERT INTO Moderator(idUser) VALUES(1);
-INSERT INTO Administrator(idModerator) VALUES (1);
+INSERT INTO Administrator(idUser) VALUES (1);
 
 INSERT INTO Moderator(idUser) VALUES(5);
-INSERT INTO Permission(permission) VALUES('CAN_CREATE_CUSTOMER');
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(5,1);
+INSERT INTO ModeratorPermission(idModerator, permission) VALUES(1,'CAN_CREATE_CUSTOMER');
 
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(2,1,1);
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(3,2,2);
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(4,3,NULL);
 
-INSERT INTO Cart(idCustomer) VALUES(2);
+INSERT INTO Cart(idCustomer) VALUES(1);
 
 INSERT INTO Category(name, description) VALUES('strategy', 'A strategy game or strategic game is a game (e.g. a board game) in which the players\' uncoerced, and often autonomous, decision-making skills have a high significance in determining the outcome.');
 INSERT INTO Category(name, description) VALUES('card game', 'A card game is any game using playing cards as the primary device with which the game is played, be they traditional or game-specific.');
@@ -227,6 +220,6 @@ INSERT INTO Mail(fromAddress, toAddress, subject, body, date) VALUES('example@ex
 
 INSERT INTO ShippingMethod(name, price, maxDaysTransit) VALUES('standard', 5, 10);
 
-INSERT INTO Orders(total, date, orderStatus, idCustomer, idShippingMethod, idAddress) VALUES(30, STR_TO_DATE('30/10/2023', '%d/%m/%Y'), 'SHIPPED', 2, 1, 1);
+INSERT INTO Orders(total, date, orderStatus, idCustomer, idShippingMethod, idAddress) VALUES(30, STR_TO_DATE('30/10/2023', '%d/%m/%Y'), 'SHIPPED', 1, 1, 1);
 INSERT INTO CartItem(quantity, idOrder, idProduct) VALUES(2,1,1);
 

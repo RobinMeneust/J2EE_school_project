@@ -2,6 +2,8 @@ package j2ee_project.model.order;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 public class ShippingMethod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -9,14 +11,14 @@ public class ShippingMethod {
     @Column(name = "id", nullable = false)
     private int id;
     @Basic
-    @Column(name = "name", nullable = false, length = 50)
+    @Column(name = "name", nullable = true, length = 50)
     private String name;
     @Basic
-    @Column(name = "price", nullable = false, precision = 0)
-    private double price;
+    @Column(name = "price", nullable = true, precision = 0)
+    private Double price;
     @Basic
-    @Column(name = "maxDaysTransit", nullable = false)
-    private int maxDaysTransit;
+    @Column(name = "maxDaysTransit", nullable = true)
+    private Integer maxDaysTransit;
 
     public int getId() {
         return id;
@@ -34,19 +36,19 @@ public class ShippingMethod {
         this.name = name;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public int getMaxDaysTransit() {
+    public Integer getMaxDaysTransit() {
         return maxDaysTransit;
     }
 
-    public void setMaxDaysTransit(int maxDaysTransit) {
+    public void setMaxDaysTransit(Integer maxDaysTransit) {
         this.maxDaysTransit = maxDaysTransit;
     }
 
@@ -54,26 +56,12 @@ public class ShippingMethod {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         ShippingMethod that = (ShippingMethod) o;
-
-        if (id != that.id) return false;
-        if (Double.compare(price, that.price) != 0) return false;
-        if (maxDaysTransit != that.maxDaysTransit) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-
-        return true;
+        return id == that.id && Objects.equals(name, that.name) && Objects.equals(price, that.price) && Objects.equals(maxDaysTransit, that.maxDaysTransit);
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        temp = Double.doubleToLongBits(price);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + maxDaysTransit;
-        return result;
+        return Objects.hash(id, name, price, maxDaysTransit);
     }
 }

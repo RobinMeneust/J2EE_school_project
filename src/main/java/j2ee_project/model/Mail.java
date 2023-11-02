@@ -3,6 +3,7 @@ package j2ee_project.model;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.util.Objects;
 
 @Entity
 public class Mail {
@@ -11,19 +12,19 @@ public class Mail {
     @Column(name = "id", nullable = false)
     private int id;
     @Basic
-    @Column(name = "fromAddress", nullable = false, length = 50)
+    @Column(name = "fromAddress", nullable = true, length = 50)
     private String fromAddress;
     @Basic
-    @Column(name = "toAddress", nullable = false, length = 50)
+    @Column(name = "toAddress", nullable = true, length = 50)
     private String toAddress;
     @Basic
-    @Column(name = "subject", nullable = false, length = 50)
+    @Column(name = "subject", nullable = true, length = 50)
     private String subject;
     @Basic
-    @Column(name = "body", nullable = false, length = 300)
+    @Column(name = "body", nullable = true, length = 300)
     private String body;
     @Basic
-    @Column(name = "date", nullable = false)
+    @Column(name = "date", nullable = true)
     private Date date;
 
     public int getId() {
@@ -78,27 +79,12 @@ public class Mail {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Mail mail = (Mail) o;
-
-        if (id != mail.id) return false;
-        if (fromAddress != null ? !fromAddress.equals(mail.fromAddress) : mail.fromAddress != null) return false;
-        if (toAddress != null ? !toAddress.equals(mail.toAddress) : mail.toAddress != null) return false;
-        if (subject != null ? !subject.equals(mail.subject) : mail.subject != null) return false;
-        if (body != null ? !body.equals(mail.body) : mail.body != null) return false;
-        if (date != null ? !date.equals(mail.date) : mail.date != null) return false;
-
-        return true;
+        return id == mail.id && Objects.equals(fromAddress, mail.fromAddress) && Objects.equals(toAddress, mail.toAddress) && Objects.equals(subject, mail.subject) && Objects.equals(body, mail.body) && Objects.equals(date, mail.date);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (fromAddress != null ? fromAddress.hashCode() : 0);
-        result = 31 * result + (toAddress != null ? toAddress.hashCode() : 0);
-        result = 31 * result + (subject != null ? subject.hashCode() : 0);
-        result = 31 * result + (body != null ? body.hashCode() : 0);
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        return result;
+        return Objects.hash(id, fromAddress, toAddress, subject, body, date);
     }
 }

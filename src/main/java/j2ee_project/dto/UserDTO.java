@@ -9,7 +9,7 @@ public class UserDTO {
 
     @NotBlank()
     @Size(max = 30)
-    @Pattern(regexp = "^[a-zA-Z\\-]$", message = "is not valid.")
+    @Pattern(regexp = "^[a-zA-Z\\-]{1,30}$", message = "is not valid.")
     private String firstName;
     @NotBlank()
     @Size(max = 30)

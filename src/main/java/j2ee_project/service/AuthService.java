@@ -1,5 +1,6 @@
 package j2ee_project.service;
 
+import j2ee_project.dao.user.UserDAO;
 import j2ee_project.dto.CustomerDTO;
 import j2ee_project.dto.ModeratorDTO;
 import j2ee_project.dto.UserDTO;
@@ -10,7 +11,6 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import org.hibernate.Hibernate;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -26,35 +26,57 @@ public class AuthService {
 
     }
 
-    public static void registerCustomer(CustomerDTO customerDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public static User registerCustomer(CustomerDTO customerDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
         customerDTO.setPassword(HashService.generatePasswordHash(customerDTO.getPassword()));
-        Customer customer = new Customer(customerDTO);
+        User customer = new Customer(customerDTO);
+        UserDAO.addUser(customer);
+        return customer;
     }
 
-    public static void registerModerator(ModeratorDTO moderatorDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public static User registerModerator(ModeratorDTO moderatorDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
         moderatorDTO.setPassword(HashService.generatePasswordHash(moderatorDTO.getPassword()));
         Moderator moderator = new Moderator(moderatorDTO);
+        UserDAO.addUser(moderator);
+        return moderator;
     }
 
-    public static void userDataValidation(UserDTO userDTO){
+    public static Set<ConstraintViolation<UserDTO>> userDataValidation(UserDTO userDTO){
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         Validator validator = validatorFactory.getValidator();
-        Set<ConstraintViolation<UserDTO>> constraintViolations = validator.validate(userDTO);
+        return validator.validate(userDTO);
 
-        for(ConstraintViolation<UserDTO> violation : constraintViolations){
+      /*  for(ConstraintViolation<UserDTO> violation : constraintViolations){
             System.out.printf(violation.getMessage());
-        }
+        }*/
     }
 
     public static void main(String[] args) {
         String firstName = "TestFirstName";
         String lastName = "TestLastName";
         String email = "test@email.com";
-        String password = "TestPassword123";
+        String password = "#TestPassword123";
         String phoneNumber = "0123456789";
 
-        CustomerDTO customerDTO = new CustomerDTO(null, lastName, email, password, phoneNumber);
-        userDataValidation(customerDTO);
+        CustomerDTO customerDTO = new CustomerDTO(firstName, lastName, email, password, phoneNumber);
+        Set<ConstraintViolation<UserDTO>> constraintViolations = userDataValidation(customerDTO);
+        if (!constraintViolations.isEmpty()){
+            for(ConstraintViolation<UserDTO> violation : constraintViolations){
+                System.out.print(violation.getInvalidValue() + " : ");
+                System.out.printf(violation.getMessage());
+            }
+            return;
+        }
+        try {
+            User customer = registerCustomer(customerDTO);
+            System.out.print("Reussite");
+
+        }catch (NoSuchAlgorithmException | InvalidKeySpecException exception){
+            System.out.print("Error");
+        }
+        catch (Exception exception){
+            System.out.printf("Error !!!!! : ");
+            System.out.print(exception);
+        }
 
     }
 

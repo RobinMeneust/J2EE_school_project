@@ -22,7 +22,7 @@ public class Customer extends User{
     @ManyToOne
     @JoinColumn(name = "idLoyaltyAccount", referencedColumnName = "id")
     private LoyaltyAccount loyaltyAccount;
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(targetEntity = Orders.class, mappedBy = "customer")
     private Set<Orders> orders;
 
     public Customer(CustomerDTO customerDTO){

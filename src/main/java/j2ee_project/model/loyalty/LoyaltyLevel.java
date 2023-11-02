@@ -15,6 +15,9 @@ public class LoyaltyLevel {
     @ManyToOne
     @JoinColumn(name = "idDiscount", referencedColumnName = "id", nullable = false)
     private Discount discount;
+    @ManyToOne
+    @JoinColumn(name = "idLoyaltyProgram", referencedColumnName = "id", nullable = false)
+    private LoyaltyProgram loyaltyProgram;
 
     public int getId() {
         return id;

@@ -82,7 +82,6 @@ CREATE TABLE IF NOT EXISTS LoyaltyAccountLevelUsed (
     PRIMARY KEY(idLoyaltyAccount, idLoyaltyLevel)
 );
 
-
 CREATE TABLE IF NOT EXISTS Product (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30),

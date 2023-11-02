@@ -62,6 +62,7 @@
 <c:set var="maxPrice" value="<%=maxPrice%>"/>
 
 <div class="container mt-1 px-4">
+    <h1 class="display-1">Browse products</h1>
     <button class="btn btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
         <span class="material-symbols-outlined">filter_alt</span>
     </button>
@@ -72,33 +73,40 @@
         </div>
         <div class="offcanvas-body">
             <form action="browse-products" method="get">
-                <label class="form-label" for="name">Name: </label> <input value="${name}" type="text" id="name" name="name"><br>
-                <label class="form-label" for="category">Category: </label> <input value="${category}" type="text" id="category" name="category"><br><br>
-                <label class="form-label">Price: </label>
+                <div class="form-floating mb-2">
+                    <input value="${name}" placeholder="Chess" class="form-control" type="text" id="name" name="name">
+                    <label for="name">Name</label>
+                </div>
+                <div class="form-floating mb-2">
+                    <input value="${category}" placeholder="Strategy" class="form-control" type="text" id="category" name="category"><br><br>
+                    <label for="category">Category</label>
+                </div>
                 <input type="hidden" id="min-price" name="min-price"/>
                 <input type="hidden" id="max-price" name="max-price"/>
 
-                <tc-range-slider
-                        id="priceSlider"
-                        min="-100"
-                        max="100"
-                        step="5"
-                        value1="0"
-                        value2="50"
-                        generate-labels="true"
-                        round="0"
-                        <c:if test="${minPrice != null && maxPrice != null}">
-                            set="[${minPrice},${maxPrice}]"
-                        </c:if>
-                ></tc-range-slider>
-                <input type="submit" value="Submit">
+                <fieldset class="border p-2">
+                    <legend class="w-auto float-none">Price</legend>
+                    <tc-range-slider
+                            id="priceSlider"
+                            min="0"
+                            max="100"
+                            step="5"
+                            value1="0"
+                            value2="100"
+                            generate-labels="true"
+                            round="0"
+                            <c:if test="${minPrice != null && maxPrice != null && minPrice<maxPrice && maxPrice<100 && minPrice>0}">
+                                set="[${minPrice},${maxPrice}]"
+                            </c:if>
+                    ></tc-range-slider>
+                </fieldset>
+                <input class="btn btn-primary mt-5" type="submit" value="Submit">
             </form>
             <script>
                 const priceSlider = document.getElementById('priceSlider');
                 const minPriceInput = document.getElementById('min-price');
                 const maxPriceInput = document.getElementById('max-price');
                 priceSlider.addEventListener('change', (evt) => {
-                    console.log(evt.detail.value1, evt.detail.value2);
                     minPriceInput.setAttribute("value", evt.detail.value1);
                     maxPriceInput.setAttribute("value", evt.detail.value2);
                 });

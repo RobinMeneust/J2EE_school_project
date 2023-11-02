@@ -48,7 +48,7 @@ public class BrowseProductsController extends HttpServlet
 
         request.setAttribute("page", page);
         request.setAttribute("products", ProductDAO.getProducts(15*(page-1),15, name, category, minPrice, maxPrice));
-        long totalPages = ((ProductDAO.getSize()-1) / 15) + 1;
+        long totalPages = ((ProductDAO.getSize(name, category, minPrice, maxPrice)-1) / 15) + 1;
         request.setAttribute("totalPages", totalPages);
 
 

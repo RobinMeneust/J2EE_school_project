@@ -15,22 +15,18 @@ import java.util.*;
  */
 public class ProductDAO {
     /**
-     * Get a list of products that match the given filters
-     * @param begin Index of the first element (e.g. begin=4 will ignore the 3 first products)
-     * @param size Max number of elements returned
+     * Create a query string from a list of filters for the Product table and its params
+     * @param queryStrStart Beginning of the query to which filters are added
      * @param name The products' name must match with this name (it's case-insensitive, and it can be just a part of a searched word: e.g. 'Ch' will return 'chess' products)
      * @param category The products' category must match with it (exactly like the name filter)
      * @param minPrice The products' price must be greater or equal to this value
      * @param maxPrice The products' price must be lesser or equal to this value
-     * @return List of products that match with all of those filters
+     * @return Hashmap containing the query (key "query") associated to the provided filters whose values are stored in a list in the hashmap in the same order as in the query string (key "params")
      */
-    public static List<Product> getProducts(int begin, int size, String name, String category, String minPrice, String maxPrice) {
+    public static HashMap<String,Object> getQueryString(String queryStrStart, String name, String category, String minPrice, String maxPrice) {
         LinkedList<String> listParams = new LinkedList<>();
 
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-
-        String queryStr = "FROM Product AS p";
+        String queryStr = queryStrStart;
         String queryStrPart2 = "";
         boolean isNotFirstFilter = false;
 
@@ -68,10 +64,44 @@ public class ProductDAO {
             queryStr += " WHERE " + queryStrPart2;
         }
 
+        HashMap<String,Object> result = new HashMap<>(2);
+        result.put("query", queryStr);
+        result.put("params", listParams);
+        return result;
+    }
+
+    /**
+     * Get a list of products that match the given filters
+     * @param begin Index of the first element (e.g. begin=4 will ignore the 3 first products)
+     * @param size Max number of elements returned
+     * @param name The products' name must match with this name (it's case-insensitive, and it can be just a part of a searched word: e.g. 'Ch' will return 'chess' products)
+     * @param category The products' category must match with it (exactly like the name filter)
+     * @param minPrice The products' price must be greater or equal to this value
+     * @param maxPrice The products' price must be lesser or equal to this value
+     * @return List of products that match with all of those filters
+     */
+    public static List<Product> getProducts(int begin, int size, String name, String category, String minPrice, String maxPrice) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+
+        HashMap<String,Object> queryObj = getQueryString("FROM Product AS p",name, category, minPrice, maxPrice);
+        String queryStr = "";
+        if(queryObj.get("query") instanceof String) {
+            queryStr = (String) queryObj.get("query");
+        }
+
+        List<String> params = null;
+        if(queryObj.get("params") != null) {
+            params = (List<String>) queryObj.get("params");
+        }
+
+        if(params == null || queryStr == "") {
+            return new ArrayList<>();
+        }
 
         Query<Product> query = session.createQuery(queryStr, Product.class);
-        for(int i=0; i<listParams.size(); i++) {
-            query.setParameter(i+1,listParams.get(i));
+        for(int i=0; i<params.size(); i++) {
+            query.setParameter(i+1,params.get(i));
         }
 
         List<Product> products =query.setFirstResult(begin).setMaxResults(size).getResultList();
@@ -98,12 +128,38 @@ public class ProductDAO {
 
     /**
      * Get the total number of products
+     * @param name The products' name must match with this name (it's case-insensitive, and it can be just a part of a searched word: e.g. 'Ch' will return 'chess' products)
+     * @param category The products' category must match with it (exactly like the name filter)
+     * @param minPrice The products' price must be greater or equal to this value
+     * @param maxPrice The products' price must be lesser or equal to this value
      * @return Number of products
      */
-    public static Long getSize() {
+    public static Long getSize(String name, String category, String minPrice, String maxPrice) {
+        HashMap<String,Object> queryObj = getQueryString("SELECT COUNT(*) FROM Product AS p", name, category, minPrice, maxPrice);
+
+        String queryStr = "";
+        if(queryObj.get("query") instanceof String) {
+            queryStr = (String) queryObj.get("query");
+        }
+
+        List<String> params = null;
+        if(queryObj.get("params") != null) {
+            params = (List<String>) queryObj.get("params");
+        }
+
+        if(params == null || queryStr == "") {
+            return 0L;
+        }
+
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        Long size = (Long) session.createQuery("SELECT COUNT(*) FROM Product", Long.class).uniqueResult();
+
+        Query<Long> query = session.createQuery(queryStr, Long.class);
+        for(int i=0; i<params.size(); i++) {
+            query.setParameter(i+1,params.get(i));
+        }
+        Long size = query.uniqueResult();
+
         session.getTransaction().commit();
         session.close();
 

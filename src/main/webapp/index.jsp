@@ -53,7 +53,6 @@
 </head>
 <body>
 	<p>Test</p>
-	<a href="browse-products">Browse products</a>
 	<a href="mailTest.jsp">TEST MAIL</a>
 	<div class="form-check form-switch">
 		<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">

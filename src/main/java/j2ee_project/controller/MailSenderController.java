@@ -27,11 +27,25 @@ import org.json.JSONTokener;
 public class MailSenderController extends HttpServlet
 {
     /**
+     * Redirect to the sender of this request and set an error message since GET queries aren't accepted by this servlet
+     * @param request Request object received by the servlet
+     * @param response Response to be sent
+     * @throws ServletException If the servlet encountered difficulty at some point
+     * @throws IOException If an I/O operation has failed or is interrupted
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        String URLRedirect = getServletContext().getContextPath();
+        URLRedirect += "error=postNotSupported";
+        response.sendRedirect(URLRedirect);
+    }
+
+    /**
      * Send a mail with the parameters given in the request object. An error is sent to the sender in the request object if the mail could not be sent
      * @param request Request object received by the servlet
      * @param response Response to be sent
-     * @throws ServletException If the request for the POST could not be handled
-     * @throws IOException If an input or output error is detected when the servlet handles the POST request
+     * @throws ServletException If the servlet encountered difficulty at some point
+     * @throws IOException If an I/O operation has failed or is interrupted
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {

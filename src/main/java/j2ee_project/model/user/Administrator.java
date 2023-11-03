@@ -2,44 +2,20 @@ package j2ee_project.model.user;
 
 import jakarta.persistence.*;
 
-import java.util.Objects;
-
 @Entity
-public class Administrator {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id", nullable = false)
-    private int id;
-    @Basic
-    @Column(name = "idUser", nullable = true)
-    private Integer idUser;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Integer getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(Integer idUser) {
-        this.idUser = idUser;
-    }
+@PrimaryKeyJoinColumn(name = "idModerator")
+public class Administrator extends Moderator{
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Administrator that = (Administrator) o;
-        return id == that.id && Objects.equals(idUser, that.idUser);
+
+        Administrator administrator = (Administrator) o;
+
+        if (this.getId() != administrator.getId()) return false;
+
+        return true;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, idUser);
-    }
 }

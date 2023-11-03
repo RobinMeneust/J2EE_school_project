@@ -14,6 +14,7 @@
     <jsp:include page="../../include.jsp" />
 </head>
 <body>
+<jsp:include page="../../layout/header.jsp" />
 <%
     Product product = (Product) request.getAttribute("product");
 %>
@@ -28,5 +29,6 @@
             <c:out value="${product.getDescription()}" />
         </p>
 </div>
+<jsp:include page="../../layout/footer.jsp" />
 </body>
 </html>

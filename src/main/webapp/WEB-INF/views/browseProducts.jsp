@@ -17,6 +17,7 @@
     <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/tcrs-generated-labels.min.js"></script>
 </head>
 <body>
+<jsp:include page="../../layout/header.jsp" />
 <%
     List<Product> products = (List<Product>) request.getAttribute("products");
     if(products == null) {
@@ -168,5 +169,6 @@
         </ul>
     </nav>
 </div>
+<jsp:include page="../../layout/footer.jsp" />
 </body>
 </html>

@@ -30,7 +30,7 @@
             <property name="jakarta.persistence.jdbc.user"   value="j2ee_user" />
             <property name="jakarta.persistence.jdbc.password" value="j2ee_password" />
 
-            <property name="jakarta.persistence.lock.timeout" value="100"/>
+            <property name="jakarta.persistence.lock.timeout" value="500"/>
             <property name="jakarta.persistence.query.timeout" value="100"/>
 
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />

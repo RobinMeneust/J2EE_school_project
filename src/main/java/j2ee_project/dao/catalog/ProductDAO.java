@@ -1,4 +1,4 @@
-package j2ee_project.dao.product;
+package j2ee_project.dao.catalog;
 
 import j2ee_project.dao.HibernateUtil;
 import j2ee_project.model.catalog.Product;

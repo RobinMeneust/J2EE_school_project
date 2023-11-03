@@ -1,6 +1,6 @@
 package j2ee_project.controller.catalog;
 
-import j2ee_project.dao.product.ProductDAO;
+import j2ee_project.dao.catalog.ProductDAO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,9 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * This class is a servlet used to browse products. It's a controller in the MVC architecture of this project.

@@ -18,15 +18,24 @@
     Product product = (Product) request.getAttribute("product");
 %>
 
+<c:set var="product" value="<%=product%>"/>
+
 <div class="container mt-1 px-4">
-        <img style="width: 390px; height: 250px; object-fit: cover;" alt="product_img" src="<c:out value="${product.getImageUrl()}" />">
-        <div>
-            <span class="font-weight-bold"><c:out value="${product.getName()}" /></span>
-            <span class="font-weight-bold">$<c:out value="${product.getUnitPrice()}" /></span>
-        </div>
+    <img style="width: 390px; height: 250px; object-fit: cover;" alt="product_img" src="<c:out value="${product.getImageUrl()}" />">
+    <div>
+        <span class="font-weight-bold"><c:out value="${product.getName()}" /></span>
+        <span class="font-weight-bold">$<c:out value="${product.getUnitPrice()}" /></span>
+    </div>
+    <p>
+        <c:out value="${product.getDescription()}" />
+    </p>
+    <a class="btn btn-primary" href="add-to-cart?id=${product.getId()}" role="button">Add to cart</a>
+
+    <c:if test="${isAlreadyInCart}">
         <p>
-            <c:out value="${product.getDescription()}" />
+            This product is in your cart
         </p>
+    </c:if>
 </div>
 </body>
 </html>

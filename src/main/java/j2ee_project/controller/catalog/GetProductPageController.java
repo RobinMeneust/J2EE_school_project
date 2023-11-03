@@ -1,6 +1,6 @@
 package j2ee_project.controller.catalog;
 
-import j2ee_project.dao.product.ProductDAO;
+import j2ee_project.dao.catalog.ProductDAO;
 import j2ee_project.model.catalog.Product;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;

@@ -2,7 +2,7 @@ package j2ee_project.model.loyalty;
 
 import jakarta.persistence.*;
 
-import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class LoyaltyProgram {
@@ -11,11 +11,10 @@ public class LoyaltyProgram {
     @Column(name = "id", nullable = false)
     private int id;
     @Basic
-    @Column(name = "durationNbDays", nullable = true)
-    private Integer durationNbDays;
-    @Basic
-    @Column(name = "idLoyaltyAccount", nullable = true)
-    private Integer idLoyaltyAccount;
+    @Column(name = "durationNbDays", nullable = false)
+    private int durationNbDays;
+    @OneToMany(targetEntity = LoyaltyLevel.class, mappedBy = "loyaltyProgram")
+    private Set<LoyaltyLevel> loyaltyLevels;
 
     public int getId() {
         return id;
@@ -25,32 +24,39 @@ public class LoyaltyProgram {
         this.id = id;
     }
 
-    public Integer getDurationNbDays() {
+    public int getDurationNbDays() {
         return durationNbDays;
     }
 
-    public void setDurationNbDays(Integer durationNbDays) {
+    public void setDurationNbDays(int durationNbDays) {
         this.durationNbDays = durationNbDays;
-    }
-
-    public Integer getIdLoyaltyAccount() {
-        return idLoyaltyAccount;
-    }
-
-    public void setIdLoyaltyAccount(Integer idLoyaltyAccount) {
-        this.idLoyaltyAccount = idLoyaltyAccount;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         LoyaltyProgram that = (LoyaltyProgram) o;
-        return id == that.id && Objects.equals(durationNbDays, that.durationNbDays) && Objects.equals(idLoyaltyAccount, that.idLoyaltyAccount);
+
+        if (id != that.id) return false;
+        if (durationNbDays != that.durationNbDays) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, durationNbDays, idLoyaltyAccount);
+        int result = id;
+        result = 31 * result + durationNbDays;
+        return result;
+    }
+
+    public Set<LoyaltyLevel> getLoyaltyLevels() {
+        return loyaltyLevels;
+    }
+
+    public void setLoyaltyLevels(Set<LoyaltyLevel> loyaltyLevels) {
+        this.loyaltyLevels = loyaltyLevels;
     }
 }

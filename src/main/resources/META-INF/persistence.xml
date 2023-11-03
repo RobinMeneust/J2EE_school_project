@@ -5,21 +5,23 @@
              https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
 
     <persistence-unit name="jpa-hibernate-mysql">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>j2ee_project.model.Address</class>
+        <class>j2ee_project.model.Discount</class>
+        <class>j2ee_project.model.Mail</class>
         <class>j2ee_project.model.user.Administrator</class>
+        <class>j2ee_project.model.user.Customer</class>
+        <class>j2ee_project.model.user.User</class>
+        <class>j2ee_project.model.user.Moderator</class>
         <class>j2ee_project.model.order.Cart</class>
         <class>j2ee_project.model.order.CartItem</class>
+        <class>j2ee_project.model.order.Orders</class>
+        <class>j2ee_project.model.order.ShippingMethod</class>
         <class>j2ee_project.model.catalog.Category</class>
-        <class>j2ee_project.model.user.Customer</class>
-        <class>j2ee_project.model.Discount</class>
+        <class>j2ee_project.model.catalog.Product</class>
         <class>j2ee_project.model.loyalty.LoyaltyAccount</class>
         <class>j2ee_project.model.loyalty.LoyaltyLevel</class>
         <class>j2ee_project.model.loyalty.LoyaltyProgram</class>
-        <class>j2ee_project.model.order.Orders</class>
-        <class>j2ee_project.model.catalog.Product</class>
-        <class>j2ee_project.model.order.ShippingMethod</class>
-        <class>j2ee_project.model.user.User</class>
-        <class>j2ee_project.model.Mail</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
             <property name="jakarta.persistence.jdbc.url"    value="jdbc:mysql://db:3306/j2ee_project_db" />
@@ -31,8 +33,6 @@
             <property name="jakarta.persistence.query.timeout" value="100"/>
 
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
-            <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
         </properties>
     </persistence-unit>
 </persistence>

@@ -1,7 +1,13 @@
 window.addEventListener("load", function() {
-    if(document.documentElement.getAttribute('data-bs-theme') == "dark") {
+    let isDarkModeOn = localStorage.getItem("isDarkModeOn");
+
+    isDarkModeOn = isDarkModeOn != null && isDarkModeOn == "true";
+
+    if(isDarkModeOn) {
+        document.documentElement.setAttribute('data-bs-theme', "dark");
         document.getElementById('dark-mode-button').checked = true;
     } else {
+        document.documentElement.setAttribute('data-bs-theme', "light");
         document.getElementById('dark-mode-button').checked = false;
     }
 });
@@ -12,7 +18,9 @@ function switchTheme() {
         return;
     } else if (darkModeButton.checked) {
         document.documentElement.setAttribute('data-bs-theme','dark');
+        localStorage.setItem("isDarkModeOn", "true");
     } else {
         document.documentElement.setAttribute('data-bs-theme', 'light');
+        localStorage.setItem("isDarkModeOn", "false");
     }
 }

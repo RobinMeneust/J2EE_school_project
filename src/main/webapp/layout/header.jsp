@@ -6,31 +6,31 @@
   To change this template use File | Settings | File Templates.
 --%>
 
-<header class="p-3 mb-3 border-bottom">
-    <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <a href="/" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
-                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
-            </a>
-
-            <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
-                <li>
-                    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-                        <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-                    </form>
-                </li>
-                <li>
-                    <span class="material-symbols-outlined text-black">shopping_basket</span>
-                </li>
-                <li>
-                    <a href="#" class="nav-link text-black">
-                        <span class="material-symbols-outlined">account_circle</span>
-                    </a>
-                </li>
-                <li>
-                    DARK_MODE_SWITCH_BUTTON
-                </li>
-            </ul>
-        </div>
-    </div>
+<header style="background-color: #9C36B5;" class="py-1 px-5 mb-3 border-bottom">
+    <nav class="navbar navbar-light navbar-expand-lg row">
+        <a href="${pageContext.request.contextPath}/index.jsp" class="navbar-brand col-2" title="Home">
+            <img class="d-inline-block align-top" style="height:80px; width:80px;" src="${pageContext.request.contextPath}/img/logo_boarder_games.png" alt="logo_boarder_games">
+        </a>
+        <form class="form-inline my-2 my-lg-0 col-4 mx-5" action="browse-products" method="get">
+            <input id="name" name="name" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        </form>
+        <ul class="navbar-nav mr-auto d-flex justify-content-end col">
+            <li class="nav-item mx-2" title="Cart">
+                <a href="#" class="nav-link">
+                    <span style="font-size:60px" class="material-symbols-outlined text-white">shopping_cart</span>
+                </a>
+            </li>
+            <li class="nav-item mx-2" title="Account">
+                <a href="#" class="nav-link">
+                    <span style="font-size:60px" class="material-symbols-outlined text-white">account_circle</span>
+                </a>
+            </li>
+            <li class="nav-item mx-2" title="HomeDark / Light mode">
+                <input type="checkbox" id="dark-mode-button" onclick="switchTheme();">
+                <label for="dark-mode-button" class="toggle-dark-mode mt-3">
+                    <span class="text-center toggle-dark-mode-button material-symbols-outlined">dark_mode</span>
+                </label>
+            </li>
+        </ul>
+    </nav>
 </header>

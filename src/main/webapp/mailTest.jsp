@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<html>
+<html data-bs-theme="light">
 <head>
     <title>Mail test</title>
     <script>

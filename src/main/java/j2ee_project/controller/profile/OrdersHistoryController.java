@@ -1,4 +1,4 @@
-package j2ee_project.controller;
+package j2ee_project.controller.profile;
 
 import j2ee_project.dao.OrdersDao;
 import jakarta.servlet.RequestDispatcher;
@@ -20,7 +20,7 @@ public class OrdersHistoryController extends HttpServlet {
         System.out.println("Size:"+OrdersDao.getOrders(Integer.parseInt(idCustomer)).size());
 
         try{
-            RequestDispatcher view = request.getRequestDispatcher("profile.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp");
             view.forward(request,response);
         }catch (Exception err){
             System.out.println(err.getMessage());

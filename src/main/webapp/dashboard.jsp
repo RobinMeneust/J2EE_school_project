@@ -1,14 +1,12 @@
 <%@ page import="java.util.List" %>
-<%@ page import="j2ee_project.dao.user.CustomerDAO" %>
 <%@ page import="j2ee_project.model.user.Customer" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <meta http-equiv="Content-Type" name="viewport" content="width=device-width, initial-scale=1, text/html, charset=UTF-8">
-    <jsp:include page="include.jsp" />
     <title>Dashboard</title>
+    <jsp:include page="include.jsp"/>
     <script type="application/javascript">
         function expandCatalogue(button){
             if (button.getAttribute('id') === 'nav-catalogue-tab'){
@@ -19,16 +17,13 @@
             }
         }
     </script>
-    <style>
-        .hidden{
-            display:none;
-        }
-    </style>
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-    <div class="container-fluid" style="width: 100%;max-width: 100%;">
+    <jsp:include page="layout/header.jsp" />
+    <div class="container-fluid">
         <div class="d-flex ">
-            <nav style="width: 20%;" class="col-lg-2">
+            <nav class="col-lg-2">
                 <div class="nav nav-tabs flex-column" id="nav-tab" role="tablist">
                     <button class="nav-link active" id="nav-customers-tab" data-bs-toggle="tab" data-bs-target="#nav-customers" type="button" role="tab" aria-controls="nav-customers" aria-selected="true">Customers</button>
                     <button class="nav-link" id="nav-moderators-tab" data-bs-toggle="tab" data-bs-target="#nav-moderators" type="button" role="tab" aria-controls="nav-moderators" aria-selected="false">Moderators</button>
@@ -38,15 +33,16 @@
                     <button class="nav-link" id="nav-discounts-tab" data-bs-toggle="tab" data-bs-target="#nav-discounts" type="button" role="tab" aria-controls="nav-discounts" aria-selected="false">Discounts</button>
                 </div>
             </nav>
-            <div class="tab-content col-lg-10" id="nav-tabContent" style="width: 80%">
+            <div class="tab-content col-lg-10" id="nav-tabContent">
                 <div class="tab-pane fade show active" id="nav-customers" role="tabpanel" aria-labelledby="nav-customers-tab">
+                    <a href="addCustomer.jsp" id="add-customer">Add Customer</a>
                     <%
                         List<Customer> customers = (List<Customer>) request.getAttribute("customers");
                         if(customers == null){
                             customers = new ArrayList<>();
                         }
                     %>
-                    <table class="table table-striped table-hover" id="customers-table" style="width: 100%" data-filter-control-visible="false">
+                    <table class="table table-striped table-hover" id="customers-table" data-filter-control-visible="false">
                         <thead>
                             <tr>
                                 <th>Last Name</th>
@@ -62,46 +58,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>SAELEN</td>
-                                <td>Jérémy</td>
-                                <td>15 Boulevard du Port</td>
-                                <td>95000</td>
-                                <td>Cergy</td>
-                                <td>France</td>
-                                <td>saelenjere@cy-tech.fr</td>
-                                <td>07 83 02 28 22</td>
-                                <td>
-                                    <form action="editCustomerDashboard.jsp" method="POST">
-                                        <input type="hidden" name="last-name" value="SAELEN">
-                                        <input type="hidden" name="first-name" value="Jérémy">
-                                        <input type="hidden" name="street" value="15 Boulevard du Port">
-                                        <input type="hidden" name="postal-code" value="95000">
-                                        <input type="hidden" name="city" value="Cergy">
-                                        <input type="hidden" name="country" value="France">
-                                        <input type="hidden" name="email" value="saelenjere@cy-tech.fr">
-                                        <input type="hidden" name="phone-number" value="07 83 02 28 22">
-                                        <button type="submit" style="border: none; background-color: transparent">
-                                            <img src="img/pencil.svg" alt="Pencil">
-                                        </button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <form action="" method="POST">
-                                        <input type="hidden" name="last-name" value="SAELEN">
-                                        <input type="hidden" name="first-name" value="Jérémy">
-                                        <input type="hidden" name="street" value="15 Boulevard du Port">
-                                        <input type="hidden" name="postal-code" value="95000">
-                                        <input type="hidden" name="city" value="Cergy">
-                                        <input type="hidden" name="country" value="France">
-                                        <input type="hidden" name="email" value="saelenjere@cy-tech.fr">
-                                        <input type="hidden" name="phone-number" value="07 83 02 28 22">
-                                        <button type="submit" style="border: none; background-color: transparent">
-                                            <img src="img/trash.svg" alt="Trash can">
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
                             <c:forEach var = "customer" items = "${customers}">
                                 <tr>
                                     <td><c:out value = "${customer.getLastName()}"/></td>
@@ -113,14 +69,14 @@
                                     <td><c:out value = "${customer.getEmail()}"/></td>
                                     <td><c:out value = "${customer.getPhoneNumber()}"/></td>
                                     <td class="border-bottom-0">
-                                        <button style="border: none; background-color: transparent">
+                                        <a href="" class="pencil">
                                             <img src="img/pencil.svg" alt="Pencil">
-                                        </button>
+                                        </a>
                                     </td>
                                     <td class="border-bottom-0">
-                                        <button style="border: none; background-color: transparent">
+                                        <a href="" class="trash-can">
                                             <img src="img/trash.svg" alt="Trash can">
-                                        </button>
+                                        </a>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -137,5 +93,6 @@
             </div>
         </div>
     </div>
+    <jsp:include page="layout/footer.jsp" />
 </body>
 </html>

@@ -7,13 +7,22 @@ import org.hibernate.Session;
 import java.util.List;
 
 public class CustomerDAO {
-    public static List<Customer> getCustomer(){
+    public static List<Customer> getCustomers(){
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        List<Customer> customers = session.createQuery("from Customer" /*join User U on Customer.idUser = U.id join Address A on Customer.idAddress = A.id"*/,Customer.class).getResultList();
+        List<Customer> customers = session.createQuery("FROM Customer",Customer.class).getResultList();
         session.getTransaction().commit();
         session.close();
         return customers;
+    }
+
+    public static Customer getCustomer(int customerId){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        Customer customer = session.createQuery("FROM Customer WHERE id=:customerId",Customer.class).setParameter("customerId",customerId).getSingleResult();
+        session.getTransaction().commit();
+        session.close();
+        return customer;
     }
 
     public static void deleteCustomer(Customer customer){

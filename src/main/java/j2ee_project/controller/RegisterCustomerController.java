@@ -1,5 +1,6 @@
 package j2ee_project.controller;
 
+import j2ee_project.dao.user.UserDAO;
 import j2ee_project.dto.CustomerDTO;
 import j2ee_project.dto.UserDTO;
 import j2ee_project.model.user.Customer;
@@ -33,13 +34,16 @@ public class RegisterCustomerController extends HttpServlet {
         );
         Set<ConstraintViolation<UserDTO>> inputErrors = AuthService.userDataValidation(customer);
         if(inputErrors.isEmpty()){
-            try {
-                User user = AuthService.registerCustomer(customer);
-                HttpSession session = request.getSession();
-                session.setAttribute("user", user);
-            }catch (NoSuchAlgorithmException | InvalidKeySpecException exception){
+            if (!UserDAO.emailIsInDb(customer.getEmail())){
+                try {
+                    User user = AuthService.registerCustomer(customer);
+                    HttpSession session = request.getSession();
+                    session.setAttribute("user", user);
+                }catch (NoSuchAlgorithmException | InvalidKeySpecException exception){
 
+                }
             }
+
         }
 
 

@@ -2,6 +2,7 @@ package j2ee_project.dao.user;
 
 import j2ee_project.dao.HibernateUtil;
 import j2ee_project.model.user.User;
+import jakarta.persistence.Query;
 import org.hibernate.Session;
 
 public class UserDAO {
@@ -20,6 +21,16 @@ public class UserDAO {
         session.save(user);
         session.getTransaction().commit();
         session.close();
+    }
+
+    public static boolean emailIsInDb(String email){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        int countEmail = session.createNativeQuery("SELECT COUNT(*) from User WHERE email=:email", Integer.class)
+                .uniqueResult();
+        session.getTransaction().commit();
+        session.close();
+        return countEmail > 0;
     }
 
 }

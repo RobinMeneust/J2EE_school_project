@@ -7,7 +7,7 @@ import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
-@WebServlet("browse-customers")
+@WebServlet("/browse-customers")
 public class BrowseCustomersController extends HttpServlet {
 
     @Override

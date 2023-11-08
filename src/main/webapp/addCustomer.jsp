@@ -10,12 +10,16 @@
 </head>
 <body>
     <h2>Add Customer</h2>
-    <form action="add-customer" method="get">
+    <form action="add-customer" method="post">
         <div id="name">
             <label for="last-name">Last Name :</label>
             <input type="text" id="last-name" name="last-name" value="">
             <label for="first-name">First Name :</label>
             <input type="text" id="first-name" name="first-name" value="">
+        </div>
+        <div>
+            <label for="password">Password :</label>
+            <input type="text" id="password" name="password" value="">
         </div>
         <div id="address">
             <label for="street">Street</label>

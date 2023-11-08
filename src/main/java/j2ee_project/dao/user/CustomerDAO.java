@@ -25,9 +25,10 @@ public class CustomerDAO {
         return customer;
     }
 
-    public static void deleteCustomer(Customer customer){
+    public static void deleteCustomer(int customerId){
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
+        Customer customer = session.createQuery("FROM Customer WHERE id=:customerId",Customer.class).setParameter("customerId",customerId).getSingleResult();
         session.remove(customer);
         session.getTransaction().commit();
         session.close();

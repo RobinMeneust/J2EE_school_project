@@ -19,7 +19,7 @@ div.tab-content{
     width: 80%;
 }
 
-a#add-customer{
+a.add-data{
     text-decoration: none;
     color: black;
     border:1px solid black;

@@ -1,7 +1,10 @@
 <%@ page import="java.util.List" %>
 <%@ page import="j2ee_project.model.user.Customer" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="j2ee_project.model.catalog.Product" %>
+<%@ page import="j2ee_project.model.user.Moderator" %>
+<%@ page import="j2ee_project.model.catalog.Category" %>
+<%@ page import="j2ee_project.model.Discount" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
@@ -17,7 +20,7 @@
             }
         }
     </script>
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
 </head>
 <body>
     <jsp:include page="layout/header.jsp" />
@@ -35,7 +38,7 @@
             </nav>
             <div class="tab-content col-lg-10" id="nav-tabContent">
                 <div class="tab-pane fade show active" id="nav-customers" role="tabpanel" aria-labelledby="nav-customers-tab">
-                    <a href="addCustomer.jsp" id="add-customer">Add Customer</a>
+                    <a href="add-customer" class="add-data" id="add-customer">Add Customer</a>
                     <%
                         List<Customer> customers = (List<Customer>) request.getAttribute("customers");
                         if(customers == null){
@@ -70,12 +73,12 @@
                                     <td><c:out value = "${customer.getPhoneNumber()}"/></td>
                                     <td class="border-bottom-0">
                                         <a href="" class="pencil">
-                                            <img src="img/pencil.svg" alt="Pencil">
+                                            <img src="${pageContext.request.contextPath}/img/pencil.svg" alt="Pencil">
                                         </a>
                                     </td>
                                     <td class="border-bottom-0">
-                                        <a href="" class="trash-can">
-                                            <img src="img/trash.svg" alt="Trash can">
+                                        <a href="delete-customer?id=${customer.getId()}" class="trash-can">
+                                            <img src="${pageContext.request.contextPath}/img/trash.svg" alt="Trash can">
                                         </a>
                                     </td>
                                 </tr>
@@ -86,10 +89,177 @@
                         new DataTable('#customers-table');
                     </script>
                 </div>
-                <div class="tab-pane fade" id="nav-moderators" role="tabpanel" aria-labelledby="nav-moderators-tab">Moderators</div>
-                <div class="tab-pane fade" id="nav-products" role="tabpanel" aria-labelledby="nav-products-tab">Products</div>
-                <div class="tab-pane fade" id="nav-categories" role="tabpanel" aria-labelledby="nav-discounts-tab">Categories</div>
-                <div class="tab-pane fade" id="nav-discounts" role="tabpanel" aria-labelledby="nav-discounts-tab">Discounts</div>
+                <div class="tab-pane fade" id="nav-moderators" role="tabpanel" aria-labelledby="nav-moderators-tab">
+                    <a href="add-moderator" class="add-data" id="add-moderator">Add Moderator</a>
+                    <%
+                        List<Moderator> moderators = (List<Moderator>) request.getAttribute("moderators");
+                        if(moderators == null) {
+                            moderators = new ArrayList<>();
+                        }
+                    %>
+                    <table class="table table-striped table-hover" id="moderators-table" data-filter-control-visible="false">
+                        <thead>
+                        <tr>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th data-sortable="false"></th>
+                            <th data-sortable="false"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach var = "moderator" items = "${moderators}">
+                            <tr>
+                                <td><c:out value = "${moderator.getLastName()}"/></td>
+                                <td><c:out value = "${moderator.getFirstName()}"/></td>
+                                <td><c:out value = "${moderator.getEmail()}"/></td>
+                                <td><c:out value = "${moderator.getPhoneNumber()}"/></td>
+                                <td class="border-bottom-0">
+                                    <a href="" class="pencil">
+                                        <img src="${pageContext.request.contextPath}/img/pencil.svg" alt="Pencil">
+                                    </a>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <a href="delete-moderator?id=${moderator.getId()}" class="trash-can">
+                                        <img src="${pageContext.request.contextPath}/img/trash.svg" alt="Trash can">
+                                    </a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                    <script>
+                        new DataTable('#moderators-table');
+                    </script>
+                </div>
+                <div class="tab-pane fade" id="nav-products" role="tabpanel" aria-labelledby="nav-products-tab">
+                    <a href="add-product" class="add-data" id="add-product">Add Product</a>
+                    <%
+                        List<Product> products = (List<Product>) request.getAttribute("products");
+                        if(products == null){
+                            products = new ArrayList<>();
+                        }
+                    %>
+                    <table class="table table-striped table-hover" id="products-table" data-filter-control-visible="false">
+                        <thead>
+                        <tr>
+                            <th data-sortable="false"></th>
+                            <th data-sortable="false"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach var = "product" items = "${products}">
+                            <tr>
+                                <td class="border-bottom-0">
+                                    <a href="" class="pencil">
+                                        <img src="${pageContext.request.contextPath}/img/pencil.svg" alt="Pencil">
+                                    </a>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <a href="delete-product?id=${product.getId()}" class="trash-can">
+                                        <img src="${pageContext.request.contextPath}/img/trash.svg" alt="Trash can">
+                                    </a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                    <script>
+                        new DataTable('#products-table');
+                    </script>
+                </div>
+                <div class="tab-pane fade" id="nav-categories" role="tabpanel" aria-labelledby="nav-discounts-tab">
+                    <a href="add-category" class="add-data" id="add-category">Add Category</a>
+                    <%
+                        List<Category> categories = (List<Category>) request.getAttribute("categories");
+                        if(categories == null){
+                            categories = new ArrayList<>();
+                        }
+                    %>
+                    <table class="table table-striped table-hover" id="categories-table" data-filter-control-visible="false">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Discount</th>
+                            <th data-sortable="false"></th>
+                            <th data-sortable="false"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach var = "category" items = "${categories}">
+                            <tr>
+                                <td><c:out value = "${category.getName()}"/></td>
+                                <td><c:out value = "${category.getDescription()}"/></td>
+
+                                <td>
+                                    <c:if test="${category.getDiscount()!=null}">
+                                        <c:out value = "${category.getDiscount().getName()}"/>
+                                    </c:if>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <a href="" class="pencil">
+                                        <img src="${pageContext.request.contextPath}/img/pencil.svg" alt="Pencil">
+                                    </a>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <a href="delete-category?id=${category.getId()}" class="trash-can">
+                                        <img src="${pageContext.request.contextPath}/img/trash.svg" alt="Trash can">
+                                    </a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                    <script>
+                        new DataTable('#categories-table');
+                    </script>
+                </div>
+                <div class="tab-pane fade" id="nav-discounts" role="tabpanel" aria-labelledby="nav-discounts-tab">
+                    <a href="add-discount" class="add-data" id="add-discount">Add Discount</a>
+                    <%
+                        List<Discount> discounts = (List<Discount>) request.getAttribute("discounts");
+                        if(discounts == null){
+                            discounts = new ArrayList<>();
+                        }
+                    %>
+                    <table class="table table-striped table-hover" id="categories-table" data-filter-control-visible="false">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Discount Percentage</th>
+                            <th data-sortable="false"></th>
+                            <th data-sortable="false"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach var = "discount" items = "${discounts}">
+                            <tr>
+                                <td><c:out value = "${discount.getName()}"/></td>
+                                <td><c:out value = "${discount.getStartDate()}"/></td>
+                                <td><c:out value = "${discount.getEndDate()}"/></td>
+                                <td><c:out value = "${discount.getDiscountPercentage()}"/></td>
+                                <td class="border-bottom-0">
+                                    <a href="" class="pencil">
+                                        <img src="${pageContext.request.contextPath}/img/pencil.svg" alt="Pencil">
+                                    </a>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <a href="delete-discount?id=${discount.getId()}" class="trash-can">
+                                        <img src="${pageContext.request.contextPath}/img/trash.svg" alt="Trash can">
+                                    </a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                    <script>
+                        new DataTable('#discount-table');
+                    </script>
+                </div>
             </div>
         </div>
     </div>

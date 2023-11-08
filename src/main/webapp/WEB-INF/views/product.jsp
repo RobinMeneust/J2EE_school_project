@@ -20,6 +20,26 @@
 
 <c:set var="product" value="<%=product%>"/>
 
+<script>
+    function addToCart(productId) {
+        if(productId != null && !isNaN(productId) && productId>0) {
+            const url = "add-to-cart?id="+productId;
+
+            fetch(url, {
+                method: 'GET'
+            }).then((response) => {
+                if(response.ok) {
+                    $("#success-alert-box").removeClass("invisible").addClass("visible");
+                    $("#failure-alert-box").removeClass("visible").addClass("invisible");
+                } else {
+                    $("#failure-alert-box").removeClass("invisible").addClass("visible");
+                    $("#success-alert-box").removeClass("visible").addClass("invisible");
+                }
+            });
+        }
+    }
+</script>
+
 <div class="container mt-1 px-4">
     <img style="width: 390px; height: 250px; object-fit: cover;" alt="product_img" src="<c:out value="${product.getImageUrl()}" />">
     <div>
@@ -29,13 +49,9 @@
     <p>
         <c:out value="${product.getDescription()}" />
     </p>
-    <a class="btn btn-primary" href="add-to-cart?id=${product.getId()}" role="button">Add to cart</a>
-
-    <c:if test="${isAlreadyInCart}">
-        <p>
-            This product is in your cart
-        </p>
-    </c:if>
+    <button onclick="addToCart(${product.getId()})" class="btn btn-primary">Add to cart</button>
+    <div id="success-alert-box" class="alert alert-success invisible" role="alert">Added</div>
+    <div id="failure-alert-box" class="alert alert-failure invisible" role="alert">Failure</div>
 </div>
 </body>
 </html>

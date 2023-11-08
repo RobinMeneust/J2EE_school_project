@@ -16,11 +16,11 @@ import java.io.IOException;
  *
  * @author Robin MENEUST
  */
-@WebServlet("/get-product-page")
-public class GetProductPageController extends HttpServlet
+@WebServlet("/cart")
+public class GetCartPageController extends HttpServlet
 {
     /**
-     * Get a page giving information a product by giving its ID
+     * Get a page to edit the current customer cart (it can be either the session cart if the user is not logged in, or the authenticated customer cart if he is)
      * @param request Request object received by the servlet
      * @param response Response to be sent
      * @throws ServletException If the request for the GET could not be handled
@@ -28,23 +28,8 @@ public class GetProductPageController extends HttpServlet
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        String productIdStr = request.getParameter("id");
-        int productId = -1;
-
-        if(productIdStr != null && !productIdStr.trim().isEmpty()) {
-            try {
-                productId = Integer.parseInt(productIdStr);
-            } catch(Exception ignore) {}
-        }
-
-        if(productId<=0) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Product ID must be positive");
-        }
-
         try {
-            Product product = ProductDAO.getProduct(productId);
-            request.setAttribute("product", product);
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/product.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/fullCart.jsp");
             view.forward(request, response);
         } catch(Exception err) {
             // The forward didn't work

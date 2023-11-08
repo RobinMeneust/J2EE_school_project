@@ -121,4 +121,9 @@ public class Product {
     public int hashCode() {
         return Objects.hash(id, name, stockQuantity, unitPrice, description, imageUrl, weight, idCategory);
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

@@ -19,7 +19,7 @@ import java.io.IOException;
 public class BrowseProductsController extends HttpServlet
 {
     /**
-     * Send a mail with the parameters given in the request object. An error is sent to the sender in the request object if the mail could not be sent
+     * Get a page to browse the list of products. Manages pagination and search filters
      * @param request Request object received by the servlet
      * @param response Response to be sent
      * @throws ServletException If the request for the GET could not be handled

@@ -23,4 +23,17 @@ public class CartDAO {
         session.getTransaction().commit();
         session.close();
     }
+
+    public static void editItemQuantity(CartItem cartItem, int quantity) {
+        // TODO
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+
+        session.evict(cartItem);
+        cartItem.setQuantity(quantity);
+        session.merge(cartItem);
+
+        session.getTransaction().commit();
+        session.close();
+    }
 }

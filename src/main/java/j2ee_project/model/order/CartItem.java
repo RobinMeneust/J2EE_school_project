@@ -46,7 +46,7 @@ public class CartItem {
         CartItem cartItem = (CartItem) o;
 
         if (id != cartItem.id) return false;
-        if (quantity != cartItem.quantity) return false;
+        if (!product.equals(cartItem.product)) return false;
 
         return true;
     }
@@ -64,5 +64,10 @@ public class CartItem {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    @Override
+    public String toString() {
+        return getProduct().toString() + " Qty: " + getQuantity();
     }
 }

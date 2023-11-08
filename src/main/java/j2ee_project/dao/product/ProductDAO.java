@@ -111,6 +111,11 @@ public class ProductDAO {
         return products;
     }
 
+    public static List<Product> getProducts(){
+        int size = Math.toIntExact(ProductDAO.getSize());
+        return ProductDAO.getProducts(1,size,null,null,null,null);
+    }
+
     /**
      * Get a product from its ID
      * @param productId ID of the searched product
@@ -164,5 +169,9 @@ public class ProductDAO {
         session.close();
 
         return size;
+    }
+
+    public static Long getSize(){
+        return ProductDAO.getSize(null,null,null,null);
     }
 }

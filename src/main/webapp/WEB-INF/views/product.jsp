@@ -8,12 +8,14 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Product</title>
     <jsp:include page="../../include.jsp" />
 </head>
 <body>
+<jsp:include page="../../layout/header.jsp" />
 <%
     Product product = (Product) request.getAttribute("product");
 %>
@@ -61,5 +63,6 @@
     <div id="success-alert-box" class="alert alert-success invisible" role="alert">Added</div>
     <div id="failure-alert-box" class="alert alert-failure invisible" role="alert">Failure</div>
 </div>
+<jsp:include page="../../layout/footer.jsp" />
 </body>
 </html>

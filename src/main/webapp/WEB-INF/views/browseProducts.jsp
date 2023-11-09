@@ -9,6 +9,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Products</title>
@@ -17,6 +18,7 @@
     <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/tcrs-generated-labels.min.js"></script>
 </head>
 <body>
+<jsp:include page="../../layout/header.jsp" />
 <%
     List<Product> products = (List<Product>) request.getAttribute("products");
     if(products == null) {
@@ -168,5 +170,6 @@
         </ul>
     </nav>
 </div>
+<jsp:include page="../../layout/footer.jsp" />
 </body>
 </html>

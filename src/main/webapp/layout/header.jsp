@@ -16,7 +16,7 @@
         </form>
         <ul class="navbar-nav mr-auto d-flex justify-content-end col">
             <li class="nav-item mx-2" title="Cart">
-                <a href="#" class="nav-link">
+                <a href="cart" class="nav-link">
                     <span style="font-size:60px" class="material-symbols-outlined text-white">shopping_cart</span>
                 </a>
             </li>

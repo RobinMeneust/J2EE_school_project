@@ -14,7 +14,6 @@ public class MailDAO {
      * @param mail Mail object containing the mail data (addresses, body...)
      */
     public static void addMail(Mail mail) {
-        System.out.println(mail.getBody());
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         session.save(mail);

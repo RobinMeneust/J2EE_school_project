@@ -16,10 +16,9 @@
 <body>
 <div class="container mt-1 px-4">
     <c:set var="cart" value="${cf:getCart(sessionCart,null)}"/> <%-- change 'null' to a function to get the authenticated customer --%>
-
     <ul>
         <c:forEach var="item" items="${cart.getCartItems()}">
-            <li><c:out value="${item.getName()}"/></li>
+            <li><c:out value="${item.getProduct().getName()} Qty: ${item.getQuantity()}"/></li>
         </c:forEach>
     </ul>
 </div>

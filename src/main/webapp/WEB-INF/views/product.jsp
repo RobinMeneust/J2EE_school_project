@@ -29,6 +29,14 @@
                 method: 'GET'
             }).then((response) => {
                 if(response.ok) {
+                    response.json().then((data) => {
+                        if (data != null && "isAlreadyInCart" in data && data["isAlreadyInCart"]) {
+                            $("#success-alert-box").text("Already in your cart");
+                        } else {
+                            $("#success-alert-box").text("Added");
+                        }
+                    });
+
                     $("#success-alert-box").removeClass("invisible").addClass("visible");
                     $("#failure-alert-box").removeClass("visible").addClass("invisible");
                 } else {

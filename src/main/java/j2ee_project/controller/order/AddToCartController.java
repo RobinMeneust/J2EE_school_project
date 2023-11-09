@@ -16,9 +16,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 import j2ee_project.service.CartManager;
+import org.json.JSONObject;
 
 /**
  * This class is a servlet used to add items to the cart. It's a controller in the MVC architecture of this project.
@@ -36,6 +38,10 @@ public class AddToCartController extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        JSONObject responseObj = new JSONObject();
+
         // TODO : add search filters in the request params
         String idStr = request.getParameter("id");
         int id = -1;
@@ -65,15 +71,17 @@ public class AddToCartController extends HttpServlet {
             cart.setCartItems(cartItems);
         }
 
-
-        request.removeAttribute("isAlreadyInCart");
-
         CartItem newItem = new CartItem();
         newItem.setProduct(product);
         newItem.setQuantity(1);
 
         if(cartItems.contains(newItem)) {
             response.setStatus(HttpServletResponse.SC_OK);
+            PrintWriter out = response.getWriter();
+            responseObj = new JSONObject();
+            responseObj.put("isAlreadyInCart", true);
+            out.print(responseObj);
+            out.flush();
             return;
         }
 
@@ -86,5 +94,8 @@ public class AddToCartController extends HttpServlet {
             request.removeAttribute("sessionCart");
         }
         response.setStatus(HttpServletResponse.SC_OK);
+        PrintWriter out = response.getWriter();
+        out.print(responseObj); // empty JSON response
+        out.flush();
     }
 }

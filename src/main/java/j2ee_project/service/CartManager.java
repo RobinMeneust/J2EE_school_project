@@ -30,7 +30,7 @@ public class CartManager {
 	public static Cart getCart(Cart sessionCart, Customer customer) {
 		if(customer != null /* && AUTHENTICATED && IS IN DATABASE*/) {
 			return customer.getCart();
-		} else if(sessionCart != null && sessionCart.getId() > 0) {
+		} else if(sessionCart != null && sessionCart.getId() <= 0) {
 			// If it's not null and not associated to a customer
 			return sessionCart;
 		}

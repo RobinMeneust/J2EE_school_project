@@ -45,7 +45,7 @@ public class ProductDAO {
             } else {
                 isNotFirstFilter = true;
             }
-            queryStrPart2 += "p.category LIKE ?"+(listParams.size()+1);
+            queryStrPart2 += "c.name LIKE ?"+(listParams.size()+1);
             listParams.add("%"+category+"%");
         }
 
@@ -85,7 +85,7 @@ public class ProductDAO {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
 
-        HashMap<String,Object> queryObj = getQueryString("FROM Product AS p",name, category, minPrice, maxPrice);
+        HashMap<String,Object> queryObj = getQueryString("FROM Product AS p LEFT JOIN Category AS c ON p.idCategory = c.id",name, category, minPrice, maxPrice);
         String queryStr = "";
         if(queryObj.get("query") instanceof String) {
             queryStr = (String) queryObj.get("query");
@@ -150,7 +150,7 @@ public class ProductDAO {
      * @return Number of products
      */
     public static Long getSize(String name, String category, String minPrice, String maxPrice) {
-        HashMap<String,Object> queryObj = getQueryString("SELECT COUNT(*) FROM Product AS p", name, category, minPrice, maxPrice);
+        HashMap<String,Object> queryObj = getQueryString("SELECT COUNT(*) FROM Product AS p LEFT JOIN Category AS c ON p.idCategory = c.id", name, category, minPrice, maxPrice);
 
         String queryStr = "";
         if(queryObj.get("query") instanceof String) {

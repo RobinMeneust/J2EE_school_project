@@ -1,6 +1,7 @@
 package j2ee_project.dao.catalog;
 
 import j2ee_project.dao.HibernateUtil;
+import j2ee_project.model.catalog.FeaturedProduct;
 import j2ee_project.model.catalog.Product;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -127,6 +128,20 @@ public class ProductDAO {
     }
 
     /**
+     * Get the list of the featured products
+     * @return Featured products
+     */
+    public static List<FeaturedProduct> getFeaturedProducts() {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        List<FeaturedProduct> featuredProducts = session.createQuery("FROM FeaturedProduct", FeaturedProduct.class).getResultList();
+        session.getTransaction().commit();
+        session.close();
+
+        return featuredProducts;
+    }
+
+    /**
      * Get the total number of products
      * @param name The products' name must match with this name (it's case-insensitive, and it can be just a part of a searched word: e.g. 'Ch' will return 'chess' products)
      * @param category The products' category must match with it (exactly like the name filter)
@@ -165,4 +180,5 @@ public class ProductDAO {
 
         return size;
     }
+
 }

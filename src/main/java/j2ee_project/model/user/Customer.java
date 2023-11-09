@@ -11,7 +11,6 @@ import java.util.Set;
 @Entity
 @PrimaryKeyJoinColumn(name = "idUser")
 public class Customer extends User{
-
     @OneToOne(mappedBy = "customer")
     private Cart cart;
     @ManyToOne

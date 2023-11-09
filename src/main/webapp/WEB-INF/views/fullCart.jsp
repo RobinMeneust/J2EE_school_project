@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="cf" uri="../functions.tld"%>
+<%@ taglib prefix="cf" uri="/WEB-INF/functions.tld"%>
 <%--
   Created by IntelliJ IDEA.
   User: robin

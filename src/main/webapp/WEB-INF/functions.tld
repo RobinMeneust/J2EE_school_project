@@ -13,5 +13,15 @@
         <function-class>j2ee_project.service.CartManager</function-class>
         <function-signature>j2ee_project.model.order.Cart getCart(j2ee_project.model.order.Cart,j2ee_project.model.user.Customer)</function-signature>
     </function>
+    <function>
+        <name>getFeaturedProducts</name>
+        <function-class>j2ee_project.dao.catalog.ProductDAO</function-class>
+        <function-signature>java.util.List getFeaturedProducts()</function-signature>
+    </function>
+    <function>
+        <name>getCategories</name>
+        <function-class>j2ee_project.dao.catalog.CategoryDAO</function-class>
+        <function-signature>java.util.List getCategories()</function-signature>
+    </function>
 </taglib>
 

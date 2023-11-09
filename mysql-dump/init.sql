@@ -1,4 +1,5 @@
-DROP DATABASE j2ee_project_db;
+-- DROP DATABASE j2ee_project_db;
+
 CREATE DATABASE IF NOT EXISTS j2ee_project_db;
 USE j2ee_project_db;
 
@@ -94,6 +95,11 @@ CREATE TABLE IF NOT EXISTS Product (
     FOREIGN KEY (idCategory) REFERENCES Category(id),
     CONSTRAINT valid_unit_price CHECK(unitPrice >= 0),
     CONSTRAINT valid_stock_quantity CHECK(stockQuantity >= 0)
+);
+
+CREATE TABLE IF NOT EXISTS FeaturedProduct (
+    idProduct INT PRIMARY KEY,
+    FOREIGN KEY (idProduct) REFERENCES Product(id)
 );
 
 CREATE TABLE IF NOT EXISTS ShippingMethod (
@@ -250,3 +256,8 @@ INSERT INTO ShippingMethod(name, price, maxDaysTransit) VALUES('standard', 5, 10
 INSERT INTO Orders(total, date, orderStatus, idCustomer, idShippingMethod, idAddress) VALUES(30, STR_TO_DATE('30/10/2023', '%d/%m/%Y'), 'SHIPPED', 2, 1, 1);
 INSERT INTO CartItem(quantity, idOrder, idProduct) VALUES(2,1,1);
 
+INSERT INTO FeaturedProduct(idProduct) VALUES(1);
+INSERT INTO FeaturedProduct(idProduct) VALUES(2);
+INSERT INTO FeaturedProduct(idProduct) VALUES(3);
+INSERT INTO FeaturedProduct(idProduct) VALUES(4);
+INSERT INTO FeaturedProduct(idProduct) VALUES(5);

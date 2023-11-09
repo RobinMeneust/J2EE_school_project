@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * This class is a servlet used to browse products. It's a controller in the MVC architecture of this project.
+ * This class is a servlet used to get a product page from its ID. It's a controller in the MVC architecture of this project.
  *
  * @author Robin MENEUST
  */

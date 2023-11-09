@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

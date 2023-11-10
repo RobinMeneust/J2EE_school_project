@@ -57,7 +57,7 @@
 		<p>Test</p>
 		<a href="browse-products">Browse products</a>
 		<a href="mailTest.jsp">TEST MAIL</a>
-		<a href="browse-customers">Dashboard</a>
+		<a href="dashboard">Dashboard</a>
 		<div class="form-check form-switch">
 			<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
 			<label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>

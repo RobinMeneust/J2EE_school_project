@@ -5,6 +5,9 @@
 <%@ page import="j2ee_project.model.user.Moderator" %>
 <%@ page import="j2ee_project.model.catalog.Category" %>
 <%@ page import="j2ee_project.model.Discount" %>
+<%@ page import="j2ee_project.model.user.Permission" %>
+<%@ page import="java.util.Set" %>
+<%@ page import="org.hibernate.Hibernate" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
@@ -102,6 +105,7 @@
                         <tr>
                             <th>Last Name</th>
                             <th>First Name</th>
+                            <%--<th>Permissions</th>--%>
                             <th>Email</th>
                             <th>Phone Number</th>
                             <th data-sortable="false"></th>
@@ -113,6 +117,17 @@
                             <tr>
                                 <td><c:out value = "${moderator.getLastName()}"/></td>
                                 <td><c:out value = "${moderator.getFirstName()}"/></td>
+                                <%--<td>
+                                    <ul>
+                                        <c:if test="${not empty moderator.permissions()}">
+                                            <c:forEach var="permission" items="${moderator.permissions}">
+                                                <li>
+                                                    <c:out value="${permission.getPermission()}"/>
+                                                </li>
+                                            </c:forEach>
+                                        </c:if>
+                                    </ul>
+                                </td>--%>
                                 <td><c:out value = "${moderator.getEmail()}"/></td>
                                 <td><c:out value = "${moderator.getPhoneNumber()}"/></td>
                                 <td class="border-bottom-0">

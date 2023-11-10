@@ -14,6 +14,8 @@ import jakarta.validation.ValidatorFactory;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class AuthService {
@@ -40,10 +42,18 @@ public class AuthService {
         return moderator;
     }
 
-    public static Set<ConstraintViolation<UserDTO>> userDataValidation(UserDTO userDTO){
+    public static Map<String, String> userDataValidation(UserDTO userDTO){
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         Validator validator = validatorFactory.getValidator();
-        return validator.validate(userDTO);
+        Set<ConstraintViolation<UserDTO>> violations = validator.validate(userDTO);
+        Map<String, String> violationsMap = new HashMap<>();
+        for(ConstraintViolation<UserDTO> violation : violations){
+            violationsMap.put(violation.getPropertyPath().toString(), violation.getMessage());
+        }
+        if(!userDTO.getPassword().equals(userDTO.getConfirmPassword())){
+            violationsMap.put("confirmPassword", "Password and Confirm Password must match.");
+        }
+        return violationsMap;
 
       /*  for(ConstraintViolation<UserDTO> violation : constraintViolations){
             System.out.printf(violation.getMessage());
@@ -55,14 +65,15 @@ public class AuthService {
         String lastName = "TestLastName";
         String email = "test@email.com";
         String password = "#TestPassword123";
+        String passwordConfirmation = "#TestPassword123";
+
         String phoneNumber = "0123456789";
 
-        CustomerDTO customerDTO = new CustomerDTO(firstName, lastName, email, password, phoneNumber);
-        Set<ConstraintViolation<UserDTO>> constraintViolations = userDataValidation(customerDTO);
+        CustomerDTO customerDTO = new CustomerDTO(firstName, lastName, email, password, passwordConfirmation, phoneNumber);
+        Map<String, String> constraintViolations = userDataValidation(customerDTO);
         if (!constraintViolations.isEmpty()){
-            for(ConstraintViolation<UserDTO> violation : constraintViolations){
-                System.out.print(violation.getInvalidValue() + " : ");
-                System.out.printf(violation.getMessage());
+            for(String violation : constraintViolations.values()){
+                System.out.print(violation);
             }
             return;
         }

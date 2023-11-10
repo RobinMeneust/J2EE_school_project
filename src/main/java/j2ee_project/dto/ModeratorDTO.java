@@ -9,8 +9,8 @@ public class ModeratorDTO extends UserDTO{
 
     private Set<Permission> permissions;
 
-    public ModeratorDTO(String firstName, String lastName, String email, String password, String phoneNumber, Set<Permission> permissions) {
-        super(firstName, lastName, email, password, phoneNumber);
+    public ModeratorDTO(String firstName, String lastName, String email, String password, String confirmPassword, String phoneNumber, Set<Permission> permissions) {
+        super(firstName, lastName, email, password, confirmPassword,phoneNumber);
         this.permissions = permissions;
     }
 

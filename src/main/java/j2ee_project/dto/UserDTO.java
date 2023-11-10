@@ -5,30 +5,31 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+
 public class UserDTO {
 
-    @NotBlank()
-    @Size(max = 30)
-    @Pattern(regexp = "^[a-zA-Z\\-]{1,30}$", message = "is not valid.")
+    @NotBlank(message = "First name can not be blank.")
+    @Size(max = 30, message = "First name can not exceed 30 characters.")
+    @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿ\\-']*$", message = "First name is not valid : only letters and -' are authorized.")
     private String firstName;
-    @NotBlank()
-    @Size(max = 30)
-    @Pattern(regexp = "^[a-zA-Z\\-]{1,30}$", message = "is not valid.")
+    @NotBlank(message = "Last name can not be blank.")
+    @Size(max = 30, message = "Last name can not exceed 30 characters.")
+    @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿ-]*$", message = "First name is not valid : only letters and -' are authorized.")
     private String lastName;
-    @Email()
+    @Pattern(regexp = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$",message = "Email is not valid.")
     private String email;
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$", message = "is not valid.")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,24}$", message = "Password is not valid : it needs letters, numbers, and special characters @$!%*#?&")
     private String password;
-    @NotBlank()
-    @Size(max = 30)
-    @Pattern(regexp = "^[0-9]{10}$", message = "is not valid.")
+    private String confirmPassword;
+    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be composed by 10 numbers.")
     private String phoneNumber;
 
-    public UserDTO(String firstName, String lastName, String email, String password, String phoneNumber) {
+    public UserDTO(String firstName, String lastName, String email, String password, String confirmPassword, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.confirmPassword = confirmPassword;
         this.phoneNumber = phoneNumber;
     }
 
@@ -46,6 +47,9 @@ public class UserDTO {
 
     public String getPassword() {
         return password;
+    }
+    public String getConfirmPassword() {
+        return confirmPassword;
     }
 
     public String getPhoneNumber() {

@@ -27,6 +27,7 @@ public class UserDAO {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         int countEmail = session.createNativeQuery("SELECT COUNT(*) from User WHERE email=:email", Integer.class)
+                .setParameter("email", email)
                 .uniqueResult();
         session.getTransaction().commit();
         session.close();

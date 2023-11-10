@@ -22,7 +22,7 @@ public class Orders {
     @Basic
     @Column(name = "orderStatus", nullable = false, length = 30)
     private String orderStatus;
-    @OneToMany(mappedBy = "ordersByIdOrder")
+    @OneToMany(mappedBy = "order")
     private Set<CartItem> cartItems;
     @ManyToOne
     @JoinColumn(name = "idCustomer", referencedColumnName = "idUser", nullable = false)

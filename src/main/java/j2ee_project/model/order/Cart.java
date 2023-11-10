@@ -18,7 +18,7 @@ public class Cart {
     @OneToOne
     @JoinColumn(name = "idCustomer", referencedColumnName = "idUser", nullable = false)
     private Customer customer;
-    @OneToMany(mappedBy = "cartByIdCart")
+    @OneToMany(mappedBy = "cart")
     private Set<CartItem> cartItems;
 
     public int getId() {

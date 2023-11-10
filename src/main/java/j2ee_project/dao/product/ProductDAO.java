@@ -1,6 +1,7 @@
 package j2ee_project.dao.product;
 
 import j2ee_project.dao.HibernateUtil;
+import j2ee_project.model.Discount;
 import j2ee_project.model.catalog.Product;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -173,5 +174,22 @@ public class ProductDAO {
 
     public static Long getSize(){
         return ProductDAO.getSize(null,null,null,null);
+    }
+
+    public static void deleteProduct(int productId){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        Product product = session.createQuery("FROM Product WHERE id=:productId",Product.class).setParameter("productId",productId).getSingleResult();
+        session.remove(product);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public static void addProduct(Product product){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.save(product);
+        session.getTransaction().commit();
+        session.close();
     }
 }

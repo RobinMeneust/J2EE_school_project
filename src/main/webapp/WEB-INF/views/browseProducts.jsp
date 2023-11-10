@@ -16,6 +16,8 @@
     <jsp:include page="../../include.jsp" />
     <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/toolcool-range-slider.min.js"></script>
     <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/tcrs-generated-labels.min.js"></script>
+    <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/tcrs-moving-tooltip.min.js"></script>
+
 </head>
 <body>
 <jsp:include page="../../layout/header.jsp" />
@@ -86,7 +88,7 @@
                 <input type="hidden" id="min-price" name="min-price"/>
                 <input type="hidden" id="max-price" name="max-price"/>
 
-                <fieldset class="border p-2">
+                <fieldset class="border p-5">
                     <legend class="w-auto float-none">Price</legend>
                     <tc-range-slider
                             id="priceSlider"
@@ -95,8 +97,15 @@
                             step="5"
                             value1="0"
                             value2="100"
-                            generate-labels="true"
                             round="0"
+                            moving-tooltip="true"
+                            moving-tooltip-distance-to-pointer="40"
+                            moving-tooltip-width="35"
+                            moving-tooltip-height="30"
+                            moving-tooltip-bg="#721d82"
+                            moving-tooltip-text-color="#efefef"
+                            moving-tooltip-units="$"
+                            moving-tooltip-units-type="prefix"
                             <c:if test="${minPrice != null && maxPrice != null && minPrice<maxPrice && maxPrice<100 && minPrice>0}">
                                 set="[${minPrice},${maxPrice}]"
                             </c:if>

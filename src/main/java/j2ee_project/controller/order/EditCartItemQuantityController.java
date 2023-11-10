@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import j2ee_project.service.CartManager;
@@ -74,26 +75,25 @@ public class EditCartItemQuantityController extends HttpServlet {
             cartItems = new HashSet<>();
             cart.setCartItems(cartItems);
         }
-        
-        for(CartItem item : cartItems) {
+
+        Iterator<CartItem> it = cartItems.iterator();
+        while(it.hasNext()) {
+            CartItem item = it.next();
             if(item.getId() == id) {
-				CartDAO.editItemQuantity(item, quantity);
-                redirect(request, response);
+                if(customer == null) {
+                    if(quantity<=0) {
+                        it.remove();
+                    } else {
+                        item.setQuantity(quantity);
+                    }
+                } else {
+                    CartDAO.editItemQuantity(item, quantity);
+                }
+                response.setStatus(HttpServletResponse.SC_OK);
                 return;
             }
         }
         // If the cart item is not in the cart
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, "The provided item was not found in your cart");
-    }
-
-    public void redirect(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        try {
-            RequestDispatcher view = request.getRequestDispatcher(request.getHeader("referer"));
-            view.forward(request, response);
-        } catch(Exception err) {
-            // The forward didn't work
-            System.err.println(err.getMessage());
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-        }
     }
 }

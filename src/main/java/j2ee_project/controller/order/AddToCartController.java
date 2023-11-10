@@ -75,6 +75,15 @@ public class AddToCartController extends HttpServlet {
         newItem.setProduct(product);
         newItem.setQuantity(1);
 
+        int newId = 0;
+        for(CartItem item : cartItems) {
+            if(item.getId()>newId) {
+                newId = item.getId();
+            }
+        }
+        newId++;
+        newItem.setId(newId);
+
         if(cartItems.contains(newItem)) {
             response.setStatus(HttpServletResponse.SC_OK);
             PrintWriter out = response.getWriter();

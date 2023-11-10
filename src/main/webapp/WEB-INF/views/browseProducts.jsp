@@ -125,9 +125,9 @@
         </div>
     </div>
 
-    <div class="row my-4">
+    <div class="row my-4 g-4 justify-content-start">
         <c:forEach var = "product" items="${products}">
-            <div class="col-4 my-2">
+            <div class="col my-2 mx-2" style="max-width:400px;">
                 <a href="get-product-page?id=<c:out value="${product.getId()}"/>" style="text-decoration: none">
                     <div class="card hover-shadow hover-zoom" style="width: 390px; height: 350px;">
                         <img style="width: 390px; height: 250px; object-fit: cover;" alt="product_img" src="<c:out value="${product.getImageUrl()}" />" class="card-img-top">

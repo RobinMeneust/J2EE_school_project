@@ -25,8 +25,7 @@ public class DeleteCategoryController extends HttpServlet {
         }
         CategoryDAO.deleteCategory(categoryId);
         try {
-            RequestDispatcher view = request.getRequestDispatcher("dashboard.jsp");
-            view.forward(request,response);
+            response.sendRedirect("dashboard");
         }catch (Exception err){
             System.out.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

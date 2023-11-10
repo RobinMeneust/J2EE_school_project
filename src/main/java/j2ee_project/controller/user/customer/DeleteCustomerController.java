@@ -26,8 +26,7 @@ public class DeleteCustomerController extends HttpServlet {
         }
         CustomerDAO.deleteCustomer(customerId);
         try {
-            RequestDispatcher view = request.getRequestDispatcher("dashboard.jsp");
-            view.forward(request,response);
+            response.sendRedirect("dashboard");
         }catch (Exception err){
             System.out.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

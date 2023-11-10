@@ -1,21 +1,18 @@
-package j2ee_project.controller.user.customer;
+package j2ee_project.controller.catalog.category;
 
-import j2ee_project.dao.user.CustomerDAO;
+import j2ee_project.dao.catalog.category.CategoryDAO;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
-@WebServlet("/browse-customers")
-public class BrowseCustomersController extends HttpServlet {
-
+@WebServlet("/get-categories")
+public class GetCategoriesController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            request.setAttribute("customers", CustomerDAO.getCustomers());
-            RequestDispatcher view = request.getRequestDispatcher("dashboard.jsp");
-            view.forward(request,response);
+            request.setAttribute("categories", CategoryDAO.getCategories());
         }catch (Exception err){
             System.out.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

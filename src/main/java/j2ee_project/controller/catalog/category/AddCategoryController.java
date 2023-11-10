@@ -38,8 +38,7 @@ public class AddCategoryController extends HttpServlet {
         CategoryDAO.addCategory(category);
 
         try {
-            RequestDispatcher view = request.getRequestDispatcher("dashboard.jsp");
-            view.forward(request,response);
+            response.sendRedirect("dashboard");
         }catch (Exception err){
             System.out.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

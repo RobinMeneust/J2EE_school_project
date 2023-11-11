@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="j2ee_project.model.catalog.Product" %>
+<%@ page import="j2ee_project.model.Discount" %>
 <%@ taglib prefix="cf" uri="/WEB-INF/functions.tld"%>
 <%--
   Created by IntelliJ IDEA.
@@ -20,10 +21,15 @@
 <jsp:include page="../../layout/header.jsp" />
 <%
     Product product = (Product) request.getAttribute("product");
+    Discount discount = product.getCategory().getDiscount();
+    Integer discountPercentage = 0;
+    if(discount != null) {
+        discountPercentage = discount.getDiscountPercentage();
+    }
 %>
 
 <c:set var="product" value="<%=product%>"/>
-<c:set var="discount" value="${cf:getDiscount(product)}"/>
+<c:set var="discountPercentage" value="<%=discountPercentage%>"/>
 <c:set var="cart" value="${cf:getCart(sessionCart,null)}"/> <%-- change 'null' to a function to get the authenticated customer --%>
 
 
@@ -34,7 +40,8 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <h3 class="display-3 mb-3"><c:out value="${product.getName()}" /></h3>
+    <h3 class="display-3"><c:out value="${product.getName()}"/></h3>
+    <h6 class="display-6 mb-3 text-secondary"><c:out value="${product.getCategory().getName()}"/></h6>
     <div class="row g-5 justify-content-start">
         <div class="col">
             <img class="rounded" style="width: 420px; height: 300px; object-fit: cover;" alt="product_img" src="<c:out value="${product.getImageUrl()}" />">
@@ -47,9 +54,9 @@
         <div class="col bg-secondary-subtle shadow p-3 rounded d-flex align-items-start flex-column" style="min-width:250px; max-width:450px">
             <div class="p-2 mb-auto">
                 <c:choose>
-                    <c:when test="${discount != null && discount > 0}">
-                        <span class="text-secondary text-decoration-line-through">$<c:out value="${product.getUnitPrice()}"/></span> <span class="text-success"><c:out value="(-${discount} %)"/></span>
-                        <h6 class="display-6">$<c:out value="${product.getUnitPrice()*(1-(discount/100))}"/></h6>
+                    <c:when test="${discountPercentage != null && discountPercentage > 0}">
+                        <span class="text-secondary text-decoration-line-through">$<c:out value="${product.getUnitPrice()}"/></span> <span class="text-success"><c:out value="(-${discountPercentage} %)"/></span>
+                        <h6 class="display-6">$<c:out value="${product.getUnitPrice()*(1-(discountPercentage/100))}"/></h6>
                     </c:when>
                     <c:otherwise>
                         <h6 class="display-6">$<c:out value="${product.getUnitPrice()}"/></h6>

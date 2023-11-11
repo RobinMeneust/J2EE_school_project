@@ -44,18 +44,4 @@ public class DiscountDAO {
         session.getTransaction().commit();
         session.close();
     }
-
-    public static Integer getDiscount(Product product) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        Integer discountPercentage = null;
-
-        try {
-            discountPercentage = session.createQuery("SELECT p.category.discount.discountPercentage FROM Product AS p WHERE p=:product", Integer.class).setParameter("product", product).getSingleResult();
-            session.getTransaction().commit();
-        } catch(NoResultException ignore) { }
-        session.close();
-
-        return discountPercentage;
-    }
 }

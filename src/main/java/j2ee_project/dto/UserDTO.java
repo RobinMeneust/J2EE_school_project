@@ -18,10 +18,10 @@ public class UserDTO {
     private String lastName;
     @Pattern(regexp = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$",message = "Email is not valid.")
     private String email;
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,24}$", message = "Password is not valid : it needs letters, numbers, and special characters @$!%*#?&")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,24}$", message = "Password is not valid : it needs letters, numbers, special characters @$!%*#?& and length between 8 and 24.")
     private String password;
     private String confirmPassword;
-    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be composed by 10 numbers.")
+    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be composed by 10 numbers with this format : 0000000000")
     private String phoneNumber;
 
     public UserDTO(String firstName, String lastName, String email, String password, String confirmPassword, String phoneNumber) {

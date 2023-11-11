@@ -16,8 +16,6 @@ classDiagram
     LoyaltyLevel "-discount" o--> Discount
     Order "-items" o--> "*" CartItem
     Cart "-items" o--> "*" CartItem
-    ShippingMethodStandard --|> ShippingMethod
-    ShippingMethodPremium --|> ShippingMethod
     MailManager --> Mail
     
     note for AuthService "return null if doesn't exist"
@@ -28,7 +26,6 @@ classDiagram
         permissions is a Set of Permission objects"
     note for LoyaltyProgram "Singleton
         instance, getInstance(), createInstance() are static"
-    note for ShippingMethod "Premium = quicker and cheaper"
     note for Administrator "the list of permissions contains all
      the available permissions here"
 
@@ -160,7 +157,6 @@ classDiagram
         -date : Date
         -customer : Customer
         -status : OrderStatus
-        -shippingMethod : ShippingMethod
         -address : Address
     }
     
@@ -171,24 +167,6 @@ classDiagram
        +SHIPPED
        +CANCELLED
        +DELIVERED
-    }
-    
-    class ShippingMethod {
-        <<abstract>>
-        -name : String
-        -price : int
-        -maxDaysTransit : int
-        +getName()  String
-        +getPrice()  float
-        +getMaxDaysTransit()  int
-    }
-    
-    class ShippingMethodPremium {
-        +ShippingMethodPremium(String, int, int)
-    }
-
-    class ShippingMethodStandard {
-        +ShippingMethodStandard(String, int, int)
     }
     
     class Mail {

@@ -29,9 +29,13 @@ public class CartDAO {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
 
-        session.evict(cartItem);
-        cartItem.setQuantity(quantity);
-        session.merge(cartItem);
+        if(quantity<=0) {
+            session.remove(cartItem);
+        } else {
+            session.evict(cartItem);
+            cartItem.setQuantity(quantity);
+            session.merge(cartItem);
+        }
 
         session.getTransaction().commit();
         session.close();

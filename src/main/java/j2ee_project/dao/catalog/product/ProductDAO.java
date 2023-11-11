@@ -1,6 +1,7 @@
-package j2ee_project.dao.catalog;
+package j2ee_project.dao.catalog.product;
 
 import j2ee_project.dao.HibernateUtil;
+import j2ee_project.dao.catalog.category.CategoryDAO;
 import j2ee_project.model.catalog.FeaturedProduct;
 import j2ee_project.model.catalog.Product;
 import org.hibernate.Session;
@@ -85,7 +86,7 @@ public class ProductDAO {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
 
-        HashMap<String,Object> queryObj = getQueryString("FROM Product AS p LEFT JOIN Category AS c ON p.idCategory = c.id",name, category, minPrice, maxPrice);
+        HashMap<String,Object> queryObj = getQueryString("FROM Product AS p LEFT JOIN Category AS c ON p.category.id = c.id",name, category, minPrice, maxPrice);
         String queryStr = "";
         if(queryObj.get("query") instanceof String) {
             queryStr = (String) queryObj.get("query");
@@ -100,6 +101,8 @@ public class ProductDAO {
             return new ArrayList<>();
         }
 
+        System.out.println(queryStr);
+
         Query<Product> query = session.createQuery(queryStr, Product.class);
         for(int i=0; i<params.size(); i++) {
             query.setParameter(i+1,params.get(i));
@@ -110,6 +113,11 @@ public class ProductDAO {
         session.close();
 
         return products;
+    }
+
+    public static List<Product> getProducts(){
+        int size = Math.toIntExact(ProductDAO.getSize());
+        return ProductDAO.getProducts(0,size,null,null,null,null);
     }
 
     /**
@@ -150,7 +158,7 @@ public class ProductDAO {
      * @return Number of products
      */
     public static Long getSize(String name, String category, String minPrice, String maxPrice) {
-        HashMap<String,Object> queryObj = getQueryString("SELECT COUNT(*) FROM Product AS p LEFT JOIN Category AS c ON p.idCategory = c.id", name, category, minPrice, maxPrice);
+        HashMap<String,Object> queryObj = getQueryString("SELECT COUNT(*) FROM Product AS p LEFT JOIN Category AS c ON p.category.id = c.id", name, category, minPrice, maxPrice);
 
         String queryStr = "";
         if(queryObj.get("query") instanceof String) {
@@ -181,4 +189,24 @@ public class ProductDAO {
         return size;
     }
 
+    public static Long getSize(){
+        return ProductDAO.getSize(null,null,null,null);
+    }
+
+    public static void deleteProduct(int productId){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        Product product = session.createQuery("FROM Product WHERE id=:productId",Product.class).setParameter("productId",productId).getSingleResult();
+        session.remove(product);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public static void addProduct(Product product){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.save(product);
+        session.getTransaction().commit();
+        session.close();
+    }
 }

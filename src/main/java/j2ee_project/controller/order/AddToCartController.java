@@ -1,13 +1,12 @@
 package j2ee_project.controller.order;
 
-import j2ee_project.dao.catalog.ProductDAO;
+import j2ee_project.dao.catalog.product.ProductDAO;
 import j2ee_project.dao.order.CartDAO;
 import j2ee_project.model.catalog.Product;
 import j2ee_project.model.order.Cart;
 import j2ee_project.model.order.CartItem;
 import j2ee_project.model.user.Customer;
 import j2ee_project.service.CartManager;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,7 +18,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
-import j2ee_project.service.CartManager;
 import org.json.JSONObject;
 
 /**
@@ -74,6 +72,15 @@ public class AddToCartController extends HttpServlet {
         CartItem newItem = new CartItem();
         newItem.setProduct(product);
         newItem.setQuantity(1);
+
+        int newId = 0;
+        for(CartItem item : cartItems) {
+            if(item.getId()>newId) {
+                newId = item.getId();
+            }
+        }
+        newId++;
+        newItem.setId(newId);
 
         if(cartItems.contains(newItem)) {
             response.setStatus(HttpServletResponse.SC_OK);

@@ -22,10 +22,6 @@ public class Administrator extends Moderator{
         this.addPermission(new Permission(TypePermission.CAN_MANAGE_ORDER));
     }*/
 
-    public Administrator() {
-        super();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

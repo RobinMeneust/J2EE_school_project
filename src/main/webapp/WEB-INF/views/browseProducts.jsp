@@ -136,8 +136,10 @@
                                 <span class="font-weight-bold"><c:out value="${product.getName()}" /></span>
                                 <span class="font-weight-bold">$<c:out value="${product.getUnitPrice()}" /></span>
                             </div>
-                            <p class="card-text mb-1 mt-1">
-                                <c:out value="${product.getDescription()}" />
+                            <p class="card-text text-success mb-1 mt-1">
+                                <c:if test="${not empty product.getCategory().getDiscount() && product.getCategory().getDiscount().getDiscountPercentage() > 0}">
+                                    <c:out value="-${product.getCategory().getDiscount().getDiscountPercentage()} %"/>
+                                </c:if>
                             </p>
                         </div>
                     </div>

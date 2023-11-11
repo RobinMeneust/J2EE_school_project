@@ -1,14 +1,17 @@
 package j2ee_project.controller.profile;
 
+import j2ee_project.dao.profile.CustomerDAO;
 import j2ee_project.dao.profile.LoyaltyDAO;
 import j2ee_project.model.loyalty.LoyaltyAccount;
 import j2ee_project.model.loyalty.LoyaltyLevel;
+import j2ee_project.model.user.Customer;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.hibernate.Session;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,15 +28,30 @@ public class LoyaltyRedeemController extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String customerIdStr = request.getParameter("id");
+        String customerIdStr = request.getParameter("customerId");
+        String loyaltyAccountIdStr = request.getParameter("loyaltyAccountId");
+        System.out.println(customerIdStr);
         int customerId = 1;
-
         int loyaltyAccountId = 1;
+
+        if(customerIdStr != null && !customerIdStr.trim().isEmpty()) {
+            try {
+                customerId = Integer.parseInt(customerIdStr);
+            } catch(Exception ignore) {}
+        }
+
+        if(loyaltyAccountIdStr != null && !loyaltyAccountIdStr.trim().isEmpty()) {
+            try {
+                loyaltyAccountId = Integer.parseInt(loyaltyAccountIdStr);
+            } catch(Exception ignore) {}
+        }
 
         try {
             List<LoyaltyLevel> loyaltyLevels = LoyaltyDAO.getLoyaltyLevels();
             LoyaltyAccount loyaltyAccount = LoyaltyDAO.getLoyaltyAccount(loyaltyAccountId);
+            Customer customer = CustomerDAO.getCustomer(customerId);
 
+            request.setAttribute("customer", customer);
             request.setAttribute("loyaltyAccount", loyaltyAccount);
             request.setAttribute("loyaltyLevels", loyaltyLevels);
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=2");

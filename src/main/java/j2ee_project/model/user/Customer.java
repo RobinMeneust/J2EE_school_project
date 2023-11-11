@@ -20,7 +20,7 @@ public class Customer extends User{
     @ManyToOne
     @JoinColumn(name = "idLoyaltyAccount", referencedColumnName = "id")
     private LoyaltyAccount loyaltyAccount;
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer")
     private Set<Orders> orders;
 
     @Override

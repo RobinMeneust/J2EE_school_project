@@ -75,6 +75,8 @@
     String customerPostalCode =null;
     String customerCountry =null;
     String customerCity =null;
+    Set<Orders> orders = null;
+
     if (request.getAttribute("customer") != null) {
 
         address = customer.getAddress();
@@ -86,24 +88,18 @@
         customerPostalCode = address.getPostalCode();
         customerCountry = address.getCountry();
         customerCity = address.getCity();
-
+        orders = customer.getOrders();
     }
-    List<Orders> orders = (List<Orders>) request.getAttribute("orders");
+    //List<Orders> orders = (List<Orders>) request.getAttribute("orders");
     LoyaltyAccount loyaltyAccount = (LoyaltyAccount) request.getAttribute("loyaltyAccount");
 
    List<LoyaltyLevel> loyaltyLevels = (List<LoyaltyLevel>) request.getAttribute("loyaltyLevels");
 
-    /**
-     * Set<LoyaltyLevel> loyaltyLevels = null;
-    if (request.getAttribute("loyaltyAccount") != null) {
-        loyaltyLevels = loyaltyAccount.getLoyaltyProgram().getLoyaltyLevels();
-    }*/
-
-
-    String activeTab = request.getParameter("active-tab");
+   String activeTab = request.getParameter("active-tab");
 
 %>
 <c:set var="orders" value="<%=orders%>"/>
+<c:set var="customer" value="<%=customer%>"/>
 <c:set var="loyaltyLevels" value="<%=loyaltyLevels%>"/>
 <c:set var="activeTab" value="<%=activeTab%>"/>
 
@@ -114,8 +110,8 @@
                 <div class="nav nav-tabs flex-column" id="nav-tab" role="tablist">
                     <form action="profile-informations" method="get">
                         <button class="nav-link <c:if test="${activeTab == 1}">active</c:if>" id="nav-profile-informations-tab" data-bs-toggle="tab" data-bs-target="#nav-profile-informations" type="submit" role="tab" aria-controls="nav-profile-informations" aria-selected="true">Profile informations</button>
-                        <button class="nav-link <c:if test="${activeTab == 2}">active</c:if>" formaction="loyalty-redeem" formmethod="get" id="nav-loyalty-account-tab" data-bs-toggle="tab" data-bs-target="#nav-loyalty-account" type="submit" role="tab" aria-controls="nav-loyalty-account" aria-selected="false">Loyalty account</button>
-                        <button class="nav-link <c:if test="${activeTab == 3}">active</c:if>" formaction="order-history" id="nav-order-history-tab" data-bs-toggle="tab" data-bs-target="#nav-order-history" type="submit" role="tab" aria-controls="nav-order-history" aria-selected="false">Order history</button>
+                        <button class="nav-link <c:if test="${activeTab == 2}">active</c:if>" formaction="" formmethod="get" id="nav-loyalty-account-tab" data-bs-toggle="tab" data-bs-target="#nav-loyalty-account" type="submit" role="tab" aria-controls="nav-loyalty-account" aria-selected="false"><a href="loyalty-redeem?customerId=${customer.id}&loyaltyAccountId=${customer.loyaltyAccount.id}">Loyalty account</a></button>
+                        <button class="nav-link <c:if test="${activeTab == 3}">active</c:if>" formaction=""  id="nav-order-history-tab" data-bs-toggle="tab" data-bs-target="#nav-order-history" type="submit" role="tab" aria-controls="nav-order-history" aria-selected="false"><a href="order-history?id=${customer.id}">Order history</a></button>
                         <button class="nav-link <c:if test="${activeTab == 4}">active</c:if>" id="nav-preferences-tab" data-bs-toggle="tab" data-bs-target="#nav-preferences" type="submit" role="tab" aria-controls="nav-preferences" aria-selected="false">Preferences</button>
                     </form>
                 </div>
@@ -262,15 +258,20 @@
                     <table class="table table-striped table-hover" id="customers-table" style="width: 100%" data-filter-control-visible="false">
                         <thead>
                             <tr>
+                                <th>Date</th>
+                                <th>number of items purchased</th>
                                 <th>Status</th>
-                                <th> </th>
                             </tr>
                         </thead>
-                        <c:forEach var = "order" items = "${orders}">
-                            <tr>
-                                <td><c:out value="${order.getOrderStatus}"/></td>
-                            </tr>
-                        </c:forEach>
+                        <%if(orders!=null){
+                            for (Orders order: orders){%>
+                                <tr>
+                                    <td><%=order.getDate()%></td>
+                                    <td><%=order.getTotal()%></td>
+                                    <td><%=order.getOrderStatus()%></td>
+                                </tr>
+                            <%}
+                        }%>
                     </table>
                 </div>
                 <div class="tab-pane fade <c:if test="${activeTab == 4}">show active</c:if>" id="nav-preferences" role="tabpanel" aria-labelledby="nav-preferences-tab">Preferences</div>

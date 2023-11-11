@@ -22,12 +22,21 @@ public class LoyaltyAccount {
     @JoinColumn(name = "idLoyaltyProgram", referencedColumnName = "id", nullable = false)
     private LoyaltyProgram loyaltyProgram;
 
-    @ManyToMany
+
+    @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(name = "LoyaltyAccountLevelUsed",
             joinColumns = @JoinColumn(name = "idLoyaltyAccount"),
             inverseJoinColumns = @JoinColumn(name = "idLoyaltyLevel")
     )
     private Set<LoyaltyLevel> loyaltyLevelsUsed = new HashSet<>();
+
+    public Set<LoyaltyLevel> getLoyaltyLevelsUsed() {
+        return loyaltyLevelsUsed;
+    }
+
+    public boolean isLevelUsed(LoyaltyLevel level){
+        return this.loyaltyLevelsUsed.contains(level);
+    }
 
     public int getId() {
         return id;
@@ -90,4 +99,5 @@ public class LoyaltyAccount {
     public void resetLoyaltyLevelUsed(){
         this.loyaltyLevelsUsed = new HashSet<>();
     }
+
 }

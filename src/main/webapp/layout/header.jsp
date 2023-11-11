@@ -21,7 +21,7 @@
                 </a>
             </li>
             <li class="nav-item mx-2" title="Account">
-                <a href="#" class="nav-link">
+                <a href="profile-informations" class="nav-link">
                     <span style="font-size:60px" class="material-symbols-outlined text-white">account_circle</span>
                 </a>
             </li>

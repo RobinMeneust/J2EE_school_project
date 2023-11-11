@@ -1,7 +1,6 @@
-package j2ee_project.dao.product;
+package j2ee_project.dao.catalog.product;
 
 import j2ee_project.dao.HibernateUtil;
-import j2ee_project.model.Discount;
 import j2ee_project.model.catalog.Product;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -114,7 +113,7 @@ public class ProductDAO {
 
     public static List<Product> getProducts(){
         int size = Math.toIntExact(ProductDAO.getSize());
-        return ProductDAO.getProducts(1,size,null,null,null,null);
+        return ProductDAO.getProducts(0,size,null,null,null,null);
     }
 
     /**

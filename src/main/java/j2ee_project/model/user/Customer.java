@@ -12,15 +12,15 @@ import java.util.Set;
 @PrimaryKeyJoinColumn(name = "idUser")
 public class Customer extends User{
 
-    @OneToOne(mappedBy = "customer")
+    @OneToOne(mappedBy = "customer",cascade = CascadeType.ALL)
     private Cart cart;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idAddress", referencedColumnName = "id")
     private Address address;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idLoyaltyAccount", referencedColumnName = "id")
     private LoyaltyAccount loyaltyAccount;
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private Set<Orders> orders;
 
     @Override

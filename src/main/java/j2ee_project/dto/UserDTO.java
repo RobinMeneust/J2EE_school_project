@@ -59,4 +59,16 @@ public class UserDTO {
     public void setPassword(String hashPassword){
         this.password = hashPassword;
     }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", confirmPassword='" + confirmPassword + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
+    }
 }

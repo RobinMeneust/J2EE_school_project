@@ -20,8 +20,15 @@ import java.util.Set;
 
 public class AuthService {
 
-    public static void logIn(String email, String password){
-
+    public static User logIn(String email, String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
+        User user = UserDAO.getUserFromEmail(email);
+        if(user == null){
+            return null;
+        }
+        if(!HashService.validatePassword(password, user.getPassword())){
+            return null;
+        }
+        return user;
     }
 
     public static void logOut(){
@@ -30,7 +37,9 @@ public class AuthService {
 
     public static User registerCustomer(CustomerDTO customerDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
         customerDTO.setPassword(HashService.generatePasswordHash(customerDTO.getPassword()));
+        System.out.println(customerDTO);
         User customer = new Customer(customerDTO);
+        System.out.println(customer);
         UserDAO.addUser(customer);
         return customer;
     }
@@ -60,37 +69,4 @@ public class AuthService {
         }*/
     }
 
-    public static void main(String[] args) {
-        String firstName = "TestFirstName";
-        String lastName = "TestLastName";
-        String email = "test@email.com";
-        String password = "#TestPassword123";
-        String passwordConfirmation = "#TestPassword123";
-
-        String phoneNumber = "0123456789";
-
-        CustomerDTO customerDTO = new CustomerDTO(firstName, lastName, email, password, passwordConfirmation, phoneNumber);
-        Map<String, String> constraintViolations = userDataValidation(customerDTO);
-        if (!constraintViolations.isEmpty()){
-            for(String violation : constraintViolations.values()){
-                System.out.print(violation);
-            }
-            return;
-        }
-        try {
-            User customer = registerCustomer(customerDTO);
-            System.out.print("Reussite");
-
-        }catch (NoSuchAlgorithmException | InvalidKeySpecException exception){
-            System.out.print("Error");
-        }
-        catch (Exception exception){
-            System.out.printf("Error !!!!! : ");
-            System.out.print(exception);
-        }
-
-    }
-
-    // TODO DAO to exchange with the db
-    // TODO finalize data verification and AuthService
 }

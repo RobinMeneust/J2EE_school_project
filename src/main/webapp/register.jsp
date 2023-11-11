@@ -1,9 +1,3 @@
-<%@ page import="j2ee_project.dto.UserDTO" %>
-<%@ page import="jakarta.validation.ConstraintViolation" %>
-<%@ page import="java.util.Set" %>
-<%@ page import="java.util.Iterator" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.HashMap" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
@@ -22,10 +16,10 @@
 <body>
 <%--    <jsp:include page="../..layout/header.jsp"/>--%>
     <main>
-        <form id="registerForm" method="post" action="${pageContext.request.contextPath}/RegisterCustomerController">
-            <c:if test="${requestScope.emailInDbError != null}">
+        <form id="registerForm" name="registerForm" method="post" action="${pageContext.request.contextPath}/RegisterCustomerController">
+            <c:if test="${requestScope.emailOrPhoneNumberInDbError != null}">
                 <div class="alert alert-danger" role="alert">
-                    <c:out value="${requestScope.emailInDbError}"/>
+                    <c:out value="${requestScope.emailOrPhoneNumberInDbError}"/>
                 </div>
             </c:if>
             <c:if test="${requestScope.RegisterProcessError != null}">
@@ -81,9 +75,6 @@
     </main>
 <%--    <jsp:include page="../..layout/&footer.jsp"/>--%>
     <script>
-        $.validator.addMethod("pattern", function (value, element, param){
-            return $.validator.optional(element) || value.match(param) != null;
-        }, "Name not valid")
         /*$.validator.addMethod("patternName", function (value){
             return value.match(/^[a-zA-ZÀ-ÖØ-öø-ÿ\-']*$/) != null;
         }, "Name not valid")
@@ -93,56 +84,71 @@
         $.validator.addMethod("patternPhoneNumber", function (value){
             return value.match(/^[0-9]{10}$/) != null;
         }, "Phone number must be composed by 10 numbers with this format : 0000000000")*/
-        $(document).ready(function(){
-            $("#registerForm").validate({
+        $(function()
+        {
+            $.validator.addMethod("patternName", function (value, element){
+                return this.optional(element) || /^[a-zA-ZÀ-ÖØ-öø-ÿ\-']*$/.test(value);
+            }, "Name not valid")
+            $.validator.addMethod("patternPassword", function (value){
+                return value.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,24}$/) != null;
+            }, "Password is not valid : it needs letters, numbers, special characters @$!%*#?& and length between 8 and 24.")
+            $.validator.addMethod("patternPhoneNumber", function (value){
+                return value.match(/^[0-9]{10}$/) != null;
+            }, "Phone number must be composed by 10 numbers with this format : 0000000000")
+
+            $("form[name='registerForm']").validate({
                 rules: {
                     firstName: {
                         required: true,
-                        max: 30,
-                        pattern: /^[a-zA-ZÀ-ÖØ-öø-ÿ\-']*$/,
+                        maxlength: 30,
+                        patternName: true,
                     },
                     lastName: {
                         required: true,
-                        max: 30,
-                        pattern: /^[a-zA-ZÀ-ÖØ-öø-ÿ\-']*$/,
+                        maxlength: 30,
+                        patternName: true,
                     },
                     email: {
                         required: true,
                         email: true
                     },
                     password: {
-                        pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,24}$/
+                        required: true,
+                        patternPassword: true
                     },
                     confirmPassword: {
+                        required: true,
                         equalTo: "#password"
                     },
                     phoneNumber: {
-                        pattern: /^[0-9]{10}$/
+                        required: true,
+                        patternPhoneNumber: true
                     }
                 },
                 messages: {
                     firstName: {
-                        required: "First name can not be blank.",
+                        required: "Please enter your first name",
                         max: "First name can not exceed 30 characters.",
-                        pattern: "First name is not valid : only letters and -' are authorized.",
+                        patternName: "First name is not valid : only letters and -' are authorized.",
                     },
                     lastName: {
-                        required: "Last name can not be blank.",
+                        required: "Please enter your last name",
                         max: "Last name can not exceed 30 characters.",
-                        pattern: "Last name is not valid : only letters and -' are authorized.",
+                        patternName: "Last name is not valid : only letters and -' are authorized.",
                     },
                     email: {
-                        required: "Last name can not be blank.",
+                        required: "Please enter an email address",
                         email: "Email is not valid."
                     },
                     password: {
-                        pattern: "Password is not valid : it needs letters, numbers, special characters @$!%*#?& and length between 8 and 24."
+                        required: "Please provide a password",
                     },
                     confirmPassword: {
+                        required: "Please enter a confirmation password",
                         equalTo: "Password and Confirm Password must match."
                     },
                     phoneNumber: {
-                        pattern: "Phone number must be composed by 10 numbers with this format : 0000000000"
+                        required: "Please enter a phone number",
                     }
                 },
                 submitHandler: function(form) {

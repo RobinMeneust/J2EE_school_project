@@ -25,7 +25,6 @@ public class CartDAO {
     }
 
     public static void editItemQuantity(CartItem cartItem, int quantity) {
-        // TODO
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
 

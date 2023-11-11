@@ -40,7 +40,6 @@ public class AddToCartController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         JSONObject responseObj = new JSONObject();
 
-        // TODO : add search filters in the request params
         String idStr = request.getParameter("id");
         int id = -1;
         if(idStr != null && !idStr.trim().isEmpty()) {

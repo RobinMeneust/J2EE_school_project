@@ -71,7 +71,7 @@
 			</ul>
 		</div>
 		<div class="mb-5">
-			<h2 class="display-2 p-3">Board games</h2>
+			<h2 class="display-2 p-3">Boarder Games</h2>
 			<p>
 				A website were you will find various board games.<br>
 				It has been created by four engineering students for a school project using Jakarta Persistence, Hibernate and other tools.<br>

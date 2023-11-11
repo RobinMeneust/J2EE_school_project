@@ -1,5 +1,7 @@
 package j2ee_project.model.user;
 
+import j2ee_project.dto.CustomerDTO;
+import j2ee_project.dto.UserDTO;
 import j2ee_project.model.Address;
 import j2ee_project.model.order.Cart;
 import j2ee_project.model.loyalty.LoyaltyAccount;
@@ -22,6 +24,14 @@ public class Customer extends User{
     private LoyaltyAccount loyaltyAccount;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.ALL)
     private Set<Orders> orders;
+
+    public Customer(CustomerDTO customerDTO){
+        super(customerDTO);
+    }
+
+    public Customer() {
+        super();
+    }
 
     @Override
     public boolean equals(Object o) {

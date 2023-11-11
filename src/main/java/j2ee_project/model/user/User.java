@@ -26,9 +26,6 @@ public abstract class User {
     @Basic
     @Column(name = "phoneNumber", nullable = true, length = 15)
     private String phoneNumber;
-    @Basic
-    @Column(name = "password", nullable = true, length = 30)
-    private String password;
 
     public int getId() {
         return id;

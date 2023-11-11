@@ -25,7 +25,6 @@ public class ProfileInformationsController extends HttpServlet {
 
         try {
             Customer customer = CustomerDAO.getCustomer(customerId);
-
             request.setAttribute("customer", customer);
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=1");
             view.forward(request, response);

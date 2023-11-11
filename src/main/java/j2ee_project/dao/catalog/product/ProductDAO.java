@@ -1,6 +1,7 @@
 package j2ee_project.dao.catalog.product;
 
 import j2ee_project.dao.HibernateUtil;
+import j2ee_project.dao.catalog.category.CategoryDAO;
 import j2ee_project.model.catalog.FeaturedProduct;
 import j2ee_project.model.catalog.Product;
 import org.hibernate.Session;
@@ -85,7 +86,7 @@ public class ProductDAO {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
 
-        HashMap<String,Object> queryObj = getQueryString("FROM Product AS p LEFT JOIN Category AS c ON p.idCategory = c.id",name, category, minPrice, maxPrice);
+        HashMap<String,Object> queryObj = getQueryString("FROM Product AS p LEFT JOIN Category AS c ON p.category.id = c.id",name, category, minPrice, maxPrice);
         String queryStr = "";
         if(queryObj.get("query") instanceof String) {
             queryStr = (String) queryObj.get("query");
@@ -99,6 +100,8 @@ public class ProductDAO {
         if(params == null || queryStr == "") {
             return new ArrayList<>();
         }
+
+        System.out.println(queryStr);
 
         Query<Product> query = session.createQuery(queryStr, Product.class);
         for(int i=0; i<params.size(); i++) {
@@ -155,7 +158,7 @@ public class ProductDAO {
      * @return Number of products
      */
     public static Long getSize(String name, String category, String minPrice, String maxPrice) {
-        HashMap<String,Object> queryObj = getQueryString("SELECT COUNT(*) FROM Product AS p LEFT JOIN Category AS c ON p.idCategory = c.id", name, category, minPrice, maxPrice);
+        HashMap<String,Object> queryObj = getQueryString("SELECT COUNT(*) FROM Product AS p LEFT JOIN Category AS c ON p.category.id = c.id", name, category, minPrice, maxPrice);
 
         String queryStr = "";
         if(queryObj.get("query") instanceof String) {

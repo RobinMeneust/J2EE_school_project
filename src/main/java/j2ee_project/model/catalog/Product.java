@@ -15,10 +15,10 @@ public class Product {
     @Column(name = "name", nullable = true, length = 30)
     private String name;
     @Basic
-    @Column(name = "stockQuantity", nullable = true)
+    @Column(name = "stockQuantity", nullable = false)
     private Integer stockQuantity;
     @Basic
-    @Column(name = "unitPrice", nullable = true, precision = 0)
+    @Column(name = "unitPrice", nullable = false, precision = 2)
     private float unitPrice;
     @Basic
     @Column(name = "description", nullable = true, length = 300)
@@ -30,7 +30,7 @@ public class Product {
     @Column(name = "weight", nullable = true, precision = 0)
     private Float weight;
     @ManyToOne
-    @JoinColumn(name = "idCategory", referencedColumnName = "id")
+    @JoinColumn(name = "idCategory", referencedColumnName = "id", nullable = false)
     private Category category;
 
     public Product() {

@@ -7,6 +7,7 @@ import java.util.Set;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "idUser")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Moderator extends User{
 
     @ManyToMany
@@ -27,6 +28,18 @@ public class Moderator extends User{
 
     public void addPermission(Permission permission){
         this.permissions.add(permission);
+    }
+
+    public void removePermission(Permission permission){
+        if(permissions == null || !permissions.contains(permission)) {
+            return;
+        }
+        permissions.remove(permission);
+    }
+
+    public boolean isAllowed(Permission permission) {
+        if(getPermissions()==null) return false;
+        return getPermissions().contains(permission);
     }
 
     @Override

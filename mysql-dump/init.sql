@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS User (
     firstName VARCHAR(30),
     lastName VARCHAR(30),
     email VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(30) NOT NULL,
+    password VARCHAR(128) NOT NULL,
     phoneNumber VARCHAR(15) UNIQUE
 );
 
@@ -102,15 +102,6 @@ CREATE TABLE IF NOT EXISTS FeaturedProduct (
     FOREIGN KEY (idProduct) REFERENCES Product(id)
 );
 
-CREATE TABLE IF NOT EXISTS ShippingMethod (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL,
-    price FLOAT NOT NULL,
-    maxDaysTransit INT NOT NULL,
-    CONSTRAINT valid_price CHECK(price >= 0),
-    CONSTRAINT valid_duration CHECK(maxDaysTransit >= 0)
-);
-
 CREATE TABLE IF NOT EXISTS Customer (
     -- id INT PRIMARY KEY AUTO_INCREMENT,
     idUser INT PRIMARY KEY ,
@@ -127,10 +118,8 @@ CREATE TABLE IF NOT EXISTS Orders (
     date DATE NOT NULL,
     orderStatus VARCHAR(30) NOT NULL,
     idCustomer INT NOT NULL,
-    idShippingMethod INT NOT NULL,
     idAddress INT NOT NULL,
     FOREIGN KEY (idCustomer) REFERENCES Customer(idUser),
-    FOREIGN KEY (idShippingMethod) REFERENCES ShippingMethod(id),
     FOREIGN KEY (idAddress) REFERENCES Address(id),
     CONSTRAINT valid_total_price CHECK(total >= 0)
 );
@@ -208,8 +197,21 @@ INSERT INTO Moderator(idUser) VALUES(1);
 INSERT INTO Administrator(idModerator) VALUES (1);
 
 INSERT INTO Moderator(idUser) VALUES(5);
+
 INSERT INTO Permission(permission) VALUES('CAN_CREATE_CUSTOMER');
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(5,1);
+INSERT INTO Permission(permission) VALUES('CAN_DELETE_CUSTOMER');
+INSERT INTO Permission(permission) VALUES('CAN_CREATE_DISCOUNT');
+INSERT INTO Permission(permission) VALUES('CAN_MANAGE_LOYALTY');
+INSERT INTO Permission(permission) VALUES('CAN_MANAGE_ORDER');
+
+-- Admin has every permissions
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,1);
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,2);
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,3);
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,4);
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,5);
+
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(5,1); -- Can add customers
 
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(2,1,1);
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(3,2,2);
@@ -251,9 +253,8 @@ INSERT INTO LoyaltyAccountLevelUsed(idLoyaltyAccount, idLoyaltyLevel) VALUES(1,1
 
 INSERT INTO Mail(fromAddress, toAddress, subject, body, date) VALUES('example@example.com', 'example@example.com', 'Test mail', 'This is the body of a mail used for testing purposes', STR_TO_DATE('30/10/2023', '%d/%m/%Y'));
 
-INSERT INTO ShippingMethod(name, price, maxDaysTransit) VALUES('standard', 5, 10);
 
-INSERT INTO Orders(total, date, orderStatus, idCustomer, idShippingMethod, idAddress) VALUES(30, STR_TO_DATE('30/10/2023', '%d/%m/%Y'), 'SHIPPED', 2, 1, 1);
+INSERT INTO Orders(total, date, orderStatus, idCustomer, idAddress) VALUES(30, STR_TO_DATE('30/10/2023', '%d/%m/%Y'), 'SHIPPED', 2, 1);
 INSERT INTO CartItem(quantity, idOrder, idProduct) VALUES(2,1,1);
 
 INSERT INTO FeaturedProduct(idProduct) VALUES(1);

@@ -1,6 +1,7 @@
 package j2ee_project.model.order;
 
 import j2ee_project.model.Discount;
+import j2ee_project.model.catalog.Product;
 import j2ee_project.model.user.Customer;
 import jakarta.persistence.*;
 
@@ -68,5 +69,13 @@ public class Cart {
 
     public void setCartItems(Set<CartItem> cartItems) {
         this.cartItems = cartItems;
+    }
+
+    public float getTotal() {
+        float total = 0.0f;
+        for(CartItem item : getCartItems()) {
+            total+= item.getQuantity()*item.getProduct().getUnitPrice();
+        }
+        return total;
     }
 }

@@ -27,9 +27,7 @@ public class Orders {
     @ManyToOne
     @JoinColumn(name = "idCustomer", referencedColumnName = "idUser", nullable = false)
     private Customer customer;
-    @ManyToOne
-    @JoinColumn(name = "idShippingMethod", referencedColumnName = "id", nullable = false)
-    private ShippingMethod shippingMethod;
+
     @ManyToOne
     @JoinColumn(name = "idAddress", referencedColumnName = "id", nullable = false)
     private Address address;
@@ -104,14 +102,6 @@ public class Orders {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
-    }
-
-    public ShippingMethod getShippingMethod() {
-        return shippingMethod;
-    }
-
-    public void setShippingMethod(ShippingMethod shippingMethod) {
-        this.shippingMethod = shippingMethod;
     }
 
     public Address getAddress() {

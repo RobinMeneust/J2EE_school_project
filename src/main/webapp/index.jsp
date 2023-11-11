@@ -1,149 +1,82 @@
 <%@ page import="java.util.List" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="cf" uri="/WEB-INF/functions.tld"%>
 
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" name="viewport" content="width=device-width; initial-scale=1; text/html; charset=UTF-8">
 	<jsp:include page="include.jsp" />
+	<link href="css/carousel_style.css" rel="stylesheet" type="text/css">
 	<title>Home</title>
-	<style>
-		#hide-checkbox {
-			opacity: 0;
-			height: 0;
-			width: 0;
-		}
-
-		.toggle {
-			position: relative;
-			cursor: pointer;
-			display: inline-block;
-			width: 100px;
-			height: 50px;
-			background: #211042;
-			border-radius: 50px;
-			transition: 500ms;
-			overflow: hidden;
-		}
-
-		.toggle-button {
-			position: absolute;
-			display: inline-block;
-			top: 7px;
-			left: 6px;
-			width: 35px;
-			height: 35px;
-			border-radius: 50%;
-			background: white;
-			overflow: hidden;
-			transition: all 500ms ease-out;
-		}
-
-		#hide-checkbox:checked + .toggle {
-			background: lightgrey;
-		}
-
-
-		#hide-checkbox:checked + .toggle .toggle-button {
-			background: black;
-			transform: translateX(50px);
-		}
-	</style>
 </head>
 <body>
 	<jsp:include page="layout/header.jsp" />
-	<div class="container">
-		<p>Test</p>
-		<a href="browse-products">Browse products</a>
-		<a href="mailTest.jsp">TEST MAIL</a>
-		<p></p>
-		<a href="profile-informations">Profile</a>
-		<div class="form-check form-switch">
-			<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-			<label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
-		</div>
 
-		<i class="bi bi-moon-fill"></i>
-		<div>
-			<input type="checkbox" id="hide-checkbox">
-			<label for="hide-checkbox" class="toggle">
-				<span class="toggle-button bi bi-moon-fill"></span>
-			</label>
-		</div>
-
-		<div class="jumbotron text-center">
-			<h1>My First Bootstrap Page</h1>
-			<p>Resize this responsive page to see the effect!</p>
-		</div>
-		<div class="row">
-			<div class="col-sm-4">
-				<h3>Column 1</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-				<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-			</div>
-			<div class="col-sm-4">
-				<h3>Column 2</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-				<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-			</div>
-			<div class="col-sm-4">
-				<h3>Column 3</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-				<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-			</div>
-		</div>
-	</div>
+	<c:set var="featuredProducts" value="${cf:getFeaturedProducts()}"/>
+	<c:set var="categories" value="${cf:getCategories()}"/>
 
 	<div class="container">
-		<div class="d-flex align-items-start">
-			<div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-				<button class="nav-link active" id="v-pills-clients-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Clients</button>
-				<button class="nav-link" id="v-pills-products-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Products</button>
-				<button class="nav-link" id="v-pills-categories-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Categories</button>
-			</div>
+		<c:if test="${featuredProducts != null && featuredProducts.size() != 0}">
+		<div class="mb-5">
+			<h2 class="display-2 p-3">Featured products</h2>
 
-			<div class="tab-content" id="v-pills-tabContent">
-				<div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-clients-tab">
-					<table id="dtBasicExample" class="table table-striped table-bordered table-sm" style="width:100%">
-						<thead>
-						<tr>
-							<th>Name</th>
-							<th>Position</th>
-							<th>Office</th>
-							<th>Age</th>
-							<th>Start date</th>
-							<th>Salary</th>
-						</tr>
-						</thead>
-						<tbody>
-						<tr>
-							<td>Tiger Nixon</td>
-							<td>System Architect</td>
-							<td>Edinburgh</td>
-							<td>61</td>
-							<td>2011-04-25</td>
-							<td>$320,800</td>
-						</tr>
-						</tbody>
-						<tfoot>
-						<tr>
-							<th>Name</th>
-							<th>Position</th>
-							<th>Office</th>
-							<th>Age</th>
-							<th>Start date</th>
-							<th>Salary</th>
-						</tr>
-						</tfoot>
-					</table>
-					<script>
-						new DataTable('#dtBasicExample');
-					</script>
+			<div id="carouselExampleInterval" class="carousel slide w-" data-bs-ride="carousel">
+				<div class="carousel-inner">
+					<c:forEach var="i" begin="0" end="${Math.min(10,featuredProducts.size()-1)}">
+						<c:if test="${i%3 == 0}">
+							<div class="carousel-item <c:if test="${i == 0}">active</c:if>" data-bs-interval="10000">
+								<div class="row">
+						</c:if>
+									<div class="col-sm text-center">
+										<a class="text-decoration-none text-body" href="get-product-page?id=${featuredProducts.get(i).getId()}">
+											<img style="width: 390px; height: 250px; object-fit: cover;" src="${featuredProducts.get(i).getImageUrl()}" class="d-block" alt="${featuredProducts.get(i).getName()}_img">
+											<div>
+												<h5><c:out value="${featuredProducts.get(i).getName()}"/></h5>
+											</div>
+										</a>
+									</div>
+						<c:if test="${i%3 == 2}">
+								</div>
+							</div>
+						</c:if>
+					</c:forEach>
+					<c:if test="${Math.min(10,featuredProducts.size()-1) % 3 != 2}"> <%-- if the 2 div were not closed--%>
+								<c:forEach var="i" begin="0" end="${1 - (Math.min(10,featuredProducts.size()-1) % 3)}">
+									<div class="col-sm"></div>
+								</c:forEach>
+								</div>
+							</div>
+					</c:if>
 				</div>
-				<div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-products-tab">...</div>
-				<div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-categories-tab">...</div>
+				<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					<span class="visually-hidden">Previous</span>
+				</button>
+				<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					<span class="visually-hidden">Next</span>
+				</button>
 			</div>
+		</c:if>
+		</div>
+		<div class="mb-5">
+			<h2 class="display-2 p-3">Categories</h2>
+			<ul>
+			<c:forEach items="${categories}" var="category">
+				<li>
+					<a class="text-decoration-none" href="browse-products?category=<c:out value="${category.getName()}"/>"><c:out value="${category.getName()}"/></a>
+				</li>
+			</c:forEach>
+			</ul>
+		</div>
+		<div class="mb-5">
+			<h2 class="display-2 p-3">Board games</h2>
+			<p>
+				A website were you will find various board games.<br>
+				It has been created by four engineering students for a school project using Jakarta Persistence, Hibernate and other tools.<br>
+				GitHub: <a href="https://github.com/RobinMeneust/J2EE_school_project">Link</a><br>
+			</p>
 		</div>
 	</div>
 	<jsp:include page="layout/footer.jsp" />

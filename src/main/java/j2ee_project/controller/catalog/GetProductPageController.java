@@ -1,6 +1,6 @@
 package j2ee_project.controller.catalog;
 
-import j2ee_project.dao.product.ProductDAO;
+import j2ee_project.dao.catalog.product.ProductDAO;
 import j2ee_project.model.catalog.Product;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * This class is a servlet used to browse products. It's a controller in the MVC architecture of this project.
+ * This class is a servlet used to get a product page from its ID. It's a controller in the MVC architecture of this project.
  *
  * @author Robin MENEUST
  */
@@ -20,7 +20,7 @@ import java.io.IOException;
 public class GetProductPageController extends HttpServlet
 {
     /**
-     * Send a mail with the parameters given in the request object. An error is sent to the sender in the request object if the mail could not be sent
+     * Get a page giving information a product by giving its ID
      * @param request Request object received by the servlet
      * @param response Response to be sent
      * @throws ServletException If the request for the GET could not be handled

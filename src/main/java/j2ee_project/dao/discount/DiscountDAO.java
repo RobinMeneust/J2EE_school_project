@@ -2,6 +2,8 @@ package j2ee_project.dao.discount;
 
 import j2ee_project.dao.HibernateUtil;
 import j2ee_project.model.Discount;
+import j2ee_project.model.catalog.Product;
+import jakarta.persistence.NoResultException;
 import org.hibernate.Session;
 
 import java.util.List;
@@ -41,5 +43,19 @@ public class DiscountDAO {
         session.save(discount);
         session.getTransaction().commit();
         session.close();
+    }
+
+    public static Integer getDiscount(Product product) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        Integer discountPercentage = null;
+
+        try {
+            discountPercentage = session.createQuery("SELECT p.category.discount.discountPercentage FROM Product AS p WHERE p=:product", Integer.class).setParameter("product", product).getSingleResult();
+            session.getTransaction().commit();
+        } catch(NoResultException ignore) { }
+        session.close();
+
+        return discountPercentage;
     }
 }

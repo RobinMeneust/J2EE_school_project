@@ -23,5 +23,11 @@
         <function-class>j2ee_project.dao.catalog.category.CategoryDAO</function-class>
         <function-signature>java.util.List getCategories()</function-signature>
     </function>
+    <function>
+        <name>getDiscount</name>
+        <function-class>j2ee_project.dao.discount.DiscountDAO</function-class>
+        <function-signature>java.lang.Integer getDiscount(j2ee_project.model.catalog.Product)</function-signature>
+    </function>
+
 </taglib>
 

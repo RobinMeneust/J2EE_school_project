@@ -21,7 +21,7 @@
 		<div class="mb-5">
 			<h2 class="display-2 p-3">Featured products</h2>
 
-			<div id="carouselExampleInterval" class="carousel slide w-" data-bs-ride="carousel">
+			<div id="carousel-recommendations" class="carousel slide w-" data-bs-ride="carousel">
 				<div class="carousel-inner">
 					<c:forEach var="i" begin="0" end="${Math.min(10,featuredProducts.size()-1)}">
 						<c:if test="${i%3 == 0}">
@@ -49,11 +49,11 @@
 							</div>
 					</c:if>
 				</div>
-				<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+				<button class="carousel-control-prev" type="button" data-bs-target="#carousel-recommendations" data-bs-slide="prev">
 					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 					<span class="visually-hidden">Previous</span>
 				</button>
-				<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+				<button class="carousel-control-next" type="button" data-bs-target="#carousel-recommendations" data-bs-slide="next">
 					<span class="carousel-control-next-icon" aria-hidden="true"></span>
 					<span class="visually-hidden">Next</span>
 				</button>

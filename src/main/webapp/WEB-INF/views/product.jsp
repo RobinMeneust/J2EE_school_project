@@ -23,10 +23,11 @@
 %>
 
 <c:set var="product" value="<%=product%>"/>
+<c:set var="discount" value="${cf:getDiscount(product)}"/>
 <c:set var="cart" value="${cf:getCart(sessionCart,null)}"/> <%-- change 'null' to a function to get the authenticated customer --%>
 
 
-<div class="container mt-1 px-2">
+<div class="container mt-1 px-2 pb-5 mb-5">
     <div id="error-alert-box" class="alert invisible alert-warning alert-dismissible fade" role="alert">
         <strong>Failure</strong> The product could not be added to the cart.
         <button type="button" class="close btn" data-bs-dismiss="alert" aria-label="Close">
@@ -34,24 +35,40 @@
         </button>
     </div>
     <h3 class="display-3 mb-3"><c:out value="${product.getName()}" /></h3>
-    <div class="row">
-        <div class="col-4">
+    <div class="row g-5 justify-content-start">
+        <div class="col">
             <img class="rounded" style="width: 420px; height: 300px; object-fit: cover;" alt="product_img" src="<c:out value="${product.getImageUrl()}" />">
         </div>
-        <div class="col-4">
+        <div class="col text-justify" style="min-width:350px; max-width:600px">
             <p>
                 <c:out value="${product.getDescription()}" />
             </p>
         </div>
-        <div class="col-2">
-            <span class="font-weight-bold">$<c:out value="${product.getUnitPrice()}" /></span>
+        <div class="col bg-secondary-subtle shadow p-3 rounded d-flex align-items-start flex-column" style="min-width:250px; max-width:450px">
+            <div class="p-2 mb-auto">
+                <c:choose>
+                    <c:when test="${discount != null && discount > 0}">
+                        <span class="text-secondary text-decoration-line-through">$<c:out value="${product.getUnitPrice()}"/></span> <span class="text-success"><c:out value="(-${discount} %)"/></span>
+                        <h6 class="display-6">$<c:out value="${product.getUnitPrice()*(1-(discount/100))}"/></h6>
+                    </c:when>
+                    <c:otherwise>
+                        <h6 class="display-6">$<c:out value="${product.getUnitPrice()}"/></h6>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+            <div class="p-2 mb-auto w-100">
+                <div class="row">
+                    <div class="col text-start"><span class="material-symbols-outlined">local_shipping</span> <span>Home delivery</span></div>
+                    <div class="col text-end">$5.00 Shipping</div>
+                </div>
 
+            </div>
             <c:choose>
                 <c:when test="${cart != null && cart.getCartItems() != null && cart.containsProduct(product.getId())}">
-                    <button class="btn btn-success" disabled>Already in cart</button>
+                    <button class="btn btn-success w-100" disabled>Already in cart</button>
                 </c:when>
                 <c:otherwise>
-                    <button onclick="addToCart(this, ${product.getId()})" class="btn btn-primary">Add to cart</button>
+                    <button onclick="addToCart(this, ${product.getId()})" class="btn btn-primary w-100">Add to cart</button>
                 </c:otherwise>
             </c:choose>
         </div>

@@ -15,7 +15,7 @@ public class LoyaltyLevel {
     @ManyToOne
     @JoinColumn(name = "idDiscount", referencedColumnName = "id", nullable = false)
     private Discount discount;
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "idLoyaltyProgram", referencedColumnName = "id", nullable = false)
     private LoyaltyProgram loyaltyProgram;
 

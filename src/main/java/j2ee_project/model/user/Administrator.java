@@ -6,6 +6,10 @@ import jakarta.persistence.*;
 @PrimaryKeyJoinColumn(name = "idModerator")
 public class Administrator extends Moderator{
 
+    public Administrator() {
+        super();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

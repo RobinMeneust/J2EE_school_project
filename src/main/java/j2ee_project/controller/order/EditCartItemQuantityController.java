@@ -1,12 +1,9 @@
 package j2ee_project.controller.order;
 
-import j2ee_project.dao.catalog.ProductDAO;
 import j2ee_project.dao.order.CartDAO;
-import j2ee_project.model.catalog.Product;
 import j2ee_project.model.order.Cart;
 import j2ee_project.model.order.CartItem;
 import j2ee_project.model.user.Customer;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

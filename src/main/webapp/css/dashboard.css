@@ -1,0 +1,40 @@
+.hidden{
+    display:none;
+}
+
+#add-customer{
+    border: 1px solid black;
+}
+
+div.container-fluid{
+    width: 100%;
+    max-width: 100%;
+}
+
+nav.col-lg-2{
+    width: 20%;
+}
+
+div.tab-content{
+    width: 80%;
+}
+
+a.add-data{
+    text-decoration: none;
+    color: black;
+    border:1px solid black;
+}
+
+table#customers-table{
+    width: 100%;
+}
+
+button.trash-can{
+    border: none;
+    background-color: transparent;
+}
+
+button.pencil{
+    border: none;
+    background-color: transparent;
+}

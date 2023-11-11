@@ -1,4 +1,4 @@
-package j2ee_project.dao.catalog;
+package j2ee_project.dao.catalog.product;
 
 import j2ee_project.dao.HibernateUtil;
 import j2ee_project.model.catalog.FeaturedProduct;
@@ -112,6 +112,11 @@ public class ProductDAO {
         return products;
     }
 
+    public static List<Product> getProducts(){
+        int size = Math.toIntExact(ProductDAO.getSize());
+        return ProductDAO.getProducts(0,size,null,null,null,null);
+    }
+
     /**
      * Get a product from its ID
      * @param productId ID of the searched product
@@ -181,4 +186,24 @@ public class ProductDAO {
         return size;
     }
 
+    public static Long getSize(){
+        return ProductDAO.getSize(null,null,null,null);
+    }
+
+    public static void deleteProduct(int productId){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        Product product = session.createQuery("FROM Product WHERE id=:productId",Product.class).setParameter("productId",productId).getSingleResult();
+        session.remove(product);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public static void addProduct(Product product){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.save(product);
+        session.getTransaction().commit();
+        session.close();
+    }
 }

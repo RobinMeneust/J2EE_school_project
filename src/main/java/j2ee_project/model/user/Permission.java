@@ -29,6 +29,14 @@ public class Permission {
         this.permission = permission;
     }
 
+    public Permission(){
+
+    }
+
+    public Permission(TypePermission permission){
+        this.permission = permission;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

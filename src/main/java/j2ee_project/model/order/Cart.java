@@ -78,4 +78,15 @@ public class Cart {
         }
         return total;
     }
+
+    public boolean containsProduct(int productId) {
+        Set<CartItem> items = getCartItems();
+        if(productId<0 || items == null) return false;
+        for(CartItem item : items) {
+            if(item.getProduct() != null && item.getProduct().getId() == productId) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

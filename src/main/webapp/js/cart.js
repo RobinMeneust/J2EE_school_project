@@ -1,3 +1,5 @@
+const url = "edit-cart-item-quantity";
+
 function addToCart(button, productId) {
     if(productId != null && !isNaN(productId) && productId>0) {
         const url = "add-to-cart?id="+productId;

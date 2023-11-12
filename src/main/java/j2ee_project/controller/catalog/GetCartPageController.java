@@ -29,7 +29,7 @@ public class GetCartPageController extends HttpServlet
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         try {
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/fullCart.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/cart.jsp");
             view.forward(request, response);
         } catch(Exception err) {
             // The forward didn't work

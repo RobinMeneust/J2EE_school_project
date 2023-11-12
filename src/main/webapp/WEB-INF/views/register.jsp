@@ -10,8 +10,8 @@
 <html>
 <head>
     <title>Register</title>
-    <jsp:include page="include.jsp"/>
-    <script src="dependencies/jquery/jquery.validate.min.js"></script>
+    <jsp:include page="../../include.jsp"/>
+    <script src="../../dependencies/jquery/jquery.validate.min.js"></script>
 </head>
 <body>
 <%--    <jsp:include page="../..layout/header.jsp"/>--%>

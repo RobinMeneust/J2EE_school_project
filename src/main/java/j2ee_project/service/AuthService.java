@@ -4,9 +4,8 @@ import j2ee_project.dao.user.UserDAO;
 import j2ee_project.dto.CustomerDTO;
 import j2ee_project.dto.ModeratorDTO;
 import j2ee_project.dto.UserDTO;
-import j2ee_project.model.user.Customer;
-import j2ee_project.model.user.Moderator;
-import j2ee_project.model.user.User;
+import j2ee_project.model.user.*;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -67,6 +66,21 @@ public class AuthService {
       /*  for(ConstraintViolation<UserDTO> violation : constraintViolations){
             System.out.printf(violation.getMessage());
         }*/
+    }
+
+    public static boolean checkModerator(User user, TypePermission typePermission){
+        if(user == null){
+            return false;
+        }
+        if(!(user instanceof Moderator)){
+            return false;
+        }
+        Permission permission = new Permission();
+        permission.setPermission(typePermission);
+        if(!((Moderator) user).getPermissions().contains(permission)){
+            return false;
+        }
+        return true;
     }
 
 }

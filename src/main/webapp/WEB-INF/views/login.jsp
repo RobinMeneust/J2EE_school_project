@@ -10,13 +10,13 @@
 <html>
 <head>
     <title>Register</title>
-    <jsp:include page="include.jsp"/>
-    <script src="dependencies/jquery/jquery.validate.min.js"></script>
+    <jsp:include page="../../include.jsp"/>
+    <script src="../../dependencies/jquery/jquery.validate.min.js"></script>
 </head>
 <body>
-<%--    <jsp:include page="../..layout/header.jsp"/>--%>
+    <jsp:include page="../../layout/header.jsp"/>
 <main>
-    <form id="loginForm" method="post" action="${pageContext.request.contextPath}/RegisterCustomerController">
+    <form id="loginForm" method="post" action="${pageContext.request.contextPath}/LogInController">
         <c:if test="${requestScope.emailInDbError != null}">
             <div class="alert alert-danger" role="alert">
                 <c:out value="${requestScope.emailInDbError}"/>
@@ -44,7 +44,7 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </main>
-<%--    <jsp:include page="../..layout/&footer.jsp"/>--%>
+    <jsp:include page="../../layout/footer.jsp"/>
 <script>
     $.validator.addMethod("pattern", function (value, element, param){
         return $.validator.optional(element) || value.match(param) != null;

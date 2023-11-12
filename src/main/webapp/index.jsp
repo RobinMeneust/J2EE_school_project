@@ -1,4 +1,5 @@
 <%@ page import="java.util.List" %>
+<%@ page import="org.hibernate.Session" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="cf" uri="/WEB-INF/functions.tld"%>
@@ -12,6 +13,8 @@
 </head>
 <body>
 	<jsp:include page="layout/header.jsp" />
+
+	<c:out value="${sessionScope.user}"/>
 
 	<c:set var="featuredProducts" value="${cf:getFeaturedProducts()}"/>
 	<c:set var="categories" value="${cf:getCategories()}"/>

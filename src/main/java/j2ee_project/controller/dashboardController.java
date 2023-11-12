@@ -17,6 +17,9 @@ public class dashboardController extends HttpServlet {
             RequestDispatcher dispatcherModerators = getServletContext().getRequestDispatcher("/get-moderators");
             dispatcherModerators.include(request, response);
 
+            RequestDispatcher dispatcherProducts = getServletContext().getRequestDispatcher("/get-products");
+            dispatcherProducts.include(request, response);
+
             RequestDispatcher dispatcherCategories = getServletContext().getRequestDispatcher("/get-categories");
             dispatcherCategories.include(request, response);
 

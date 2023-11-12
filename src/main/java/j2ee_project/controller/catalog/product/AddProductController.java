@@ -1,10 +1,6 @@
 package j2ee_project.controller.catalog.product;
 
-import j2ee_project.dao.catalog.category.CategoryDAO;
-import j2ee_project.dao.discount.DiscountDAO;
 import j2ee_project.dao.catalog.product.ProductDAO;
-import j2ee_project.model.Discount;
-import j2ee_project.model.catalog.Category;
 import j2ee_project.model.catalog.Product;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;

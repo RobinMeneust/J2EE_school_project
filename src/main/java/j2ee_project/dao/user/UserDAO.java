@@ -51,9 +51,9 @@ public class UserDAO {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         User user;
-        user = session.createNativeQuery("SELECT * FROM User WHERE email=:email", User.class)
+        user = session.createQuery("FROM User WHERE email=:email", User.class)
                 .setParameter("email", email)
-                .uniqueResult();
+                .getSingleResult();
         session.getTransaction().commit();
         session.close();
         return  user;

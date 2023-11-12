@@ -24,7 +24,7 @@ public class LogInController extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String errorDestination = "WEB-INF/views/login.jsp";
-        String noErrorDestination = "index.jsp";
+        String noErrorDestination = "/index.jsp";
         RequestDispatcher dispatcher = null;
 
         try {
@@ -36,6 +36,7 @@ public class LogInController extends HttpServlet {
             else {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
+                System.out.println(user);
                 response.sendRedirect(request.getContextPath() + noErrorDestination);
             }
         }catch (Exception e) {

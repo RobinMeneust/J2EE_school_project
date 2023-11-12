@@ -14,8 +14,6 @@
 <body>
 	<jsp:include page="layout/header.jsp" />
 
-	<c:out value="${sessionScope.user}"/>
-
 	<c:set var="featuredProducts" value="${cf:getFeaturedProducts()}"/>
 	<c:set var="categories" value="${cf:getCategories()}"/>
 

@@ -56,7 +56,7 @@ public class RegisterCustomerController extends HttpServlet {
         );
         Map<String, String> inputErrors = AuthService.userDataValidation(customer);
         String errorDestination = "WEB-INF/views/register.jsp";
-        String noErrorDestination = "index.jsp";
+        String noErrorDestination = "/index.jsp";
         RequestDispatcher dispatcher = null;
         if(inputErrors.isEmpty()){
             if (!UserDAO.emailOrPhoneNumberIsInDb(customer.getEmail(), customer.getPhoneNumber())){

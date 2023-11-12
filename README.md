@@ -68,8 +68,13 @@ Create a file named "credentials.json" with the following content in src/main/re
 
 ```JSON
 {
-  "username": "PLACEHOLDER_EMAIL_ADDRESS",
-  "password": "PLACEHOLDER_PASSWORDS"
+  "gmail": {
+    "username": "PLACEHOLDER_EMAIL_ADDRESS",
+    "password": "PLACEHOLDER_PASSWORD"
+  },
+  "stripe": {
+    "secret_key": "PLACEHOLDER_STRIPE_SECRET_KEY"
+  }
 }
 ```
 

@@ -81,11 +81,11 @@ public class MailManager {
 
                 // Check if the credentials object contains the required fields
 
-                if(!credentials.has("username") || !credentials.has("password")) {
+                if(!credentials.has("gmail") || !credentials.getJSONObject("gmail").has("username") || !credentials.getJSONObject("gmail").has("password")) {
                     throw new RuntimeException("Invalid credentials");
                 }
-
-                return new PasswordAuthentication(credentials.getString("username"), credentials.getString("password"));
+                JSONObject gmailCredentials = credentials.getJSONObject("gmail");
+                return new PasswordAuthentication(gmailCredentials.getString("username"), gmailCredentials.getString("password"));
             }
         });
 

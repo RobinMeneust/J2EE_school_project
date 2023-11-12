@@ -9,7 +9,7 @@
 <html>
 <head>
     <title>Dashboard</title>
-    <jsp:include page="include.jsp"/>
+    <jsp:include page="../../../include.jsp"/>
     <script type="application/javascript">
         function expandCatalogue(button){
             if (button.getAttribute('id') === 'nav-catalogue-tab'){
@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
 </head>
 <body>
-    <jsp:include page="layout/header.jsp" />
+    <jsp:include page="../../../layout/header.jsp" />
     <div class="container-fluid">
         <div class="d-flex ">
             <nav class="col-lg-2">
@@ -295,6 +295,6 @@
             </div>
         </div>
     </div>
-    <jsp:include page="layout/footer.jsp" />
+    <jsp:include page="../../../layout/footer.jsp" />
 </body>
 </html>

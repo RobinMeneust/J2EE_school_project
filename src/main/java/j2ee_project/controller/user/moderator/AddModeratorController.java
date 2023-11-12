@@ -13,7 +13,7 @@ public class AddModeratorController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            RequestDispatcher view = request.getRequestDispatcher("addModerator.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/addModerator.jsp");
             view.forward(request,response);
         }catch (Exception err){
             System.out.println(err.getMessage());

@@ -16,7 +16,7 @@ public class AddProductController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             request.setAttribute("categories", CategoryDAO.getCategories());
-            RequestDispatcher view = request.getRequestDispatcher("addProduct.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/addProduct.jsp");
             view.forward(request,response);
         }catch (Exception err){
             System.out.println(err.getMessage());

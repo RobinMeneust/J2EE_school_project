@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS User (
     firstName VARCHAR(30),
     lastName VARCHAR(30),
     email VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(128) NOT NULL,
+    password VARCHAR(168) NOT NULL,
     phoneNumber VARCHAR(15) UNIQUE
 );
 

@@ -1,33 +1,46 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <html>
 <head>
-    <meta http-equiv="Content-Type" name="viewport" content="width=device-width, initial-scale=1, text/html, charset=UTF-8">
-    <jsp:include page="../../../include.jsp" />
     <title>Dashboard</title>
+    <jsp:include page="../../../include.jsp" />
 </head>
 <body>
-<h2>Add Moderator</h2>
-<form action="add-moderator" method="post">
-    <div id="name">
-        <label for="last-name">Last Name :</label>
-        <input type="text" id="last-name" name="last-name" value="">
-        <label for="first-name">First Name :</label>
-        <input type="text" id="first-name" name="first-name" value="">
+    <jsp:include page="../../../layout/header.jsp" />
+    <div class="d-flex flex-column align-items-center div-form">
+        <h2>Add Moderator</h2>
+        <form id="add-moderator-form" name="add-moderator-form" action="add-moderator" method="post">
+            <div class="row mb-3 input-group" id="div-name">
+                <div class="col">
+                    <label class="form-label" for="last-name">Last Name :</label>
+                    <input type="text" class="form-control" id="last-name" name="last-name" placeholder="Enter last name" required>
+                </div>
+                <div class="col">
+                    <label class="form-label" for="first-name">First Name :</label>
+                    <input type="text" class="form-control" id="first-name" name="first-name" placeholder="Enter first name" required>
+                </div>
+            </div>
+            <div class="row mb-3 input-group" id="div-password">
+                <div class="col">
+                    <label class="form-label" for="password">Password :</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                </div>
+            </div>
+            <div class="row mb-3 input-group" id="div-contact-details">
+                <div class="col">
+                    <label class="form-label" for="email">Email :</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+                </div>
+                <div class="col">
+                    <label class="form-label" for="phone-number">Phone Number :</label>
+                    <input type="tel" class="form-control" id="phone-number" name="phone-number" placeholder="Enter phone number" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                Submit
+            </button>
+        </form>
     </div>
-    <div>
-        <label for="password">Password :</label>
-        <input type="text" id="password" name="password" value="">
-    </div>
-    <div id="contact-details">
-        <label for="email">Email :</label>
-        <input type="text" id="email" name="email" value="">
-        <label for="phone-number">Phone Number</label>
-        <input type="text" id="phone-number" name="phone-number" value="">
-    </div>
-    <button type="submit">
-        Confirm
-    </button>
-</form>
+    <jsp:include page="../../../layout/footer.jsp" />
 </body>
 </html>

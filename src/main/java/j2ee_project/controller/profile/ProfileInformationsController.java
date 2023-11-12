@@ -44,11 +44,18 @@ public class ProfileInformationsController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userIdStr = request.getParameter("id");
-        int userId=2;
+        String userAddressIdStr = request.getParameter("addressId");
+        int userId=0;
+        int userAdressId=0;
 
         if(userIdStr != null && !userIdStr.trim().isEmpty()) {
             try {
                 userId = Integer.parseInt(userIdStr);
+            } catch(Exception ignore) {}
+        }
+        if(userAddressIdStr != null && !userAddressIdStr.trim().isEmpty()) {
+            try {
+                userAdressId = Integer.parseInt(userAddressIdStr);
             } catch(Exception ignore) {}
         }
 
@@ -66,6 +73,7 @@ public class ProfileInformationsController extends HttpServlet {
         address.setPostalCode(request.getParameter("userPostalCode"));
         address.setCity(request.getParameter("userCity"));
         address.setCountry(request.getParameter("userCountry"));
+        address.setId(userAdressId);
 
         customer.setAddress(address);
         UserDAO.modifyCustomer(customer);

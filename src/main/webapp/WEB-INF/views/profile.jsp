@@ -123,7 +123,7 @@
             <div class="tab-content" id="nav-tabContent">
                 <div class="tab-pane fade <c:if test="${activeTab == 1}">show active</c:if>" id="nav-profile-informations" role="tabpanel" aria-labelledby="nav-profile-informations-tab"> <h2>Profile informations</h2>
                     <p></p>
-                    <form action="profile-informations?id=${customer.id}" method="post">
+                    <form action="profile-informations?id=${customer.id}&addressId=${customer.address.id}" method="post">
                         <div class="form-group">
                             <label for="userFirstName">Name</label>
                             <input type="text" class="form-control" id="userFirstName" name="userFirstName" value="<%=customerFirstName%>">

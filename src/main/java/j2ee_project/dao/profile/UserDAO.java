@@ -24,7 +24,7 @@ public class UserDAO {
         String userQueryStr = getUserUpdateQueryString(customer);
         String addressQueryString = getAddressUpdateQueryString(customer);
         MutationQuery userQuery = session.createMutationQuery(userQueryStr).setParameter("userId",customer.getId());
-        MutationQuery addressQuery = session.createMutationQuery(addressQueryString).setParameter("userId",customer.getId());
+        MutationQuery addressQuery = session.createMutationQuery(addressQueryString).setParameter("userId",customer.getAddress().getId());
         if (!customer.getFirstName().isEmpty()){
             userQuery.setParameter("customerFirstName",customer.getFirstName());
         }

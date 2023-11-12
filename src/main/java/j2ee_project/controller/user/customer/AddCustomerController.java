@@ -14,7 +14,7 @@ public class AddCustomerController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            RequestDispatcher view = request.getRequestDispatcher("addCustomer.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/addCustomer.jsp");
             view.forward(request,response);
         }catch (Exception err){
             System.out.println(err.getMessage());

@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Dashboard</title>
-    <jsp:include page="include.jsp" />
+    <jsp:include page="../../../include.jsp" />
 
     <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/tcrs-generated-labels.min.js"></script>
     <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/toolcool-range-slider.min.js"></script>

@@ -36,14 +36,7 @@ public class CreatePaymentIntentController extends HttpServlet {
         }
     }
 
-    static int calculateOrderAmount(Object[] items) {
-        // Replace this constant with a calculation of the order's amount
-        // Calculate the order total on the server to prevent
-        // people from directly manipulating the amount on the client
-        return 1400;
-    }
-
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         try {
             // Set your Stripe secret key
@@ -58,10 +51,10 @@ public class CreatePaymentIntentController extends HttpServlet {
 
                 // Check if the credentials object contains the required fields
 
-                if(!credentials.has("stripe") || !credentials.getJSONObject("stripe").has("secret_key")) {
+                if(!credentials.has("stripe") || !credentials.getJSONObject("stripe").has("secret-key")) {
                     throw new RuntimeException("Invalid credentials");
                 }
-                Stripe.apiKey = credentials.getJSONObject("stripe").getString("secret_key");
+                Stripe.apiKey = credentials.getJSONObject("stripe").getString("secret-key");
             }
 
             response.setContentType("application/json");
@@ -69,17 +62,10 @@ public class CreatePaymentIntentController extends HttpServlet {
 
             PaymentIntentCreateParams params =
                 PaymentIntentCreateParams.builder()
-                    .setAmount(10L)
+                    .setAmount(1000L)
                     .setCurrency("eur")
-                    // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
-                    .setAutomaticPaymentMethods(
-                        PaymentIntentCreateParams.AutomaticPaymentMethods
-                            .builder()
-                            .setEnabled(true)
-                            .build()
-                    )
+                    .addPaymentMethodType("card")
                     .build();
-
             // Create a PaymentIntent with the order amount and currency
             PaymentIntent paymentIntent = PaymentIntent.create(params);
 

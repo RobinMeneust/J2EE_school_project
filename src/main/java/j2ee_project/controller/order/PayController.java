@@ -37,10 +37,10 @@ public class PayController extends HttpServlet {
 
             // Check if the credentials object contains the required fields
 
-            if(!credentials.has("stripe") || !credentials.getJSONObject("stripe").has("secret_key")) {
+            if(!credentials.has("stripe") || !credentials.getJSONObject("stripe").has("secret-key")) {
                 throw new RuntimeException("Invalid credentials");
             }
-            Stripe.apiKey = credentials.getJSONObject("stripe").getString("secret_key");
+            Stripe.apiKey = credentials.getJSONObject("stripe").getString("secret-key");
         }
 
         // Temporary values:

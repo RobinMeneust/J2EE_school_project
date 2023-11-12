@@ -48,11 +48,11 @@ public class ConfirmCartController extends HttpServlet {
             //TODO: Return error
         }
 
-        for(CartItem item : cartItems) {
-            if(item.getQuantity() > item.getProduct().getStockQuantity()) {
-                //TODO: Return error
-            }
-        }
+//        for(CartItem item : cartItems) {
+//            if(item.getQuantity() > item.getProduct().getStockQuantity()) {
+//                //TODO: Return error
+//            }
+//        }
 
         try {
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/pay.jsp");

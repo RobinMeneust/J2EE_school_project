@@ -18,7 +18,7 @@
         </a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <form class="form-inline my-2 my-lg-0 mx-5 w-50" action="browse-products" method="get">
-                <input id="name" name="name" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <input id="name" name="name" class="form-control me-sm-2" type="search" placeholder="Search" aria-label="Search">
             </form>
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item mx-2" title="Cart">

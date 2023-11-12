@@ -10,6 +10,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * This class is a servlet used to get the context path. It's a controller in the MVC architecture of this project.
+ *
+ * @author Robin MENEUST
+ */
 @WebServlet("/get-context-path")
 public class GetContextPathController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

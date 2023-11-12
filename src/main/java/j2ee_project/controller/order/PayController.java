@@ -4,6 +4,9 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 
+import com.stripe.model.PaymentIntent;
+import com.stripe.model.PaymentMethod;
+import com.stripe.param.PaymentIntentCreateParams;
 import j2ee_project.service.MailManager;
 import jakarta.mail.PasswordAuthentication;
 import jakarta.servlet.ServletException;
@@ -40,27 +43,45 @@ public class PayController extends HttpServlet {
             Stripe.apiKey = credentials.getJSONObject("stripe").getString("secret_key");
         }
 
-        // Get data from the form
-        String cardNumber = request.getParameter("card-number");
-        String expiryDate = request.getParameter("expiry-date");
-        String cvv = request.getParameter("cvv");
-
         // Temporary values:
         float price = 10.0f;
         int orderNb = 0;
 
-        try {
-            Map<String, Object> chargeParams = new HashMap<>();
-            chargeParams.put("amount", (int) (price * 100)); // amount in cents
-            chargeParams.put("currency", "usd");
-            chargeParams.put("source", cardNumber);
-            chargeParams.put("description", "Boarder Games order n°"+orderNb);
 
-            Charge charge = Charge.create(chargeParams);
+        // Get data from the form
+        String cardNumber = request.getParameter("card-number");
+        String expiryMonth = request.getParameter("expiry-month");
+        String expiryYear = request.getParameter("expiry-year");
+        String cvv = request.getParameter("cvv");
+
+        // Create Stripe objects
+        Map<String, Object> card = new HashMap<>();
+        card.put("number", cardNumber);
+        card.put("exp_month", expiryMonth);
+        card.put("exp_year", expiryYear);
+        card.put("cvc", cvv);
+
+        Map<String, Object> paramsPaymentMethod = new HashMap<>();
+        paramsPaymentMethod.put("type", "card");
+        paramsPaymentMethod.put("card", card);
+
+
+        try {
+            PaymentMethod paymentMethod = PaymentMethod.create(paramsPaymentMethod);
+
+            PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
+                .setAmount((long) price*100)
+                .setPaymentMethod(paymentMethod.getId())
+                .setCurrency("usd")
+                .setDescription("Boarder Games order n°"+orderNb)
+                .build();
+
+            PaymentIntent paymentIntent = PaymentIntent.create(params);
+            paymentIntent.confirm();
 
             // Check if the payment was successful
-            if ("succeeded".equals(charge.getStatus())) {
-                // Create order object and send invoice
+            if ("succeeded".equals(paymentIntent.getStatus())) {
+                // TODO: Create order object and send invoice
 
                 // Temporary testing message
                 response.getWriter().write("Payment successful!");
@@ -69,7 +90,7 @@ public class PayController extends HttpServlet {
                 response.getWriter().write("Payment failed. Please try again.");
             }
         } catch (StripeException e) {
-            throw new ServletException("Error processing payment", e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Payment refused"+e.getMessage());
         }
     }
 }

@@ -43,7 +43,7 @@ public class AddCustomerController extends HttpServlet {
         CustomerDAO.addCustomer(customer);
 
         try {
-            response.sendRedirect("dashboard");
+            response.sendRedirect("dashboard?tab=customers");
         }catch (Exception err){
             System.out.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

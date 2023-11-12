@@ -25,7 +25,7 @@ public class DeleteProductController extends HttpServlet {
         }
         ProductDAO.deleteProduct(productId);
         try {
-            response.sendRedirect("dashboard");
+            response.sendRedirect("dashboard?tab=products");
         }catch (Exception err){
             System.out.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

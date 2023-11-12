@@ -17,14 +17,9 @@
     <jsp:include page="../../layout/header.jsp"/>
 <main>
     <form id="loginForm" method="post" action="${pageContext.request.contextPath}/LogInController">
-        <c:if test="${requestScope.emailInDbError != null}">
+        <c:if test="${requestScope.LoggingProcessError != null}">
             <div class="alert alert-danger" role="alert">
-                <c:out value="${requestScope.emailInDbError}"/>
-            </div>
-        </c:if>
-        <c:if test="${requestScope.RegisterProcessError != null}">
-            <div class="alert alert-danger" role="alert">
-                <c:out value="${requestScope.RegisterProcessError}"/>
+                <c:out value="${requestScope.LoggingProcessError}"/>
             </div>
         </c:if>
         <div class="form-group">

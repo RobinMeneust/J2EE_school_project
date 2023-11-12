@@ -14,7 +14,7 @@
     <script src="${pageContext.request.contextPath}/dependencies/jquery/jquery.validate.min.js"></script>
 </head>
 <body>
-<%--    <jsp:include page="../..layout/header.jsp"/>--%>
+    <jsp:include page="../../layout/header.jsp"/>
     <main>
         <form id="registerForm" name="registerForm" method="post" action="${pageContext.request.contextPath}/RegisterCustomerController">
             <c:if test="${requestScope.emailOrPhoneNumberInDbError != null}">
@@ -73,7 +73,7 @@
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </main>
-<%--    <jsp:include page="../..layout/&footer.jsp"/>--%>
+    <jsp:include page="../../layout/footer.jsp"/>
     <script>
         /*$.validator.addMethod("patternName", function (value){
             return value.match(/^[a-zA-ZÀ-ÖØ-öø-ÿ\-']*$/) != null;

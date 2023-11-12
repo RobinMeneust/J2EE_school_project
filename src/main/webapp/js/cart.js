@@ -24,29 +24,3 @@ function addToCart(button, productId) {
         });
     }
 }
-
-function changeQty(itemId, variation) {
-    let quantity = parseInt($("#qty_"+itemId).text()) + parseInt(variation);
-    if(quantity<=0) {
-        removeCartItem(itemId);
-        return;
-    }
-
-    fetch(url+"?id="+itemId+"&quantity="+quantity, {
-        method: 'GET'
-    }).then((response) => {
-        if(response.ok) {
-            $("#qty_"+itemId).html(quantity);
-        }
-    });
-}
-
-function removeCartItem(itemId) {
-    fetch(url+"?id="+itemId+"&quantity=0", {
-        method: 'GET'
-    }).then((response) => {
-        if(response.ok) {
-            $("#item_"+itemId).remove();
-        }
-    });
-}

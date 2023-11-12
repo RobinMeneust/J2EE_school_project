@@ -68,7 +68,6 @@
                     <div class="col text-start"><span class="material-symbols-outlined">local_shipping</span> <span>Home delivery</span></div>
                     <div class="col text-end">$5.00 Shipping</div>
                 </div>
-
             </div>
             <c:choose>
                 <c:when test="${cart != null && cart.getCartItems() != null && cart.containsProduct(product.getId())}">

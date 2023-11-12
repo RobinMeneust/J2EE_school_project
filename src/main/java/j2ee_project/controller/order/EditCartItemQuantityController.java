@@ -86,11 +86,10 @@ public class EditCartItemQuantityController extends HttpServlet {
                 } else {
                     CartDAO.editItemQuantity(item, quantity);
                 }
-                response.setStatus(HttpServletResponse.SC_OK);
-                return;
+                break;
             }
         }
-        // If the cart item is not in the cart
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "The provided item was not found in your cart");
+
+        response.sendRedirect("cart");
     }
 }

@@ -20,18 +20,19 @@ public class OrdersHistoryController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("entered order controller");
-        String idCustomerStr = request.getParameter("id");
-        System.out.println(idCustomerStr);
-        int idCustomer = 0;
+        String customerIdStr = request.getParameter("id");
+        System.out.println(customerIdStr);
+        int customerId = 0;
 
-        if(idCustomerStr != null && !idCustomerStr.trim().isEmpty()) {
+        if(customerIdStr != null && !customerIdStr.trim().isEmpty()) {
             try {
-                idCustomer = Integer.parseInt(idCustomerStr);
+                customerId = Integer.parseInt(customerIdStr);
             } catch(Exception ignore) {}
         }
-        System.out.println(idCustomer);
+
+        System.out.println(customerId);
         try{
-            Customer customer = CustomerDAO.getCustomer(idCustomer);
+            Customer customer = CustomerDAO.getCustomer(customerId);
             request.setAttribute("customer", customer);
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=3");
             view.forward(request,response);

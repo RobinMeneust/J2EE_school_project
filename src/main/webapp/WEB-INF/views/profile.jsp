@@ -25,6 +25,19 @@
             text-align: center;
         }
 
+        div.container-fluid{
+            width: 100%;
+            max-width: 100%;
+        }
+
+        div.tab-content{
+            width: 70%;
+        }
+
+        div.nav-tabs{
+            width: 30%;
+        }
+
         .step-container {
             position: relative;
             text-align: center;
@@ -66,6 +79,9 @@
 
 <%
     Customer customer = (Customer) request.getAttribute("customer");
+    LoyaltyAccount loyaltyAccount = (LoyaltyAccount) request.getAttribute("loyaltyAccount");
+    List<LoyaltyLevel> loyaltyLevels = (List<LoyaltyLevel>) request.getAttribute("loyaltyLevels");
+    String activeTab = request.getParameter("active-tab");
     Address address = null;
     String customerFirstName = null;
     String customerLastName = null;
@@ -78,7 +94,6 @@
     Set<Orders> orders = null;
 
     if (request.getAttribute("customer") != null) {
-
         address = customer.getAddress();
         customerFirstName = customer.getFirstName();
         customerLastName = customer.getLastName();
@@ -89,15 +104,7 @@
         customerCountry = address.getCountry();
         customerCity = address.getCity();
         orders = customer.getOrders();
-    }
-    //List<Orders> orders = (List<Orders>) request.getAttribute("orders");
-    LoyaltyAccount loyaltyAccount = (LoyaltyAccount) request.getAttribute("loyaltyAccount");
-
-   List<LoyaltyLevel> loyaltyLevels = (List<LoyaltyLevel>) request.getAttribute("loyaltyLevels");
-
-   String activeTab = request.getParameter("active-tab");
-
-%>
+    }%>
 <c:set var="orders" value="<%=orders%>"/>
 <c:set var="customer" value="<%=customer%>"/>
 <c:set var="loyaltyLevels" value="<%=loyaltyLevels%>"/>
@@ -108,29 +115,26 @@
         <div class="d-flex align-items-start">
             <nav>
                 <div class="nav nav-tabs flex-column" id="nav-tab" role="tablist">
-                    <form action="profile-informations" method="get">
-                        <button class="nav-link <c:if test="${activeTab == 1}">active</c:if>" id="nav-profile-informations-tab" data-bs-toggle="tab" data-bs-target="#nav-profile-informations" type="submit" role="tab" aria-controls="nav-profile-informations" aria-selected="true">Profile informations</button>
-                        <button class="nav-link <c:if test="${activeTab == 2}">active</c:if>" formaction="" formmethod="get" id="nav-loyalty-account-tab" data-bs-toggle="tab" data-bs-target="#nav-loyalty-account" type="submit" role="tab" aria-controls="nav-loyalty-account" aria-selected="false"><a href="loyalty-redeem?customerId=${customer.id}&loyaltyAccountId=${customer.loyaltyAccount.id}">Loyalty account</a></button>
-                        <button class="nav-link <c:if test="${activeTab == 3}">active</c:if>" formaction=""  id="nav-order-history-tab" data-bs-toggle="tab" data-bs-target="#nav-order-history" type="submit" role="tab" aria-controls="nav-order-history" aria-selected="false"><a href="order-history?id=${customer.id}">Order history</a></button>
-                        <button class="nav-link <c:if test="${activeTab == 4}">active</c:if>" id="nav-preferences-tab" data-bs-toggle="tab" data-bs-target="#nav-preferences" type="submit" role="tab" aria-controls="nav-preferences" aria-selected="false">Preferences</button>
-                    </form>
+                    <button class="nav-link <c:if test="${activeTab == 1}">active</c:if>" id="nav-profile-informations-tab" data-bs-toggle="tab" data-bs-target="#nav-profile-informations" type="submit" role="tab" aria-controls="nav-profile-informations" aria-selected="true"><a href="profile-informations?customerId=${customer.id}">Profile informations</a></button>
+                        <button class="nav-link <c:if test="${activeTab == 2}">active</c:if>" id="nav-loyalty-account-tab" data-bs-toggle="tab" data-bs-target="#nav-loyalty-account" type="submit" role="tab" aria-controls="nav-loyalty-account" aria-selected="false"><a href="loyalty-redeem?customerId=${customer.id}&loyaltyAccountId=${customer.loyaltyAccount.id}">Loyalty account</a></button>
+                        <button class="nav-link <c:if test="${activeTab == 3}">active</c:if>" id="nav-order-history-tab" data-bs-toggle="tab" data-bs-target="#nav-order-history" type="submit" role="tab" aria-controls="nav-order-history" aria-selected="false"><a href="order-history?id=${customer.id}">Order history</a></button>
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
                 <div class="tab-pane fade <c:if test="${activeTab == 1}">show active</c:if>" id="nav-profile-informations" role="tabpanel" aria-labelledby="nav-profile-informations-tab"> <h2>Profile informations</h2>
                     <p></p>
-                    <form action="profile-informations">
+                    <form action="profile-informations?id=${customer.id}" method="post">
                         <div class="form-group">
-                            <label for="userName">Name</label>
-                            <input type="text" class="form-control" id="userName" name="userName" placeholder="<%=customerFirstName%>">
+                            <label for="userFirstName">Name</label>
+                            <input type="text" class="form-control" id="userFirstName" name="userFirstName" value="<%=customerFirstName%>">
                         </div>
                         <div class="form-group">
-                            <label for="userSurname">Surname</label>
-                            <input type="text" class="form-control" id="userSurname" name="userSurname" placeholder="<%=customerLastName%>">
+                            <label for="userLastName">Surname</label>
+                            <input type="text" class="form-control" id="userLastName" name="userLastName" value="<%=customerLastName%>">
                         </div>
                         <div class="form-group">
                             <label for="userEmail">Email address</label>
-                            <input type="email" class="form-control" id="userEmail" name="userEmail" placeholder="<%=customerEmail%>">
+                            <input type="email" class="form-control" id="userEmail" name="userEmail" value="<%=customerEmail%>">
                         </div>
                         <div class="form-group">
                             <label for="userPassword">Password</label>
@@ -138,23 +142,23 @@
                         </div>
                         <div class="form-group">
                             <label for="userPhoneNumber">Phone number</label>
-                            <input type="text" class="form-control" id="userPhoneNumber" name="userPhoneNumber" placeholder="<%=customerPhoneNumber%>">
+                            <input type="text" class="form-control" id="userPhoneNumber" name="userPhoneNumber" value="<%=customerPhoneNumber%>">
                         </div>
                         <div class="form-group">
                             <label for="userAddress">Address</label>
-                            <input type="text" class="form-control" id="userAddress" name="userAddress" placeholder="<%=customerAddress%>">
+                            <input type="text" class="form-control" id="userAddress" name="userAddress" value="<%=customerAddress%>">
                         </div>
                         <div class="form-group">
                             <label for="userPostalCode">Postal code</label>
-                            <input type="text" class="form-control" id="userPostalCode" name="userPostalCode" placeholder="<%=customerPostalCode%>">
+                            <input type="text" class="form-control" id="userPostalCode" name="userPostalCode" value="<%=customerPostalCode%>">
                         </div>
                         <div class="form-group">
                             <label for="userCity">City</label>
-                            <input type="text" class="form-control" id="userCity" name="userCity" placeholder="<%=customerCity%>">
+                            <input type="text" class="form-control" id="userCity" name="userCity" value="<%=customerCity%>">
                         </div>
                         <div class="form-group">
                             <label for="userCountry">Country</label>
-                            <input type="text" class="form-control" id="userCountry" name="userCountry" placeholder="<%=customerCountry%>">
+                            <input type="text" class="form-control" id="userCountry" name="userCountry" value="<%=customerCountry%>">
                         </div>
                         <p></p>
                         <button type="submit" class="btn btn-primary">Update profile</button>
@@ -274,7 +278,6 @@
                         }%>
                     </table>
                 </div>
-                <div class="tab-pane fade <c:if test="${activeTab == 4}">show active</c:if>" id="nav-preferences" role="tabpanel" aria-labelledby="nav-preferences-tab">Preferences</div>
             </div>
         </div>
     </div>

@@ -55,7 +55,7 @@ public class RegisterCustomerController extends HttpServlet {
                 request.getParameter("phoneNumber")
         );
         Map<String, String> inputErrors = AuthService.userDataValidation(customer);
-        String errorDestination = "register.jsp";
+        String errorDestination = "WEB-INF/views/register.jsp";
         String noErrorDestination = "index.jsp";
         RequestDispatcher dispatcher = null;
         if(inputErrors.isEmpty()){

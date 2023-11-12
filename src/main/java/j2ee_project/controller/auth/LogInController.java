@@ -23,8 +23,8 @@ public class LogInController extends HttpServlet {
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        String errorDestination = "login.jsp";
-        String noErrorDestination = "/index.jsp";
+        String errorDestination = "WEB-INF/views/login.jsp";
+        String noErrorDestination = "index.jsp";
         RequestDispatcher dispatcher = null;
 
         try {

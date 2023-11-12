@@ -1,0 +1,16 @@
+.hidden{
+    display:none;
+}
+
+div.container-fluid{
+    width: 100%;
+    max-width: 100%;
+}
+
+nav.col-lg-2{
+    width: 20%;
+}
+
+div.tab-content{
+    width: 80%;
+}

@@ -107,8 +107,7 @@
                             moving-tooltip-height="30"
                             moving-tooltip-bg="#721d82"
                             moving-tooltip-text-color="#efefef"
-                            moving-tooltip-units="$"
-                            moving-tooltip-units-type="prefix"
+                            moving-tooltip-units=" €"
                             <c:if test="${minPrice != null && maxPrice != null && minPrice<maxPrice && maxPrice<100 && minPrice>0}">
                                 set="[${minPrice},${maxPrice}]"
                             </c:if>
@@ -138,7 +137,7 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <span class="font-weight-bold"><c:out value="${product.getName()}" /></span>
-                            <span class="font-weight-bold">$<c:out value="${product.getUnitPrice()}" /></span>
+                            <span class="font-weight-bold"><c:out value="${product.getUnitPrice()} €" /></span>
                         </div>
                         <p class="card-text text-success mb-1 mt-1">
                             <c:if test="${not empty product.getCategory().getDiscount() && product.getCategory().getDiscount().getDiscountPercentage() > 0}">
@@ -161,7 +160,7 @@
         </c:forEach>
     </div>
 
-    <nav aria-label="Page navigation example">
+    <nav>
         <ul class="pagination justify-content-center">
             <c:if test="${pageIndex>1}">
                 <li class="page-item"><a class="page-link" href="browse-products?page=1">First</a></li>

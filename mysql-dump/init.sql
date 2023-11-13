@@ -112,9 +112,10 @@ CREATE TABLE IF NOT EXISTS Customer (
     FOREIGN KEY (idLoyaltyAccount) REFERENCES LoyaltyAccount (id)
 );
 
+
 CREATE TABLE IF NOT EXISTS Orders (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    total INT NOT NULL,
+    total FLOAT NOT NULL,
     date DATE NOT NULL,
     orderStatus VARCHAR(30) NOT NULL,
     idCustomer INT NOT NULL,

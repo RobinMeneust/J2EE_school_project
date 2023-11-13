@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="cf" uri="/WEB-INF/functions.tld"%>
 <%--
   Created by IntelliJ IDEA.
   User: robin
@@ -13,7 +15,7 @@
         </button>
 
 
-        <a href="${pageContext.request.contextPath}/index.jsp" class="navbar-brand" title="Home">
+        <a href="${pageContext.request.contextPath}/" class="navbar-brand" title="Home">
             <img class="d-inline-block align-top" style="height:80px; width:80px;" src="${pageContext.request.contextPath}/img/logo_boarder_games.png" alt="logo_boarder_games">
         </a>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -27,7 +29,16 @@
                     </a>
                 </li>
                 <li class="nav-item mx-2" title="Account">
-                    <a href="profile-informations" class="nav-link">
+                    <c:set var="customer" value="${cf:getCustomer(user)}"/>
+                    <c:choose>
+                        <c:when test="${not empty customer}">
+                            <c:set var="profileIconLink" value="profile-informations"/>
+                        </c:when>
+                        <c:otherwise>
+                            <c:set var="profileIconLink" value="login"/>
+                        </c:otherwise>
+                    </c:choose>
+                    <a href="${profileIconLink}" class="nav-link">
                         <span style="font-size:60px" class="material-symbols-outlined text-white">account_circle</span>
                     </a>
                 </li>

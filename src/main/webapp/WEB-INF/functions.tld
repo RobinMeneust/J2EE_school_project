@@ -23,5 +23,10 @@
         <function-class>j2ee_project.dao.catalog.category.CategoryDAO</function-class>
         <function-signature>java.util.List getCategories()</function-signature>
     </function>
+    <function>
+        <name>getCustomer</name>
+        <function-class>j2ee_project.service.AuthService</function-class>
+        <function-signature>j2ee_project.model.user.Customer getCustomer(j2ee_project.model.user.User)</function-signature>
+    </function>
 </taglib>
 

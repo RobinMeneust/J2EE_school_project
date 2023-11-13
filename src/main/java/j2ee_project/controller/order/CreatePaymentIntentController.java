@@ -2,27 +2,27 @@ package j2ee_project.controller.order;
 
 import com.google.gson.Gson;
 import com.stripe.Stripe;
-import com.stripe.exception.StripeException;
-import com.stripe.model.Charge;
 
 import com.stripe.model.PaymentIntent;
-import com.stripe.model.PaymentMethod;
 import com.stripe.param.PaymentIntentCreateParams;
-import j2ee_project.service.MailManager;
-import jakarta.mail.PasswordAuthentication;
+import j2ee_project.dao.order.OrdersDAO;
+import j2ee_project.model.order.Orders;
+import j2ee_project.model.user.Customer;
+import j2ee_project.model.user.User;
+import j2ee_project.service.AuthService;
+import j2ee_project.service.OrdersManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 @WebServlet("/create-payment-intent")
 public class CreatePaymentIntentController extends HttpServlet {
@@ -37,12 +37,13 @@ public class CreatePaymentIntentController extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
 
         try {
             // Set your Stripe secret key
             if(Stripe.apiKey == null) {
                 String credentialsFilePath = "/credentials.json";
-                InputStream inputStream = MailManager.class.getResourceAsStream(credentialsFilePath);
+                InputStream inputStream = CreatePaymentIntentController.class.getResourceAsStream(credentialsFilePath);
                 if (inputStream == null) {
                     throw new NullPointerException("Cannot find the credentials file");
                 }
@@ -60,9 +61,30 @@ public class CreatePaymentIntentController extends HttpServlet {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
+            String orderId = request.getParameter("order-id");
+            Orders order = OrdersDAO.getOrder(orderId);
+
+            if(order == null) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No order is associated to this ID");
+                return;
+            }
+
+            Object obj = session.getAttribute("user");
+            Customer customer = null;
+            if(obj instanceof User) {
+                customer = AuthService.getCustomer((User) obj);
+            }
+
+            String error = OrdersManager.checkOrder(order, customer);
+
+            if(error != null && !error.trim().isEmpty()) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, error);
+                return;
+            }
+
             PaymentIntentCreateParams params =
                 PaymentIntentCreateParams.builder()
-                    .setAmount(1000L)
+                    .setAmount(Double.valueOf(Math.floor(order.getTotal()*100)).longValue())
                     .setCurrency("eur")
                     .addPaymentMethodType("card")
                     .build();

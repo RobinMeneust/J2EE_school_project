@@ -1,4 +1,4 @@
-package j2ee_project.controller.catalog;
+package j2ee_project.controller.catalog.product;
 
 import j2ee_project.dao.catalog.product.ProductDAO;
 import jakarta.servlet.RequestDispatcher;

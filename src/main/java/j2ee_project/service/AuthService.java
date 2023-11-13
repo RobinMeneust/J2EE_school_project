@@ -84,4 +84,11 @@ public class AuthService {
         return true;
     }
 
+    public static Customer getCustomer(User user) {
+        if(user instanceof Customer) {
+            return (Customer) user;
+        } else {
+            return null;
+        }
+    }
 }

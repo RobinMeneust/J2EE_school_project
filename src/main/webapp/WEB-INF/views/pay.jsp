@@ -20,6 +20,9 @@
 <jsp:include page="../../layout/header.jsp" />
 <div class="container">
     <%--For testing purposes use the card number: 4242424242424242--%>
+    <p>
+        You need to pay <span id="amount-to-be-paid"></span> €
+    </p>
     <form id="payment-form">
         <div id="payment-element" class="me-5 my-4 p-4 w-50" style="background-color: lightgray">
             <!--Stripe.js injects the Payment Element-->

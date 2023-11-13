@@ -26,7 +26,7 @@ public class GetStripePublishableKeyController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         String credentialsFilePath = "/credentials.json";
-        InputStream inputStream = MailManager.class.getResourceAsStream(credentialsFilePath);
+        InputStream inputStream = GetStripePublishableKeyController.class.getResourceAsStream(credentialsFilePath);
         if (inputStream == null) {
             throw new NullPointerException("Cannot find the credentials file");
         }

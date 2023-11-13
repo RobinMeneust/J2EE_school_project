@@ -1,4 +1,10 @@
-publishableStripeKeyPromise = fetch("get-stripe-publishable-key").then((response) => {
+let elements;
+let globalClientSecret = null;
+let stripe = null;
+let amountToBePaid= null;
+let doAbort = false;
+
+let publishableStripeKeyPromise = fetch("get-stripe-publishable-key").then((response) => {
     return response.json();
 }).then((data) => {
     if("stripe-publishable-key" in data) {
@@ -8,20 +14,24 @@ publishableStripeKeyPromise = fetch("get-stripe-publishable-key").then((response
     }
 });
 
-let contextPathPromise = fetch("get-context-path").then((response) => {
+const urlParams = new URLSearchParams(window.location.search);
+
+if(!urlParams.has("order-id")) {
+    showMessage("Invalid order ID");
+    doAbort = true;
+}
+
+let amountToBePaidPromise = fetch("get-order-total?order-id="+urlParams.get("order-id")).then((response) => {
     return response.json();
 }).then((data) => {
-    if("path" in data) {
-        return data["path"];
+    if("total" in data) {
+        return data["total"];
     } else {
         return "";
     }
 });
 
 
-let elements;
-let globalClientSecret = null;
-let stripe = null;
 
 initialize();
 checkStatus();
@@ -32,9 +42,13 @@ document
 
 // Fetches a payment intent and captures the client secret
 async function initialize() {
+    if(doAbort) return;
     stripe = Stripe(await publishableStripeKeyPromise);
+    amountToBePaid = await amountToBePaidPromise;
 
-    const response = await fetch(`create-payment-intent`);
+    $("#amount-to-be-paid").text(amountToBePaid);
+
+    const response = await fetch(`create-payment-intent?order-id=`+urlParams.get("order-id"));
     const { clientSecret } = await response.json();
     globalClientSecret = clientSecret;
 
@@ -51,13 +65,8 @@ async function initialize() {
 
 async function handleSubmit(e) {
     e.preventDefault();
+    if(doAbort) return;
     setLoading(true);
-
-    contextPath = await contextPathPromise;
-    if(contextPath == "") {
-        console.error("Website URL could not be fetched")
-        return;
-    }
 
     const { paymentIntent, error } = await stripe.confirmCardPayment(globalClientSecret, {
         payment_method: {
@@ -79,7 +88,7 @@ async function handleSubmit(e) {
             showMessage("An unexpected error occurred.");
         }
     } else if (paymentIntent.status === 'succeeded') {
-        window.location.href = `http://localhost:8082${contextPath}/checkout`;
+        window.location.href = `checkout`;
     } else {
         console.log('Payment is not yet confirmed');
     }
@@ -88,6 +97,7 @@ async function handleSubmit(e) {
 
 // Get payment intent status after submit
 async function checkStatus() {
+    if(doAbort) return;
     const clientSecret = new URLSearchParams(window.location.search).get(
         "payment_intent_client_secret"
     );
@@ -130,6 +140,7 @@ function showMessage(messageText) {
 
 // Show a spinner on payment submission
 function setLoading(isLoading) {
+    if(doAbort) return;
     if (isLoading) {
         $(".spinner-pay-btn").each(function() {
             $(this).removeClass("visually-hidden");

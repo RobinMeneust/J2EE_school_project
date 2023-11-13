@@ -186,21 +186,29 @@ INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ('60 rue de
 INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ('6 avenue de Provence', '26000', 'Valence', 'France');
 INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ('18 Avenue Millies Lacroix', '78990', 'Élancourt', 'France');
 
-INSERT INTO User(firstName, lastName, email, password) VALUES ('root', 'root', 'jeewebproject@gmail.com', 'root_password');
+INSERT INTO User(firstName, lastName, email, password) VALUES ('root', 'root', 'jeewebproject@gmail.com', '1000:65460f50162f1d94b21e59fb1c516338:fd32f025e305407e41daa397b16ebb183502f2a5e4aaaf6ab2ce427f04b1470f74c044e4b66e2ffeee6df7921b9be8631f3e03e01fa13609a3ef401c02049875'); -- @root123
 
-INSERT INTO User(firstName, lastName, email, password) VALUES ('Robin', 'Meneust', 'robin@example.com', 'p1');
-INSERT INTO User(firstName, lastName, email, password) VALUES ('Lucas', 'Velay', 'lucas@example.com', 'p2');
-INSERT INTO User(firstName, lastName, email, password) VALUES ('Jérémy', 'Saëlen', 'jeremy@example.com', 'p3');
-INSERT INTO User(firstName, lastName, email, password) VALUES ('Théo', 'Gandy', 'theo@example.com', 'p4');
+INSERT INTO User(firstName, lastName, email, password) VALUES ('Robin', 'Meneust', 'robin@example.com', '1000:61f68dce346f7bf72925ec13259aa771:41027a218217d6bfaf0ab69951d1fed568159c180e58c94c2e08eaf272b9bf536bf52716c254d3f0598f9eb87585834b76ae935231f27a8ff9d8d372bab79191'); -- @robin123
+INSERT INTO User(firstName, lastName, email, password) VALUES ('Lucas', 'Velay', 'lucas@example.com', '1000:2284d7f466ddab45de8e66cf31f9cd01:9814d3a4822ff220bc48fbd58ae28551fc37ba923d5363a1a98afdc3df258d8f66b797149b570c19bc8adb8f7ca37ce1ceb55e9a3eae135566953563fb16eb93'); -- @lucas123
+INSERT INTO User(firstName, lastName, email, password) VALUES ('Jérémy', 'Saëlen', 'jeremy@example.com', '1000:7931d0679ddd85495fb3164ed9d9f035:0462d9322d5be6e390d4cdc2aefc54cd51f88d9271e330e6c92ba888ca974783b35ea58134d6329407bc95f024f87937fe362ad04506ba077de38f089b84d92f'); -- @jeremy123
+INSERT INTO User(firstName, lastName, email, password) VALUES ('Théo', 'Gandy', 'theo@example.com', '1000:b777892652b967f9a2755b41293d305d:b8e9cf0a82df4449a54fdeea6eec824dadbe61ae4579d20880f752d8dede6e77830da6c7281fc01fbef615a4a76c67da80de17a4536a8182542b1d95faf19a50'); -- @theo123
+
+INSERT INTO User(firstName, lastName, email, password) VALUES ('modo1', 'modo1', 'modo1@example.com', '1000:4201fdea5d6c99792fd016b927503c2c:e99384846781bef8d34ae1f410375162b3dc082245162f41f7d2d08269841dd372716ac8cc6aa2f182aab05f68e36eb4510481875da04e023a4140b0ca4f71cf'); -- @modo123
+INSERT INTO User(firstName, lastName, email, password) VALUES ('modo2', 'modo2', 'modo2@example.com', '1000:64a3fce30ec521d5d40097c493688bf8:656037907c9966323e2beb3ee3c8be46e5f569f6e8b732a29f13bb94e3f6f325dd076cd5051a2d281dc20bd8608e2a36166e819c4aed5e1f68765299a5e91a58'); -- @modo234
+INSERT INTO User(firstName, lastName, email, password) VALUES ('modo3', 'modo3', 'modo3@example.com', '1000:c93a9f45bc613a3efc601d1d6f3eb701:b6a8f38f202ea47fd3b08d30ffeb0aeb197254a59800d1770721e5a75e3662fbafae7b6639ab4e39a6373e0399173b8c5c70d6a7085874c876e6e455dfa19942'); -- @modo345
 
 INSERT INTO Moderator(idUser) VALUES(1);
 INSERT INTO Administrator(idModerator) VALUES (1);
 
-INSERT INTO Moderator(idUser) VALUES(5);
+INSERT INTO Moderator(idUser) VALUES(6);
+INSERT INTO Moderator(idUser) VALUES(7);
+INSERT INTO Moderator(idUser) VALUES(8);
 
-INSERT INTO Permission(permission) VALUES('CAN_CREATE_CUSTOMER');
-INSERT INTO Permission(permission) VALUES('CAN_DELETE_CUSTOMER');
-INSERT INTO Permission(permission) VALUES('CAN_CREATE_DISCOUNT');
+INSERT INTO Permission(permission) VALUES('CAN_MANAGE_DISCOUNT');
+INSERT INTO Permission(permission) VALUES('CAN_MANAGE_MODERATOR');
+INSERT INTO Permission(permission) VALUES('CAN_MANAGE_PRODUCT');
+INSERT INTO Permission(permission) VALUES('CAN_MANAGE_CATEGORY');
+INSERT INTO Permission(permission) VALUES('CAN_MANAGE_CUSTOMER');
 INSERT INTO Permission(permission) VALUES('CAN_MANAGE_LOYALTY');
 INSERT INTO Permission(permission) VALUES('CAN_MANAGE_ORDER');
 
@@ -210,12 +218,22 @@ INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,2);
 INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,3);
 INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,4);
 INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,5);
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,6);
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,7);
 
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(5,1); -- Can add customers
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(6,5); -- Can manage customer
+
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(7,3); -- Can manage product
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(7,4); -- Can manage category
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(7,7); -- Can manage order
+
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(8,6); -- Can manage loyalty
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(8,1); -- Can manage discount
 
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(2,1,1);
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(3,2,2);
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(4,3,NULL);
+INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(5,NULL,NULL);
 
 INSERT INTO Cart(idCustomer) VALUES(2);
 

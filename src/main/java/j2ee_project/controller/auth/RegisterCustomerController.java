@@ -1,21 +1,20 @@
 package j2ee_project.controller.auth;
 
+import j2ee_project.dao.MailDAO;
 import j2ee_project.dao.user.UserDAO;
 import j2ee_project.dto.CustomerDTO;
-import j2ee_project.dto.UserDTO;
-import j2ee_project.model.user.Customer;
+import j2ee_project.model.Mail;
 import j2ee_project.model.user.User;
 import j2ee_project.service.AuthService;
+import j2ee_project.service.MailManager;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import jakarta.validation.ConstraintViolation;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * This class is a servlet used register customer. It's a controller in the MVC architecture of this project.
@@ -55,16 +54,21 @@ public class RegisterCustomerController extends HttpServlet {
                 request.getParameter("phoneNumber")
         );
         Map<String, String> inputErrors = AuthService.userDataValidation(customer);
-        String errorDestination = "register.jsp";
-        String noErrorDestination = "index.jsp";
+        String errorDestination = "WEB-INF/views/register.jsp";
+        String noErrorDestination = "/index.jsp";
         RequestDispatcher dispatcher = null;
         if(inputErrors.isEmpty()){
             if (!UserDAO.emailOrPhoneNumberIsInDb(customer.getEmail(), customer.getPhoneNumber())){
                 try {
                     User user = AuthService.registerCustomer(customer);
+                    System.out.println(user);
+
+                    sendConfirmationMail(user.getEmail());
+
                     HttpSession session = request.getSession();
                     session.setAttribute("user", user);
-                    response.sendRedirect(request.getContextPath() + "/index.jsp");
+                    System.out.println(session.getAttribute("user"));
+                    response.sendRedirect(request.getContextPath() + noErrorDestination);
                 } catch(Exception exception){
                     System.out.println(exception.getMessage());
                     request.setAttribute("RegisterProcessError","Error during register process");
@@ -83,5 +87,27 @@ public class RegisterCustomerController extends HttpServlet {
 
         if (dispatcher != null) dispatcher.forward(request, response);
 
+    }
+
+    private void sendConfirmationMail(String email){
+        Mail mail = new Mail();
+        MailManager mailManager = MailManager.getInstance();
+
+        try
+        {
+            mail.setFromAddress("jeewebproject@gmail.com");
+            mail.setToAddress(email);
+            mail.setSubject("Register confirmation on Boarder Games website");
+            mail.setBody("Hello,\nWe confirm your registration on the Boarder Games website.\n");
+
+            // Set the date to current time if it's null
+            if(mail.getDate() == null) {
+                mail.setDate(new Date(Calendar.getInstance().getTimeInMillis()));
+            }
+
+            MailDAO.addMail(mail);
+            mailManager.send(mail);
+        }
+        catch(Exception ignore) {}
     }
 }

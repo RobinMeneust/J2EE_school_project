@@ -58,17 +58,17 @@
                                     <%--Actions--%>
                                     <td class="align-middle col">
                                         <a href="edit-cart-item-quantity?id=<c:out value="${item.getId()}"/>&quantity=<c:out value="${item.getQuantity() + 1}"/>">
-                                            <button class="btn rounded"><span class="material-symbols-outlined">add_circle</span></button>
+                                            <button type="button" class="btn rounded"><span class="material-symbols-outlined">add_circle</span></button>
                                         </a>
                                     </td>
                                     <td class="align-middle col">
                                         <a href="edit-cart-item-quantity?id=<c:out value="${item.getId()}"/>&quantity=<c:out value="${item.getQuantity() - 1}"/>">
-                                            <button class="btn rounded"><span class="material-symbols-outlined">remove</span></button>
+                                            <button type="button" class="btn rounded"><span class="material-symbols-outlined">remove</span></button>
                                         </a>
                                     </td>
                                     <td class="align-middle col">
                                         <a href="edit-cart-item-quantity?id=<c:out value="${item.getId()}"/>&quantity=0">
-                                            <button class="btn rounded"><span class="material-symbols-outlined">delete</span></button>
+                                            <button type="button" class="btn rounded"><span class="material-symbols-outlined">delete</span></button>
                                         </a>
                                     </td>
                                 </tr>

@@ -47,6 +47,7 @@ public class ConfirmCartController extends HttpServlet {
         } else {
             //TODO: Redirect to login page with an error
             response.sendRedirect("login");
+            return;
         }
         Cart cart;
 
@@ -57,11 +58,13 @@ public class ConfirmCartController extends HttpServlet {
         if(cartItems == null) {
             //TODO: Return to the cart page with an error message
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "the cart is empty");
+            return;
         }
         for(CartItem item : cartItems) {
             if(item.getQuantity() > item.getProduct().getStockQuantity()) {
                 //TODO: Return to the cart page with the new product values
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "the stock quantities has been updated and are lesser than the quantity you ordered");
+                return;
             }
         }
 

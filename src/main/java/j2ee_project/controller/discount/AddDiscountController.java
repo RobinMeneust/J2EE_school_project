@@ -14,7 +14,7 @@ public class AddDiscountController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/addDiscount.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/add/addDiscount.jsp");
             view.forward(request,response);
         }catch (Exception err){
             System.out.println(err.getMessage());

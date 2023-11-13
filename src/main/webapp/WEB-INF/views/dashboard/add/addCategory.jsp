@@ -1,15 +1,12 @@
-<%@ page import="java.util.List" %>
-<%@ page import="j2ee_project.model.Discount" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8"%>
 <html>
 <head>
     <title>Dashboard</title>
-    <jsp:include page="../../../include.jsp" />
+    <jsp:include page="../../../../include.jsp" />
 </head>
 <body>
-    <jsp:include page="../../../layout/header.jsp" />
+    <jsp:include page="../../../../layout/header.jsp" />
     <div class="d-flex flex-column align-items-center div-form">
         <h2>Add Category</h2>
         <form id="add-category-form" name="add-category-form" action="add-category" method="post">
@@ -22,15 +19,9 @@
                     <label class="form-label" for="discountId">Discount :</label>
                     <select class="form-select" id="discountId" name="discount">
                         <option value=""></option>
-                        <%
-                            List<Discount> discounts = (List<Discount>) request.getAttribute("discounts");
-                            if(discounts == null){
-                                discounts = new ArrayList<>();
-                            }
-                        %>
-                        <c:set var="discounts" value="<%=discounts%>"/>
+                        <c:set var="discounts" value="${requestScope.discounts}"/>
                         <c:forEach var="discount" items="${discounts}">
-                            <option id="${discount.getName()}" name="${discount.getName()}" value="${discount.getId()}">${discount.getName()}</option>
+                            <option id="${discount.name}" name="${discount.name}" value="${discount.id}">${discount.name}</option>
                         </c:forEach>
                     </select>
                 </div>
@@ -46,6 +37,6 @@
             </button>
         </form>
     </div>
-    <jsp:include page="../../../layout/footer.jsp" />
+    <jsp:include page="../../../../layout/footer.jsp" />
 </body>
 </html>

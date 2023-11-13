@@ -3,13 +3,13 @@
 <html>
 <head>
     <title>Dashboard</title>
-    <jsp:include page="../../../include.jsp" />
+    <jsp:include page="../../../../include.jsp" />
     <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/tcrs-generated-labels.min.js"></script>
     <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/tcrs-moving-tooltip.min.js"></script>
     <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/toolcool-range-slider.min.js"></script>
 </head>
 <body>
-    <jsp:include page="../../../layout/header.jsp" />
+    <jsp:include page="../../../../layout/header.jsp" />
     <div class="d-flex flex-column align-items-center div-form">
         <h2>Add Discount</h2>
         <form id="add-discount-form" name="add-discount-form" action="add-discount" method="post">
@@ -65,6 +65,6 @@
             discountPercentage.setAttribute("value", evt.detail.value);
         });
     </script>
-    <jsp:include page="../../../layout/footer.jsp" />
+    <jsp:include page="../../../../layout/footer.jsp" />
 </body>
 </html>

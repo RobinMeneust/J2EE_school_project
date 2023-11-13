@@ -39,7 +39,7 @@
                                 <tr>
                                     <td class="col">
                                         <a href="get-product-page?id=<c:out value="${item.getProduct().getId()}"/>" style="text-decoration: none">
-                                            <img style="width: 100px; height: 100px; object-fit: cover;" alt="product_img" src="<c:out value="${item.getProduct().getImageUrl()}" />">
+                                            <img style="width: 100px; height: 100px; object-fit: cover;" alt="product_img" src="<c:out value="${pageContext.request.contextPath}/${item.getProduct().getImagePath()}" />">
                                         </a>
                                     </td>
                                     <td class="align-middle col"><c:out value="${item.getProduct().getName()}"/></td>

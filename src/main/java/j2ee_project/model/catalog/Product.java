@@ -24,8 +24,8 @@ public class Product {
     @Column(name = "description", nullable = true, length = 300)
     private String description;
     @Basic
-    @Column(name = "imageUrl", nullable = true, length = 500)
-    private String imageUrl;
+    @Column(name = "imagePath", nullable = true, length = 500)
+    private String imagePath;
     @Basic
     @Column(name = "weight", nullable = true, precision = 0)
     private Float weight;
@@ -36,12 +36,12 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, int stockQuantity, float unitPrice, String description, String imageUrl, Float weight, Category category) {
+    public Product(String name, int stockQuantity, float unitPrice, String description, String imagePath, Float weight, Category category) {
         this.name = name;
         this.stockQuantity = stockQuantity;
         this.unitPrice = unitPrice;
         this.description = description;
-        this.imageUrl = imageUrl;
+        this.imagePath = imagePath;
         this.weight = weight;
         this.category = category;
     }
@@ -86,12 +86,12 @@ public class Product {
         this.description = description;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public Float getWeight() {
@@ -115,12 +115,12 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id == product.id && Objects.equals(name, product.name) && Objects.equals(stockQuantity, product.stockQuantity) && Objects.equals(unitPrice, product.unitPrice) && Objects.equals(description, product.description) && Objects.equals(imageUrl, product.imageUrl) && Objects.equals(weight, product.weight) && Objects.equals(category, product.category);
+        return id == product.id && Objects.equals(name, product.name) && Objects.equals(stockQuantity, product.stockQuantity) && Objects.equals(unitPrice, product.unitPrice) && Objects.equals(description, product.description) && Objects.equals(imagePath, product.imagePath) && Objects.equals(weight, product.weight) && Objects.equals(category, product.category);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, stockQuantity, unitPrice, description, imageUrl, weight, category);
+        return Objects.hash(id, name, stockQuantity, unitPrice, description, imagePath, weight, category);
     }
 
     @Override

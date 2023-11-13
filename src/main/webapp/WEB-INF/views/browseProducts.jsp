@@ -132,7 +132,7 @@
             <div class="col my-3 mx-2" style="max-width:400px;">
                 <div class="card hover-shadow hover-zoom" style="width: 390px; height:390px;">
                     <a href="get-product-page?id=<c:out value="${product.getId()}"/>" style="text-decoration: none">
-                        <img style="width: 390px; height: 250px; object-fit: cover;" alt="product_img" src="<c:out value="${product.getImageUrl()}" />" class="card-img-top">
+                        <img style="width: 390px; height: 250px; object-fit: cover;" alt="product_img" src="<c:out value="${pageContext.request.contextPath}/${product.getImagePath()}" />" class="card-img-top">
                     </a>
                     <div class="card-body">
                         <div class="d-flex justify-content-between">

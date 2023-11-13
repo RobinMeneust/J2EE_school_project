@@ -174,7 +174,7 @@
                                 <td>
                                     <img style="width: 78px; height: 50px; object-fit: cover;"
                                          alt="product_img"
-                                         src="<c:out value="${product.getImageUrl()}" />"
+                                         src="<c:out value="${pageContext.request.contextPath}/${product.getImagePath()}" />"
                                          class="card-img-top">
                                 </td>
                                 <td><c:out value="${product.getName()}"/></td>

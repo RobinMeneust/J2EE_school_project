@@ -175,7 +175,7 @@
                                     <td><c:out value = "${customer.email}"/></td>
                                     <td><c:out value = "${customer.phoneNumber}"/></td>
                                     <td>
-                                        <a href="">
+                                        <a href="edit-customer?id=${customer.id}">
                                             <button class="btn rounded"><span class="material-symbols-outlined">edit</span></button>
                                         </a>
                                     </td>

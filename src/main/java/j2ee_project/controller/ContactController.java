@@ -1,10 +1,8 @@
-package j2ee_project.controller.auth;
+package j2ee_project.controller;
 
 import j2ee_project.dao.MailDAO;
-import j2ee_project.dao.user.UserDAO;
-import j2ee_project.dto.CustomerDTO;
+import j2ee_project.dto.ContactDTO;
 import j2ee_project.model.Mail;
-import j2ee_project.model.user.User;
 import j2ee_project.service.AuthService;
 import j2ee_project.service.MailManager;
 import jakarta.servlet.*;
@@ -21,8 +19,8 @@ import java.util.Map;
  *
  * @author Lucas VELAY
  */
-@WebServlet(name = "RegisterCustomerController", value = "/register-customer-controller")
-public class RegisterCustomerController extends HttpServlet {
+@WebServlet(name = "RegisterCustomerController", value = "/contact-controller")
+public class ContactController extends HttpServlet {
 
     /**
      * Redirect to the sender of this request and set an error message since GET queries aren't accepted by this servlet
@@ -45,38 +43,26 @@ public class RegisterCustomerController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        CustomerDTO customer = new CustomerDTO(
+        ContactDTO contact = new ContactDTO(
                 request.getParameter("firstName"),
                 request.getParameter("lastName"),
                 request.getParameter("email"),
-                request.getParameter("password"),
-                request.getParameter("confirmPassword"),
-                request.getParameter("phoneNumber")
+                request.getParameter("subject"),
+                request.getParameter("bodyMessage")
         );
-        Map<String, String> inputErrors = AuthService.userDataValidation(customer);
-        String errorDestination = "WEB-INF/views/register.jsp";
-        String noErrorDestination = "/index.jsp";
+        Map<String, String> inputErrors = AuthService.contactDataValidation(contact);
+        String errorDestination = "WEB-INF/views/contact.jsp";
+        String noErrorDestination = "WEB-INF/views/contact.jsp";
         RequestDispatcher dispatcher = null;
         if(inputErrors.isEmpty()){
-            if (!UserDAO.emailOrPhoneNumberIsInDb(customer.getEmail(), customer.getPhoneNumber())){
-                try {
-                    User user = AuthService.registerCustomer(customer);
-                    System.out.println(user);
-
-                    sendConfirmationMail(user.getEmail());
-
-                    HttpSession session = request.getSession();
-                    session.setAttribute("user", user);
-                    System.out.println(session.getAttribute("user"));
-                    response.sendRedirect(request.getContextPath() + noErrorDestination);
-                } catch(Exception exception){
-                    System.out.println(exception.getMessage());
-                    request.setAttribute("RegisterProcessError","Error during register process");
-                    dispatcher = request.getRequestDispatcher(errorDestination);
-                }
-            }
-            else{
-                request.setAttribute("emailOrPhoneNumberInDbError","Email or phone number already used");
+            try {
+                System.out.println(contact);
+                sendContactMail(contact);
+                request.setAttribute("SuccessSending","Success sending");
+                dispatcher = request.getRequestDispatcher(noErrorDestination);
+            } catch(Exception exception){
+                System.out.println(exception.getMessage());
+                request.setAttribute("ContactSendingError","Error during sending");
                 dispatcher = request.getRequestDispatcher(errorDestination);
             }
         }
@@ -89,16 +75,21 @@ public class RegisterCustomerController extends HttpServlet {
 
     }
 
-    private void sendConfirmationMail(String email){
+    private void sendContactMail(ContactDTO contactDTO){
         Mail mail = new Mail();
         MailManager mailManager = MailManager.getInstance();
 
         try
         {
             mail.setFromAddress("jeewebproject@gmail.com");
-            mail.setToAddress(email);
-            mail.setSubject("Register confirmation on Boarder Games website");
-            mail.setBody("Hello,\nWe confirm your registration on the Boarder Games website.\n");
+            mail.setToAddress("jeewebproject@gmail.com");
+            mail.setSubject("[Contact Form] - " + contactDTO.getSubject());
+            mail.setBody(
+                    "First name : " + contactDTO.getFirstName() +
+                    "\nLast name : " + contactDTO.getLastName() +
+                    "\nEmail : " + contactDTO.getEmail() +
+                    "\nSubject : " + contactDTO.getSubject() +
+                    "\nMessage : \n" + contactDTO.getBodyMessage());
 
             // Set the date to current time if it's null
             if(mail.getDate() == null) {

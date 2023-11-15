@@ -16,7 +16,7 @@
 <body>
     <jsp:include page="../../layout/header.jsp"/>
 <main>
-    <form id="loginForm" method="post" action="${pageContext.request.contextPath}/LogInController">
+    <form id="loginForm" method="post" action="${pageContext.request.contextPath}/login-controller">
         <c:if test="${requestScope.LoggingProcessError != null}">
             <div class="alert alert-danger" role="alert">
                 <c:out value="${requestScope.LoggingProcessError}"/>

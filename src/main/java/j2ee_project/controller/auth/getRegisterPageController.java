@@ -1,19 +1,18 @@
 package j2ee_project.controller.auth;
 
-import j2ee_project.dao.catalog.product.ProductDAO;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
-@WebServlet(value = "/login")
-public class getLoginPageControllerServlet extends HttpServlet {
+@WebServlet(value = "/register")
+public class getRegisterPageController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         try {
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/login.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/register.jsp");
             view.forward(request, response);
         } catch(Exception err) {
             // The forward didn't work
@@ -21,7 +20,6 @@ public class getLoginPageControllerServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
-
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

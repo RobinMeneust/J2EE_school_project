@@ -1,7 +1,5 @@
 package j2ee_project.controller.auth;
 
-import j2ee_project.dao.user.UserDAO;
-import j2ee_project.dto.CustomerDTO;
 import j2ee_project.model.user.User;
 import j2ee_project.service.AuthService;
 import jakarta.servlet.*;
@@ -9,9 +7,8 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
-import java.util.Map;
 
-@WebServlet(name = "LogInController", value = "/LogInController")
+@WebServlet(name = "LogInController", value = "/login-controller")
 public class LogInController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

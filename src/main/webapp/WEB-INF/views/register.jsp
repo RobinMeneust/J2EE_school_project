@@ -16,7 +16,7 @@
 <body>
     <jsp:include page="../../layout/header.jsp"/>
     <main>
-        <form id="registerForm" name="registerForm" method="post" action="${pageContext.request.contextPath}/RegisterCustomerController">
+        <form id="registerForm" name="registerForm" method="post" action="${pageContext.request.contextPath}/register-customer-controller">
             <c:if test="${requestScope.emailOrPhoneNumberInDbError != null}">
                 <div class="alert alert-danger" role="alert">
                     <c:out value="${requestScope.emailOrPhoneNumberInDbError}"/>

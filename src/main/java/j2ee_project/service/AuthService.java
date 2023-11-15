@@ -1,6 +1,7 @@
 package j2ee_project.service;
 
 import j2ee_project.dao.user.UserDAO;
+import j2ee_project.dto.ContactDTO;
 import j2ee_project.dto.CustomerDTO;
 import j2ee_project.dto.ModeratorDTO;
 import j2ee_project.dto.UserDTO;
@@ -67,6 +68,17 @@ public class AuthService {
       /*  for(ConstraintViolation<UserDTO> violation : constraintViolations){
             System.out.printf(violation.getMessage());
         }*/
+    }
+
+    public static Map<String, String> contactDataValidation(ContactDTO contactDTO){
+        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+        Validator validator = validatorFactory.getValidator();
+        Set<ConstraintViolation<ContactDTO>> violations = validator.validate(contactDTO);
+        Map<String, String> violationsMap = new HashMap<>();
+        for(ConstraintViolation<ContactDTO> violation : violations){
+            violationsMap.put(violation.getPropertyPath().toString(), violation.getMessage());
+        }
+        return violationsMap;
     }
 
     public static boolean checkModerator(User user, TypePermission typePermission){

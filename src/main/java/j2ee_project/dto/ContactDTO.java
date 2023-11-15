@@ -4,8 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-
-public class UserDTO {
+public class ContactDTO {
 
     @NotBlank(message = "First name can not be blank.")
     @Size(max = 30, message = "First name can not exceed 30 characters.")
@@ -17,19 +16,19 @@ public class UserDTO {
     private String lastName;
     @Pattern(regexp = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$",message = "Email is not valid.")
     private String email;
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,24}$", message = "Password is not valid : it needs letters, numbers, special characters @$!%*#?& and length between 8 and 24.")
-    private String password;
-    private String confirmPassword;
-    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be composed by 10 numbers with this format : 0000000000")
-    private String phoneNumber;
+    @NotBlank(message = "Subject can not be blank.")
+    @Size(max = 50, message = "First name can not exceed 50 characters.")
+    private String subject;
+    @NotBlank(message = "Message can not be blank.")
+    @Size(max = 256, message = "Message can not exceed 256 characters.")
+    private String bodyMessage;
 
-    public UserDTO(String firstName, String lastName, String email, String password, String confirmPassword, String phoneNumber) {
+    public ContactDTO(String firstName, String lastName, String email, String subject, String bodyMessage) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.password = password;
-        this.confirmPassword = confirmPassword;
-        this.phoneNumber = phoneNumber;
+        this.subject = subject;
+        this.bodyMessage = bodyMessage;
     }
 
     public String getFirstName() {
@@ -44,30 +43,22 @@ public class UserDTO {
         return email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-    public String getConfirmPassword() {
-        return confirmPassword;
+    public String getSubject() {
+        return subject;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPassword(String hashPassword){
-        this.password = hashPassword;
+    public String getBodyMessage() {
+        return bodyMessage;
     }
 
     @Override
     public String toString() {
-        return "UserDTO{" +
+        return "ContactDTO{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", confirmPassword='" + confirmPassword + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
+                ", subject='" + subject + '\'' +
+                ", bodyMessage='" + bodyMessage + '\'' +
                 '}';
     }
 }

@@ -103,4 +103,12 @@ public class AuthService {
             return null;
         }
     }
+
+    public static Moderator getModerator(User user) {
+        if(user instanceof Moderator) {
+            return (Moderator) user;
+        } else {
+            return null;
+        }
+    }
 }

@@ -28,5 +28,10 @@
         <function-class>j2ee_project.service.AuthService</function-class>
         <function-signature>j2ee_project.model.user.Customer getCustomer(j2ee_project.model.user.User)</function-signature>
     </function>
+    <function>
+        <name>getModerator</name>
+        <function-class>j2ee_project.service.AuthService</function-class>
+        <function-signature>j2ee_project.model.user.Moderator getModerator(j2ee_project.model.user.User)</function-signature>
+    </function>
 </taglib>
 

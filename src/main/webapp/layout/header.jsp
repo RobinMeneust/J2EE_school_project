@@ -30,92 +30,74 @@
                         <span style="font-size:60px" class="material-symbols-outlined text-white">shopping_cart</span>
                     </a>
                 </li>
-                <li class="nav-item mx-2" title="Account">
-                    <c:set var="customer" value="${cf:getCustomer(user)}"/>
-                    <c:choose>
-                        <c:when test="${not empty customer}">
-                            <c:set var="profileIconLink" value="profile-informations"/>
-                        </c:when>
-                        <c:otherwise>
-                            <c:set var="profileIconLink" value="login"/>
-                        </c:otherwise>
-                    </c:choose>
-                    <a href="${profileIconLink}" class="nav-link">
-                        <span style="font-size:60px" class="material-symbols-outlined text-white">account_circle</span>
-                    </a>
-                </li>
-                <c:if test="${sessionScope.user != null}">
-                    <li class="nav-item mx-2" title="Logout">
-                        <a href="LogOutController" class="nav-link">
-                            <span style="font-size:60px" class="material-symbols-outlined text-white">logout</span>
-                        </a>
-                    </li>
-                </c:if>--%>
+                <c:set var="customer" value="${cf:getCustomer(sessionScope.user)}"/>
+                <c:set var="moderator" value="${cf:getModerator(sessionScope.user)}"/>
                 <li class="dropdown nav-item">
                     <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span style="font-size:60px" class="material-symbols-outlined text-white">account_circle</span>
                     </button>
-                    <c:if test="${sessionScope.user == null}">
-                        <ul class="dropdown-menu">
-                            <li class="nav-item mx-2" title="Logout">
-                                <a href="login" class="nav-link">
-                                    <span class="material-symbols-outlined">login</span>
-                                    Log in
-                                </a>
-                            </li>
-                            <li class="nav-item mx-2" title="Logout">
-                                <a href="register" class="nav-link">
-                                    <span class="material-symbols-outlined">how_to_reg</span>
-                                    Register
-                                </a>
-                            </li>
-                        </ul>
-                    </c:if>
-                    <c:if test="${sessionScope.user != null}">
-                        <%
-                            String customerId = null;
-                            String loyaltyAccountId = null;
-                            User user = (User) session.getAttribute("user");
-                            if(user instanceof Customer){
-                                customerId = user.getId() + "";
-                                if(((Customer) user).getLoyaltyAccount() != null){
-                                    loyaltyAccountId = ((Customer) user).getLoyaltyAccount().getId() + "";
-                                }
-                            }
-                        %>
-                        <c:set var="customerId" value="<%=customerId%>"/>
-                        <c:set var="loyaltyAccountId" value="<%=loyaltyAccountId%>"/>
-                        <ul class="dropdown-menu">
-                            <li class="nav-item mx-2" title="ProfileInformation">
-                                <a href="profile-informations" class="nav-link">
-                                    <span class="material-symbols-outlined">account_circle</span>
-                                    Profile information
-                                </a>
-                            </li>
-                            <c:if test="${customerId && loyaltyAccountId}">
+                    <c:choose>
+                        <c:when test="${not empty customer}">
+                            <ul class="dropdown-menu">
+                                <li class="nav-item mx-2" title="ProfileInformation">
+                                    <a href="profile-informations" class="nav-link">
+                                        <span class="material-symbols-outlined">account_circle</span>
+                                        Profile information
+                                    </a>
+                                </li>
                                 <li class="nav-item mx-2" title="LoyaltyRedeem">
-                                    <a href="loyalty-redeem?customerId=${customerId}&loyaltyAccountId=${loyaltyAccountId}" class="nav-link">
+                                    <a href="loyalty-redeem?customerId=${customer.id}&loyaltyAccountId=${customer.loyaltyAccount.id}" class="nav-link">
                                         <span class="material-symbols-outlined">redeem</span>
                                         Loyalty redeem
                                     </a>
                                 </li>
-                            </c:if>
-                            <c:if test="${customerId}">
                                 <li class="nav-item mx-2" title="OrderHistory">
-                                    <a href="order-history?id=${customerId}" class="nav-link">
+                                    <a href="order-history?id=${customer.id}" class="nav-link">
                                         <span class="material-symbols-outlined">history</span>
                                         Order history
                                     </a>
                                 </li>
-                            </c:if>
-                            <li class="nav-item mx-2" title="Logout">
-                                <a href="logout-controller" class="nav-link">
-                                    <span class="material-symbols-outlined">logout</span>
-                                    Log out
-                                </a>
-                            </li>
-                        </ul>
-                    </c:if>
+                                <li class="nav-item mx-2" title="Logout">
+                                    <a href="logout-controller" class="nav-link">
+                                        <span class="material-symbols-outlined">logout</span>
+                                        Log out
+                                    </a>
+                                </li>
+                            </ul>
+                        </c:when>
+                        <c:when test="${not empty moderator}">
+                            <ul class="dropdown-menu">
+                                <li class="nav-item mx-2" title="ProfileInformation">
+                                    <a href="profile-informations" class="nav-link">
+                                        <span class="material-symbols-outlined">account_circle</span>
+                                        Profile information
+                                    </a>
+                                </li>
+                                <li class="nav-item mx-2" title="Logout">
+                                    <a href="logout-controller" class="nav-link">
+                                        <span class="material-symbols-outlined">logout</span>
+                                        Log out
+                                    </a>
+                                </li>
+                            </ul>
+                        </c:when>
+                        <c:otherwise>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item mx-2" title="Logout">
+                                    <a href="login" class="nav-link">
+                                        <span class="material-symbols-outlined">login</span>
+                                        Log in
+                                    </a>
+                                </li>
+                                <li class="nav-item mx-2" title="Logout">
+                                    <a href="register" class="nav-link">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Register
+                                    </a>
+                                </li>
+                            </ul>
+                        </c:otherwise>
+                    </c:choose>
                 </li>
                 <li class="nav-item mx-2" title="HomeDark / Light mode">
                     <input type="checkbox" id="dark-mode-button" onclick="switchTheme();">

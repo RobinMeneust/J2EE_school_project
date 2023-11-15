@@ -46,7 +46,7 @@
         <div class="col">
             <img class="rounded" style="width: 420px; height: 300px; object-fit: cover;" alt="product_img" src="<c:out value="${pageContext.request.contextPath}/${product.getImagePath()}" />">
         </div>
-        <div class="col text-justify" style="min-width:350px; max-width:600px">
+        <div class="col" style="text-align: justify ;min-width:350px; max-width:600px">
             <p>
                 <c:out value="${product.getDescription()}" />
             </p>

@@ -16,7 +16,7 @@
 <body>
 <jsp:include page="../../layout/header.jsp"/>
 <main>
-    <form id="contactForm" name="contactForm" method="post" action="${pageContext.request.contextPath}/ContactController">
+    <form id="contactForm" name="contactForm" method="post" action="${pageContext.request.contextPath}/contact-controller">
         <c:if test="${requestScope.SuccessSending != null}">
             <div class="alert alert-success" role="alert">
                 <c:out value="${requestScope.SuccessSending}"/>

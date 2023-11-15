@@ -46,7 +46,7 @@
         <div class="col">
             <img class="rounded" style="width: 420px; height: 300px; object-fit: cover;" alt="product_img" src="<c:out value="${pageContext.request.contextPath}/${product.getImagePath()}" />">
         </div>
-        <div class="col text-justify" style="min-width:350px; max-width:600px">
+        <div class="col" style="text-align: justify; min-width:350px; max-width:600px">
             <p>
                 <c:out value="${product.getDescription()}" />
             </p>
@@ -56,17 +56,17 @@
                 <c:choose>
                     <c:when test="${discountPercentage != null && discountPercentage > 0}">
                         <span class="text-secondary text-decoration-line-through">$<c:out value="${product.getUnitPrice()}"/></span> <span class="text-success"><c:out value="(-${discountPercentage} %)"/></span>
-                        <h6 class="display-6">$<c:out value="${product.getUnitPrice()*(1-(discountPercentage/100))}"/></h6>
+                        <h6 class="display-6"><c:out value="${product.getUnitPrice()*(1-(discountPercentage/100))}"/> €</h6>
                     </c:when>
                     <c:otherwise>
-                        <h6 class="display-6">$<c:out value="${product.getUnitPrice()}"/></h6>
+                        <h6 class="display-6"><c:out value="${product.getUnitPrice()}"/> €</h6>
                     </c:otherwise>
                 </c:choose>
             </div>
             <div class="p-2 mb-auto w-100">
                 <div class="row">
                     <div class="col text-start"><span class="material-symbols-outlined">local_shipping</span> <span>Home delivery</span></div>
-                    <div class="col text-end">$5.00 Shipping</div>
+                    <div class="col text-end">5.00 € Shipping</div>
                 </div>
             </div>
             <c:choose>

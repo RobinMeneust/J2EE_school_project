@@ -24,9 +24,9 @@
         <c:set var="customer" value="${cf:getCustomer(user)}"/>
 
         <c:choose>
-            <c:when test="${cart != null && cart.getCartItems() != null}">
+            <c:when test="${cart != null && cart.getCartItems() != null && cart.getCartItems().size() > 0}">
                 <form action="confirm-cart" method="post">
-                    <div class="row g-2">
+                    <div class="row g-4">
                         <table class="col table text-center">
                             <tr>
                                 <th class="col"></th>
@@ -37,7 +37,7 @@
                             </tr>
                             <c:forEach var="item" items="${cart.getCartItems()}">
                                 <tr>
-                                    <td class="col">
+                                    <td class="align-middle col">
                                         <a href="get-product-page?id=<c:out value="${item.getProduct().getId()}"/>" style="text-decoration: none">
                                             <img style="width: 100px; height: 100px; object-fit: cover;" alt="product_img" src="<c:out value="${pageContext.request.contextPath}/${item.getProduct().getImagePath()}" />">
                                         </a>
@@ -53,30 +53,71 @@
                                         </c:otherwise>
                                     </c:choose>
                                     <c:set var="total" value="${total + price}"/>
-                                    <td class="align-middle col"><c:out value="${price}"/></td>
+                                    <td class="align-middle col"><c:out value="${price}€"/></td>
 
                                     <%--Actions--%>
-                                    <td class="align-middle col">
+                                    <td class="align-middle p-0">
                                         <a href="edit-cart-item-quantity?id=<c:out value="${item.getId()}"/>&quantity=<c:out value="${item.getQuantity() + 1}"/>">
-                                            <button type="button" class="btn rounded"><span class="material-symbols-outlined">add_circle</span></button>
+                                            <button type="button" class="btn rounded text-success p-0"><span class="material-symbols-outlined">add_circle</span></button>
                                         </a>
                                     </td>
-                                    <td class="align-middle col">
+                                    <td class="align-middle p-0">
                                         <a href="edit-cart-item-quantity?id=<c:out value="${item.getId()}"/>&quantity=<c:out value="${item.getQuantity() - 1}"/>">
-                                            <button type="button" class="btn rounded"><span class="material-symbols-outlined">remove</span></button>
+                                            <button type="button" class="btn rounded p-0"><span class="material-symbols-outlined">remove</span></button>
                                         </a>
                                     </td>
-                                    <td class="align-middle col">
+                                    <td class="align-middle p-0">
                                         <a href="edit-cart-item-quantity?id=<c:out value="${item.getId()}"/>&quantity=0">
-                                            <button type="button" class="btn rounded"><span class="material-symbols-outlined">delete</span></button>
+                                            <button type="button" class="btn rounded text-danger p-0"><span class="material-symbols-outlined">delete</span></button>
                                         </a>
                                     </td>
                                 </tr>
                             </c:forEach>
                         </table>
 
-                        <%--TODO: Check the form content--%>
+                        <div class="col-5">
+                            <c:if test="${false}"> <%--TODO: Test if the customer is connected and if he is subscribed to a loyalty program and get his claimed loyalty rewards--%>
+                                <div class="bg-secondary-subtle shadow p-3 mb-4 rounded d-flex align-items-start flex-column" style="min-width:250px; max-width:450px">
+                                    <label class="mb-1" for="discount-id">Select a discount</label>
+                                    <select class="form-select" id="discount-id" name="discount-id">
+                                        <option selected value="">No Discount</option>
+                                        <%--TODO: Add discounts--%>
+                                    </select>
+                                </div>
+                            </c:if>
+                            <div class="bg-secondary-subtle shadow p-3 rounded d-flex align-items-start flex-column" style="min-width:250px; max-width:450px">
+                                <div class="row py-2 w-100">
+                                    <div class="col text-start"><b>Cart</b></div>
+                                    <div class="col text-end"><c:out value="${total}"/> €</div>
+                                </div>
+                                <hr class="w-100"/>
+                                <c:set var="totalWithLoyaltyDiscount" value="${total}"/>
+                                <c:if test="${false}"> <%--TODO: Get the active discount--%>
+                                    <div class="row py-2 w-100">
+                                        <c:set var="totalWithLoyaltyDiscount" value="${total - (total*(discount/100))}"/>
+                                        <div class="col text-start"><span>Discount</span></div>
+                                        <div class="col text-end"><c:out value="- ${total*(discount/100)}"/> €</div>
+                                    </div>
+                                    <hr class="w-100"/>
+                                </c:if>
+                                <div class="row py-2 w-100">
+                                    <div class="col text-start"><span class="material-symbols-outlined">local_shipping</span> <span>Shipping fees</span></div>
+                                    <div class="col text-end">+ 5.00 €</div>
+                                </div>
+                                <hr class="w-100"/>
+                                <div class="row py-2 w-100">
+                                    <div class="col text-start"><b>TOTAL</b></div>
+                                    <div class="col text-end"><c:out value="${totalWithLoyaltyDiscount + 5} €"/></div>
+                                </div>
+                                <div class="row py-2 w-100">
+                                    <input class="col btn btn-primary" type="submit" value="Confirm">
+                                </div>
+                            </div>
+                        </div>
+
+                            <%--TODO: Check the form content--%>
                         <c:if test="${not empty customer}">
+                            <h5 class="display-5 mt-4">Delivery address</h5>
                             <div class="col-5">
                                 <div class="bg-secondary-subtle shadow p-3 mb-4 rounded d-flex align-items-start flex-column" style="min-width:250px; max-width:450px">
                                     <c:set var="addressObject" value="${customer.getAddress()}"/>
@@ -99,46 +140,6 @@
                                 </div>
                             </div>
                         </c:if>
-
-                        <div class="col-5">
-                            <c:if test="${false}"> <%--TODO: Test if the customer is connected and if he is subscribed to a loyalty program and get his claimed loyalty rewards--%>
-                                <div class="bg-secondary-subtle shadow p-3 mb-4 rounded d-flex align-items-start flex-column" style="min-width:250px; max-width:450px">
-                                    <label class="mb-1" for="discount-id">Select a discount</label>
-                                    <select class="form-select" id="discount-id" name="discount-id">
-                                        <option selected value="">No Discount</option>
-                                        <%--TODO: Add discounts--%>
-                                    </select>
-                                </div>
-                            </c:if>
-                            <div class="bg-secondary-subtle shadow p-3 rounded d-flex align-items-start flex-column" style="min-width:250px; max-width:450px">
-                                <div class="row py-2 w-100">
-                                    <div class="col text-start"><b>Cart</b></div>
-                                    <div class="col text-end"><c:out value="$${total}"/></div>
-                                </div>
-                                <hr class="w-100"/>
-                                <c:set var="totalWithLoyaltyDiscount" value="${total}"/>
-                                <c:if test="${false}"> <%--TODO: Get the active discount--%>
-                                    <div class="row py-2 w-100">
-                                        <c:set var="totalWithLoyaltyDiscount" value="${total - (total*(discount/100))}"/>
-                                        <div class="col text-start"><span>Discount</span></div>
-                                        <div class="col text-end"><c:out value="- $${total*(discount/100)}"/></div>
-                                    </div>
-                                    <hr class="w-100"/>
-                                </c:if>
-                                <div class="row py-2 w-100">
-                                    <div class="col text-start"><span class="material-symbols-outlined">local_shipping</span> <span>Shipping fees</span></div>
-                                    <div class="col text-end">+ $5.00</div>
-                                </div>
-                                <hr class="w-100"/>
-                                <div class="row py-2 w-100">
-                                    <div class="col text-start"><b>TOTAL</b></div>
-                                    <div class="col text-end"><c:out value="$${totalWithLoyaltyDiscount + 5}"/></div>
-                                </div>
-                                <div class="row py-2 w-100">
-                                    <input class="col btn btn-primary" type="submit" value="Confirm">
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </form>
             </c:when>

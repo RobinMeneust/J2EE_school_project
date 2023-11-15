@@ -1,5 +1,6 @@
 package j2ee_project.model.user;
 
+import j2ee_project.dto.UserDTO;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -26,6 +27,18 @@ public abstract class User {
     @Basic
     @Column(name = "phoneNumber", nullable = true, length = 15)
     private String phoneNumber;
+
+    public User(UserDTO userDTO){
+        this.firstName = userDTO.getFirstName();
+        this.lastName = userDTO.getLastName();
+        this.email = userDTO.getEmail();
+        this.password = userDTO.getPassword();
+        this.phoneNumber = userDTO.getPhoneNumber();
+    }
+
+    public User(){
+
+    }
 
     public int getId() {
         return id;
@@ -103,4 +116,15 @@ public abstract class User {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
+    }
 }

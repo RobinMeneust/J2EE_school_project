@@ -1,5 +1,7 @@
 package j2ee_project.model.user;
 
+import j2ee_project.dto.ModeratorDTO;
+import j2ee_project.dto.UserDTO;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -19,6 +21,11 @@ public class Moderator extends User{
 
     public Moderator(){
         super();
+    }
+
+    public Moderator(ModeratorDTO moderatorDTO) {
+        super(moderatorDTO);
+        this.permissions = moderatorDTO.getPermissions();
     }
 
 

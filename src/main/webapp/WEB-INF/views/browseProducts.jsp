@@ -1,7 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="j2ee_project.model.catalog.Product" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %><%--
+<%@ page import="java.util.ArrayList" %>
+<%@ taglib prefix="cf" uri="/WEB-INF/functions.tld"%>
+<%--
   Created by IntelliJ IDEA.
   User: robin
   Date: 30/10/2023
@@ -17,7 +19,7 @@
     <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/toolcool-range-slider.min.js"></script>
     <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/tcrs-generated-labels.min.js"></script>
     <script src="${pageContext.request.contextPath}/dependencies/rangeSlider/tcrs-moving-tooltip.min.js"></script>
-
+    <script src="${pageContext.request.contextPath}/js/cart.js"></script>
 </head>
 <body>
 <jsp:include page="../../layout/header.jsp" />
@@ -56,6 +58,7 @@
         maxPrice = null;
     }
 %>
+<c:set var="cart" value="${cf:getCart(sessionCart,null)}"/> <%-- change 'null' to a function to get the authenticated customer --%>
 
 <c:set var="products" value="<%=products%>" />
 <c:set var="pageIndex" value="<%=pageIndex%>"/>
@@ -104,8 +107,7 @@
                             moving-tooltip-height="30"
                             moving-tooltip-bg="#721d82"
                             moving-tooltip-text-color="#efefef"
-                            moving-tooltip-units="$"
-                            moving-tooltip-units-type="prefix"
+                            moving-tooltip-units=" €"
                             <c:if test="${minPrice != null && maxPrice != null && minPrice<maxPrice && maxPrice<100 && minPrice>0}">
                                 set="[${minPrice},${maxPrice}]"
                             </c:if>
@@ -125,28 +127,40 @@
         </div>
     </div>
 
-    <div class="row my-4">
+    <div class="row my-4 g-4 justify-content-start">
         <c:forEach var = "product" items="${products}">
-            <div class="col-4 my-2">
-                <a href="get-product-page?id=<c:out value="${product.getId()}"/>" style="text-decoration: none">
-                    <div class="card hover-shadow hover-zoom" style="width: 390px; height: 350px;">
-                        <img style="width: 390px; height: 250px; object-fit: cover;" alt="product_img" src="<c:out value="${product.getImageUrl()}" />" class="card-img-top">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <span class="font-weight-bold"><c:out value="${product.getName()}" /></span>
-                                <span class="font-weight-bold">$<c:out value="${product.getUnitPrice()}" /></span>
-                            </div>
-                            <p class="card-text mb-1 mt-1">
-                                <c:out value="${product.getDescription()}" />
-                            </p>
+            <div class="col my-3 mx-2" style="max-width:400px;">
+                <div class="card hover-shadow hover-zoom" style="width: 390px; height:390px;">
+                    <a href="get-product-page?id=<c:out value="${product.getId()}"/>" style="text-decoration: none">
+                        <img style="width: 390px; height: 250px; object-fit: cover;" alt="product_img" src="<c:out value="${pageContext.request.contextPath}/${product.getImagePath()}" />" class="card-img-top">
+                    </a>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <span class="font-weight-bold"><c:out value="${product.getName()}" /></span>
+                            <span class="font-weight-bold"><c:out value="${product.getUnitPrice()} €" /></span>
                         </div>
+                        <p class="card-text text-success mb-1 mt-1">
+                            <c:if test="${not empty product.getCategory().getDiscount() && product.getCategory().getDiscount().getDiscountPercentage() > 0}">
+                                <c:out value="-${product.getCategory().getDiscount().getDiscountPercentage()} %"/>
+                            </c:if>
+                        </p>
+                        <p class="card-text text-success mb-1 mt-1">
+                            <c:choose>
+                                <c:when test="${cart != null && cart.getCartItems() != null && cart.containsProduct(product.getId())}">
+                                    <button class="btn btn-success" disabled>Already in cart</button>
+                                </c:when>
+                                <c:otherwise>
+                                    <button onclick="addToCart(this, ${product.getId()})" class="btn btn-primary">Add to cart</button>
+                                </c:otherwise>
+                            </c:choose>
+                        </p>
                     </div>
-                </a>
+                </div>
             </div>
         </c:forEach>
     </div>
 
-    <nav aria-label="Page navigation example">
+    <nav>
         <ul class="pagination justify-content-center">
             <c:if test="${pageIndex>1}">
                 <li class="page-item"><a class="page-link" href="browse-products?page=1">First</a></li>

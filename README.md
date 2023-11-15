@@ -68,12 +68,43 @@ Create a file named "credentials.json" with the following content in src/main/re
 
 ```JSON
 {
-  "username": "PLACEHOLDER_EMAIL_ADDRESS",
-  "password": "PLACEHOLDER_PASSWORDS"
+  "gmail": {
+    "username": "PLACEHOLDER_EMAIL_ADDRESS",
+    "password": "PLACEHOLDER_PASSWORD"
+  }
+}
+```
+Replace `PLACEHOLDER_EMAIL_ADDRESS` with the email address used and `PLACEHOLDER_PASSWORD` with the password we generated in the previous step.
+
+### Stripe (payment system)
+
+Use this mock credit card number for testing purposes: 4242424242424242, and use a date that isn't in the past and a random CVC (3 numbers)
+
+#### Configure your account
+
+1. Go to https://stripe.com/
+2. Sign up
+3. When you are logged in, go to https://dashboard.stripe.com/test/apikeys
+4. Then copy the secret key and the publishable key, they will be added in credentials.json as mentioned below
+
+#### Add your credentials to this project
+
+Add to "credentials.json" your secret API key
+
+```JSON
+{
+  "gmail": {
+    "username": "PLACEHOLDER_EMAIL_ADDRESS",
+    "password": "PLACEHOLDER_PASSWORD"
+  },
+  "stripe": {
+    "publishable-key": "PLACEHOLDER_STRIPE_PUBLISHABLE_KEY",
+    "secret-key": "PLACEHOLDER_STRIPE_SECRET_KEY"
+  }
 }
 ```
 
-Replace `PLACEHOLDER_EMAIL_ADDRESS` with the email address used and `PLACEHOLDER_PASSWORD` with the password we generated in the previous step.
+
 
 ## Compile
 

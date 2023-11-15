@@ -1,4 +1,5 @@
 <%@ page import="java.util.List" %>
+<%@ page import="org.hibernate.Session" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="cf" uri="/WEB-INF/functions.tld"%>
@@ -21,7 +22,7 @@
 		<div class="mb-5">
 			<h2 class="display-2 p-3">Featured products</h2>
 
-			<div id="carouselExampleInterval" class="carousel slide w-" data-bs-ride="carousel">
+			<div id="carousel-recommendations" class="carousel slide w-" data-bs-ride="carousel">
 				<div class="carousel-inner">
 					<c:forEach var="i" begin="0" end="${Math.min(10,featuredProducts.size()-1)}">
 						<c:if test="${i%3 == 0}">
@@ -30,7 +31,7 @@
 						</c:if>
 									<div class="col-sm text-center">
 										<a class="text-decoration-none text-body" href="get-product-page?id=${featuredProducts.get(i).getId()}">
-											<img style="width: 390px; height: 250px; object-fit: cover;" src="${featuredProducts.get(i).getImageUrl()}" class="d-block" alt="${featuredProducts.get(i).getName()}_img">
+											<img style="width: 390px; height: 250px; object-fit: cover;" src="${pageContext.request.contextPath}/${featuredProducts.get(i).getImagePath()}" class="d-block" alt="${featuredProducts.get(i).getName()}_img">
 											<div>
 												<h5><c:out value="${featuredProducts.get(i).getName()}"/></h5>
 											</div>
@@ -49,11 +50,11 @@
 							</div>
 					</c:if>
 				</div>
-				<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+				<button class="carousel-control-prev" type="button" data-bs-target="#carousel-recommendations" data-bs-slide="prev">
 					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 					<span class="visually-hidden">Previous</span>
 				</button>
-				<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+				<button class="carousel-control-next" type="button" data-bs-target="#carousel-recommendations" data-bs-slide="next">
 					<span class="carousel-control-next-icon" aria-hidden="true"></span>
 					<span class="visually-hidden">Next</span>
 				</button>
@@ -71,7 +72,7 @@
 			</ul>
 		</div>
 		<div class="mb-5">
-			<h2 class="display-2 p-3">Board games</h2>
+			<h2 class="display-2 p-3">Boarder Games</h2>
 			<p>
 				A website were you will find various board games.<br>
 				It has been created by four engineering students for a school project using Jakarta Persistence, Hibernate and other tools.<br>

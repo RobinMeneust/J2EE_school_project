@@ -101,8 +101,6 @@ public class ProductDAO {
             return new ArrayList<>();
         }
 
-        System.out.println(queryStr);
-
         Query<Product> query = session.createQuery(queryStr, Product.class);
         for(int i=0; i<params.size(); i++) {
             query.setParameter(i+1,params.get(i));

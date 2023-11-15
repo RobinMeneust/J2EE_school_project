@@ -19,7 +19,7 @@ public class Cart {
     @OneToOne
     @JoinColumn(name = "idCustomer", referencedColumnName = "idUser", nullable = false)
     private Customer customer;
-    @OneToMany(mappedBy = "cart")
+    @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER)
     private Set<CartItem> cartItems;
 
     public int getId() {
@@ -74,8 +74,29 @@ public class Cart {
     public float getTotal() {
         float total = 0.0f;
         for(CartItem item : getCartItems()) {
-            total+= item.getQuantity()*item.getProduct().getUnitPrice();
+            float itemPrice = item.getQuantity()*item.getProduct().getUnitPrice();
+            Discount categoryDiscount = item.getProduct().getCategory().getDiscount();
+            if(categoryDiscount != null) {
+                itemPrice *= (1-((float)categoryDiscount.getDiscountPercentage()/100));
+            }
+            total += itemPrice;
         }
+
+        if(getDiscount() != null) {
+            total *= (1-((float)getDiscount().getDiscountPercentage()/100));
+        }
+
         return total;
+    }
+
+    public boolean containsProduct(int productId) {
+        Set<CartItem> items = getCartItems();
+        if(productId<0 || items == null) return false;
+        for(CartItem item : items) {
+            if(item.getProduct() != null && item.getProduct().getId() == productId) {
+                return true;
+            }
+        }
+        return false;
     }
 }

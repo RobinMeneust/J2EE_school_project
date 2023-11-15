@@ -2,6 +2,8 @@ package j2ee_project.dao.discount;
 
 import j2ee_project.dao.HibernateUtil;
 import j2ee_project.model.Discount;
+import j2ee_project.model.catalog.Product;
+import jakarta.persistence.NoResultException;
 import org.hibernate.Session;
 
 import java.util.List;

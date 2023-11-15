@@ -1,4 +1,4 @@
-package j2ee_project.controller.catalog;
+package j2ee_project.controller.catalog.product;
 
 import j2ee_project.dao.catalog.product.ProductDAO;
 import jakarta.servlet.RequestDispatcher;
@@ -27,8 +27,6 @@ public class BrowseProductsController extends HttpServlet
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        // TODO : add search filters in the request params
-
         String pageStr = request.getParameter("page");
         int page = 1;
 

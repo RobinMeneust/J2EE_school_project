@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="j2ee_project.model.catalog.Product" %>
+<%@ page import="j2ee_project.model.Discount" %>
+<%@ taglib prefix="cf" uri="/WEB-INF/functions.tld"%>
 <%--
   Created by IntelliJ IDEA.
   User: robin
@@ -13,55 +15,70 @@
 <head>
     <title>Product</title>
     <jsp:include page="../../include.jsp" />
+    <script src="${pageContext.request.contextPath}/js/cart.js"></script>
 </head>
 <body>
 <jsp:include page="../../layout/header.jsp" />
 <%
     Product product = (Product) request.getAttribute("product");
+    Discount discount = product.getCategory().getDiscount();
+    Integer discountPercentage = 0;
+    if(discount != null) {
+        discountPercentage = discount.getDiscountPercentage();
+    }
 %>
 
 <c:set var="product" value="<%=product%>"/>
+<c:set var="discountPercentage" value="<%=discountPercentage%>"/>
+<c:set var="cart" value="${cf:getCart(sessionCart,null)}"/> <%-- change 'null' to a function to get the authenticated customer --%>
 
-<script>
-    function addToCart(productId) {
-        if(productId != null && !isNaN(productId) && productId>0) {
-            const url = "add-to-cart?id="+productId;
 
-            fetch(url, {
-                method: 'GET'
-            }).then((response) => {
-                if(response.ok) {
-                    response.json().then((data) => {
-                        if (data != null && "isAlreadyInCart" in data && data["isAlreadyInCart"]) {
-                            $("#success-alert-box").text("Already in your cart");
-                        } else {
-                            $("#success-alert-box").text("Added");
-                        }
-                    });
-
-                    $("#success-alert-box").removeClass("invisible").addClass("visible");
-                    $("#failure-alert-box").removeClass("visible").addClass("invisible");
-                } else {
-                    $("#failure-alert-box").removeClass("invisible").addClass("visible");
-                    $("#success-alert-box").removeClass("visible").addClass("invisible");
-                }
-            });
-        }
-    }
-</script>
-
-<div class="container mt-1 px-4">
-    <img style="width: 390px; height: 250px; object-fit: cover;" alt="product_img" src="<c:out value="${product.getImageUrl()}" />">
-    <div>
-        <span class="font-weight-bold"><c:out value="${product.getName()}" /></span>
-        <span class="font-weight-bold">$<c:out value="${product.getUnitPrice()}" /></span>
+<div class="container mt-1 px-2 pb-5 mb-5">
+    <div id="error-alert-box" class="alert invisible alert-warning alert-dismissible fade" role="alert">
+        <strong>Failure</strong> The product could not be added to the cart.
+        <button type="button" class="close btn" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
-    <p>
-        <c:out value="${product.getDescription()}" />
-    </p>
-    <button onclick="addToCart(${product.getId()})" class="btn btn-primary">Add to cart</button>
-    <div id="success-alert-box" class="alert alert-success invisible" role="alert">Added</div>
-    <div id="failure-alert-box" class="alert alert-failure invisible" role="alert">Failure</div>
+    <h3 class="display-3"><c:out value="${product.getName()}"/></h3>
+    <h6 class="display-6 mb-3 text-secondary"><c:out value="${product.getCategory().getName()}"/></h6>
+    <div class="row g-5 justify-content-start">
+        <div class="col">
+            <img class="rounded" style="width: 420px; height: 300px; object-fit: cover;" alt="product_img" src="<c:out value="${pageContext.request.contextPath}/${product.getImagePath()}" />">
+        </div>
+        <div class="col text-justify" style="min-width:350px; max-width:600px">
+            <p>
+                <c:out value="${product.getDescription()}" />
+            </p>
+        </div>
+        <div class="col bg-secondary-subtle shadow p-3 rounded d-flex align-items-start flex-column" style="min-width:250px; max-width:450px">
+            <div class="p-2 mb-auto">
+                <c:choose>
+                    <c:when test="${discountPercentage != null && discountPercentage > 0}">
+                        <span class="text-secondary text-decoration-line-through">$<c:out value="${product.getUnitPrice()}"/></span> <span class="text-success"><c:out value="(-${discountPercentage} %)"/></span>
+                        <h6 class="display-6">$<c:out value="${product.getUnitPrice()*(1-(discountPercentage/100))}"/></h6>
+                    </c:when>
+                    <c:otherwise>
+                        <h6 class="display-6">$<c:out value="${product.getUnitPrice()}"/></h6>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+            <div class="p-2 mb-auto w-100">
+                <div class="row">
+                    <div class="col text-start"><span class="material-symbols-outlined">local_shipping</span> <span>Home delivery</span></div>
+                    <div class="col text-end">$5.00 Shipping</div>
+                </div>
+            </div>
+            <c:choose>
+                <c:when test="${cart != null && cart.getCartItems() != null && cart.containsProduct(product.getId())}">
+                    <button class="btn btn-success w-100" disabled>Already in cart</button>
+                </c:when>
+                <c:otherwise>
+                    <button onclick="addToCart(this, ${product.getId()})" class="btn btn-primary w-100">Add to cart</button>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </div>
 </div>
 <jsp:include page="../../layout/footer.jsp" />
 </body>

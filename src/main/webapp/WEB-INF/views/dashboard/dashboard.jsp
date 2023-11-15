@@ -5,14 +5,11 @@
 <%@ page import="j2ee_project.model.user.Moderator" %>
 <%@ page import="j2ee_project.model.catalog.Category" %>
 <%@ page import="j2ee_project.model.Discount" %>
-<%@ page import="j2ee_project.model.user.Permission" %>
-<%@ page import="java.util.Set" %>
-<%@ page import="org.hibernate.Hibernate" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Dashboard</title>
-    <jsp:include page="include.jsp"/>
+    <jsp:include page="../../../include.jsp"/>
     <script type="application/javascript">
         function expandCatalogue(button){
             if (button.getAttribute('id') === 'nav-catalogue-tab'){
@@ -26,7 +23,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
 </head>
 <body>
-    <jsp:include page="layout/header.jsp" />
+    <jsp:include page="../../../layout/header.jsp" />
     <div class="container-fluid">
         <div class="d-flex ">
             <nav class="col-lg-2">
@@ -100,6 +97,7 @@
                             moderators = new ArrayList<>();
                         }
                     %>
+                    <c:set var="moderators" value="<%=moderators%>"/>
                     <table class="table table-striped table-hover" id="moderators-table" data-filter-control-visible="false">
                         <thead>
                         <tr>
@@ -119,7 +117,7 @@
                                 <td><c:out value = "${moderator.getFirstName()}"/></td>
                                 <%--<td>
                                     <ul>
-                                        <c:if test="${not empty moderator.permissions()}">
+                                        <c:if test="${not empty moderator.permissions}">
                                             <c:forEach var="permission" items="${moderator.permissions}">
                                                 <li>
                                                     <c:out value="${permission.getPermission()}"/>
@@ -159,6 +157,13 @@
                     <table class="table table-striped table-hover" id="products-table" data-filter-control-visible="false">
                         <thead>
                         <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Stock Quantity</th>
+                            <th>Price</th>
+                            <th>Weight</th>
+                            <th>Category</th>
                             <th data-sortable="false"></th>
                             <th data-sortable="false"></th>
                         </tr>
@@ -166,6 +171,18 @@
                         <tbody>
                         <c:forEach var = "product" items = "${products}">
                             <tr>
+                                <td>
+                                    <img style="width: 78px; height: 50px; object-fit: cover;"
+                                         alt="product_img"
+                                         src="<c:out value="${pageContext.request.contextPath}/${product.getImagePath()}" />"
+                                         class="card-img-top">
+                                </td>
+                                <td><c:out value="${product.getName()}"/></td>
+                                <td><c:out value="${product.getDescription()}"/></td>
+                                <td><c:out value="${product.getStockQuantity()}"/></td>
+                                <td><c:out value="${product.getUnitPrice()}"/></td>
+                                <td><c:out value="${product.getWeight()}"/></td>
+                                <td><c:out value="${product.getCategory().getName()}"/></td>
                                 <td class="border-bottom-0">
                                     <a href="" class="pencil">
                                         <img src="${pageContext.request.contextPath}/img/pencil.svg" alt="Pencil">
@@ -278,6 +295,6 @@
             </div>
         </div>
     </div>
-    <jsp:include page="layout/footer.jsp" />
+    <jsp:include page="../../../layout/footer.jsp" />
 </body>
 </html>

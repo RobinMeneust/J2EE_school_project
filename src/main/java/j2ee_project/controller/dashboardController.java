@@ -17,13 +17,16 @@ public class dashboardController extends HttpServlet {
             RequestDispatcher dispatcherModerators = getServletContext().getRequestDispatcher("/get-moderators");
             dispatcherModerators.include(request, response);
 
+            RequestDispatcher dispatcherProducts = getServletContext().getRequestDispatcher("/get-products");
+            dispatcherProducts.include(request, response);
+
             RequestDispatcher dispatcherCategories = getServletContext().getRequestDispatcher("/get-categories");
             dispatcherCategories.include(request, response);
 
             RequestDispatcher dispatcherDiscounts = getServletContext().getRequestDispatcher("/get-discounts");
             dispatcherDiscounts.include(request, response);
 
-            RequestDispatcher view = request.getRequestDispatcher("dashboard.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/dashboard.jsp");
             view.forward(request,response);
         }catch (Exception err){
             System.out.println(err.getMessage());

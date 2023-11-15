@@ -57,7 +57,11 @@ public class EditCartItemQuantityController extends HttpServlet {
 		}
 
         HttpSession session = request.getSession();
-        Customer customer = null; // TODO: check if the user is connected and if he is, set this var
+        Object obj = session.getAttribute("user");
+        Customer customer = null;
+        if(obj instanceof Customer) {
+            customer = (Customer) obj;
+        }
         Cart cart;
 
         if(customer == null) {

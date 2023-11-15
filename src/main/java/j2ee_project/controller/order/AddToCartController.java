@@ -6,6 +6,7 @@ import j2ee_project.model.catalog.Product;
 import j2ee_project.model.order.Cart;
 import j2ee_project.model.order.CartItem;
 import j2ee_project.model.user.Customer;
+import j2ee_project.service.AuthService;
 import j2ee_project.service.CartManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -56,7 +57,12 @@ public class AddToCartController extends HttpServlet {
         }
 
         HttpSession session = request.getSession();
-        Customer customer = null; // TODO: check if the user is connected and if he is, set this var
+
+        Object obj = session.getAttribute("user");
+        Customer customer = null;
+        if(obj instanceof Customer) {
+            customer = (Customer) obj;
+        }
         Cart cart;
 
         cart = CartManager.getCart(session, customer);

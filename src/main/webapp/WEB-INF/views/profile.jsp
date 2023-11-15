@@ -8,7 +8,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="j2ee_project.model.order.Orders" %>
 <%@ page import="j2ee_project.model.loyalty.LoyaltyLevel" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="j2ee_project.model.loyalty.LoyaltyAccount" %>
 <%@ page import="j2ee_project.model.user.Customer" %>
 <%@ page import="j2ee_project.model.Address" %>
@@ -82,7 +81,7 @@
     LoyaltyAccount loyaltyAccount = (LoyaltyAccount) request.getAttribute("loyaltyAccount");
     List<LoyaltyLevel> loyaltyLevels = (List<LoyaltyLevel>) request.getAttribute("loyaltyLevels");
     String activeTab = request.getParameter("active-tab");
-    Address address = null;
+    Address address;
     String customerFirstName = null;
     String customerLastName = null;
     String customerPhoneNumber = null;
@@ -109,6 +108,8 @@
 <c:set var="customer" value="<%=customer%>"/>
 <c:set var="loyaltyLevels" value="<%=loyaltyLevels%>"/>
 <c:set var="activeTab" value="<%=activeTab%>"/>
+<c:set var="loyaltyAccount" value="<%=loyaltyAccount%>"/>
+
 
 
     <div class="container-fluid" style="width: 100%;max-width: 100%;">
@@ -179,10 +180,10 @@
                                 <%}}%>
                             </div>
                         </div>
-
-                        <form id="multi-step-form" action="">
-                            <%if(loyaltyLevels!=null){ for (LoyaltyLevel loyaltyLevel : loyaltyLevels) {%>
+                        <%if(loyaltyLevels!=null){ for (LoyaltyLevel loyaltyLevel : loyaltyLevels) {%>
                             <div class="step step-<%=loyaltyLevel.getId()%>">
+                                <form id="multi-step-form" action="loyalty-redeem?customerId=${customer.id}&loyaltyAccountId=${customer.loyaltyAccount.id}&loyaltyLevelId=<%=loyaltyLevel.getId()%>" method="post">
+
                                 <h3><%= loyaltyLevel.getDiscount().getDiscountPercentage()%>% Discount</h3>
                                 <div class="mb-3">
                                     <%if(loyaltyAccount.getLoyaltyPoints()>loyaltyLevel.getRequiredPoints()){
@@ -205,9 +206,10 @@
                                 <%} else {%>
                                     <button type="button" class="btn btn-primary next-step">Next</button>
                                 <%}%>
+                                </form>
                             </div>
                             <%}}%>
-                        </form>
+
                     </div>
 
                     <script>
@@ -224,6 +226,12 @@
                         }
 
                         $(document).ready(function() {
+
+                            setTimeout(function (){
+                                $(".step").hide();
+                                $(".step-1").show();
+                            },20);
+
                             $('#multi-step-form').find('.step').slice(1).hide();
 
                             $(".next-step").click(function() {

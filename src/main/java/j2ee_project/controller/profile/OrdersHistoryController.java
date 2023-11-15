@@ -19,9 +19,7 @@ public class OrdersHistoryController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("entered order controller");
         String customerIdStr = request.getParameter("id");
-        System.out.println(customerIdStr);
         int customerId = 0;
 
         if(customerIdStr != null && !customerIdStr.trim().isEmpty()) {
@@ -30,7 +28,6 @@ public class OrdersHistoryController extends HttpServlet {
             } catch(Exception ignore) {}
         }
 
-        System.out.println(customerId);
         try{
             Customer customer = CustomerDAO.getCustomer(customerId);
             request.setAttribute("customer", customer);

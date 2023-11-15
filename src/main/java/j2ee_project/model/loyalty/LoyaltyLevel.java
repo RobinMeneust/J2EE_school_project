@@ -62,4 +62,14 @@ public class LoyaltyLevel {
     public void setDiscount(Discount discount) {
         this.discount = discount;
     }
+
+    @Override
+    public String toString() {
+        return "LoyaltyLevel{" +
+                "id=" + id +
+                ", requiredPoints=" + requiredPoints +
+                ", discount=" + discount +
+                ", loyaltyProgram=" + loyaltyProgram +
+                '}';
+    }
 }

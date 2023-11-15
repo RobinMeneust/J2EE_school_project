@@ -30,7 +30,6 @@ public class LoyaltyRedeemController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String customerIdStr = request.getParameter("customerId");
         String loyaltyAccountIdStr = request.getParameter("loyaltyAccountId");
-        System.out.println(customerIdStr);
         int customerId = 1;
         int loyaltyAccountId = 1;
 
@@ -72,6 +71,31 @@ public class LoyaltyRedeemController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String j;
+        String loyaltyAccountIdStr = request.getParameter("loyaltyAccountId");
+        String loyaltyLevelIdStr = request.getParameter("loyaltyLevelId");
+
+        int loyaltyAccountId = 1;
+        int loyaltyLevelId = 1;
+
+        if(loyaltyAccountIdStr != null && !loyaltyAccountIdStr.trim().isEmpty()) {
+            try {
+                loyaltyAccountId = Integer.parseInt(loyaltyAccountIdStr);
+            } catch(Exception ignore) {}
+        }
+
+        if(loyaltyLevelIdStr != null && !loyaltyLevelIdStr.trim().isEmpty()) {
+            try {
+                loyaltyLevelId = Integer.parseInt(loyaltyLevelIdStr);
+            } catch(Exception ignore) {}
+        }
+
+        try{
+            LoyaltyDAO.createLevelUsed(loyaltyAccountId,loyaltyLevelId);
+            doGet(request,response);
+        }catch (Exception err) {
+            // The forward didn't work
+            System.err.println(err.getMessage());
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 }

@@ -21,6 +21,15 @@ public class Address {
     @Column(name = "country", nullable = false, length = 60)
     private String country;
 
+    public Address() {}
+
+    public Address(String streetAddress, String postalCode, String city, String country) {
+        this.streetAddress = streetAddress;
+        this.postalCode = postalCode;
+        this.city = city;
+        this.country = country;
+    }
+
     public int getId() {
         return id;
     }
@@ -68,7 +77,6 @@ public class Address {
 
         Address address = (Address) o;
 
-        if (id != address.id) return false;
         if (streetAddress != null ? !streetAddress.equals(address.streetAddress) : address.streetAddress != null)
             return false;
         if (postalCode != null ? !postalCode.equals(address.postalCode) : address.postalCode != null) return false;

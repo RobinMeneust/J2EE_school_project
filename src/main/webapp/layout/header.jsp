@@ -1,6 +1,7 @@
 <%@ page import="j2ee_project.model.user.User" %>
 <%@ page import="j2ee_project.model.user.Customer" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="cf" uri="/WEB-INF/functions.tld"%>
 <%--
   Created by IntelliJ IDEA.
   User: robin
@@ -16,12 +17,12 @@
         </button>
 
 
-        <a href="${pageContext.request.contextPath}/index.jsp" class="navbar-brand" title="Home">
+        <a href="${pageContext.request.contextPath}/" class="navbar-brand" title="Home">
             <img class="d-inline-block align-top" style="height:80px; width:80px;" src="${pageContext.request.contextPath}/img/logo_boarder_games.png" alt="logo_boarder_games">
         </a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <form class="form-inline my-2 my-lg-0 mx-5 w-50" action="browse-products" method="get">
-                <input id="name" name="name" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <input id="name" name="name" class="form-control me-sm-2" type="search" placeholder="Search" aria-label="Search">
             </form>
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item mx-2" title="Cart">
@@ -29,8 +30,17 @@
                         <span style="font-size:60px" class="material-symbols-outlined text-white">shopping_cart</span>
                     </a>
                 </li>
-<%--                <li class="nav-item mx-2" title="Account">
-                    <a href="profile-informations" class="nav-link">
+                <li class="nav-item mx-2" title="Account">
+                    <c:set var="customer" value="${cf:getCustomer(user)}"/>
+                    <c:choose>
+                        <c:when test="${not empty customer}">
+                            <c:set var="profileIconLink" value="profile-informations"/>
+                        </c:when>
+                        <c:otherwise>
+                            <c:set var="profileIconLink" value="login"/>
+                        </c:otherwise>
+                    </c:choose>
+                    <a href="${profileIconLink}" class="nav-link">
                         <span style="font-size:60px" class="material-symbols-outlined text-white">account_circle</span>
                     </a>
                 </li>

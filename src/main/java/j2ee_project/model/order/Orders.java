@@ -15,13 +15,14 @@ public class Orders {
     private int id;
     @Basic
     @Column(name = "total", nullable = false)
-    private int total;
+    private float total;
     @Basic
     @Column(name = "date", nullable = false)
     private Date date;
     @Basic
     @Column(name = "orderStatus", nullable = false, length = 30)
-    private String orderStatus;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
     @OneToMany(mappedBy = "order")
     private Set<CartItem> cartItems;
     @ManyToOne
@@ -32,6 +33,17 @@ public class Orders {
     @JoinColumn(name = "idAddress", referencedColumnName = "id", nullable = false)
     private Address address;
 
+    public Orders() { }
+
+    public Orders(float total, Date date, Set<CartItem> cartItems, Customer customer, Address address) {
+        this.total = total;
+        this.date = date;
+        this.cartItems = cartItems;
+        this.customer = customer;
+        this.address = address;
+        this.orderStatus = OrderStatus.WAITING_PAYMENT;
+    }
+
     public int getId() {
         return id;
     }
@@ -40,7 +52,7 @@ public class Orders {
         this.id = id;
     }
 
-    public int getTotal() {
+    public float getTotal() {
         return total;
     }
 
@@ -56,11 +68,11 @@ public class Orders {
         this.date = date;
     }
 
-    public String getOrderStatus() {
+    public OrderStatus getOrderStatus() {
         return orderStatus;
     }
 
-    public void setOrderStatus(String orderStatus) {
+    public void setOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
     }
 
@@ -82,7 +94,7 @@ public class Orders {
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + total;
+        result = 31 * result + Float.valueOf(total).hashCode();
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (orderStatus != null ? orderStatus.hashCode() : 0);
         return result;

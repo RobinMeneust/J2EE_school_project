@@ -33,32 +33,52 @@ public class LoyaltyRedeemController extends HttpServlet {
         int customerId = 1;
         int loyaltyAccountId = 1;
 
-        if(customerIdStr != null && !customerIdStr.trim().isEmpty()) {
+        if (customerIdStr != null && !customerIdStr.trim().isEmpty()) {
             try {
                 customerId = Integer.parseInt(customerIdStr);
-            } catch(Exception ignore) {}
+            } catch (Exception ignore) {
+            }
         }
 
-        if(loyaltyAccountIdStr != null && !loyaltyAccountIdStr.trim().isEmpty()) {
+        if (loyaltyAccountIdStr != null && !loyaltyAccountIdStr.trim().isEmpty()) {
             try {
                 loyaltyAccountId = Integer.parseInt(loyaltyAccountIdStr);
-            } catch(Exception ignore) {}
+            } catch (Exception ignore) {
+            }
         }
 
-        try {
-            List<LoyaltyLevel> loyaltyLevels = LoyaltyDAO.getLoyaltyLevels();
-            LoyaltyAccount loyaltyAccount = LoyaltyDAO.getLoyaltyAccount(loyaltyAccountId);
-            Customer customer = CustomerDAO.getCustomer(customerId);
+        if (loyaltyAccountIdStr == null || loyaltyAccountIdStr.trim().isEmpty()){
+            try {
+                List<LoyaltyLevel> loyaltyLevels = LoyaltyDAO.getLoyaltyLevels();
+                LoyaltyAccount loyaltyAccount = LoyaltyDAO.getLoyaltyAccount(loyaltyAccountId);
+                Customer customer = CustomerDAO.getCustomer(customerId);
 
-            request.setAttribute("customer", customer);
-            request.setAttribute("loyaltyAccount", loyaltyAccount);
-            request.setAttribute("loyaltyLevels", loyaltyLevels);
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=2");
-            view.forward(request, response);
-        } catch(Exception err) {
-            // The forward didn't work
-            System.err.println(err.getMessage());
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                request.setAttribute("customer", customer);
+                request.setAttribute("loyaltyAccount", loyaltyAccount);
+                request.setAttribute("loyaltyLevels", loyaltyLevels);
+                RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=2&has-loyalty-account=0");
+                view.forward(request, response);
+            } catch (Exception err) {
+                // The forward didn't work
+                System.err.println(err.getMessage());
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            }
+        }else {
+            try {
+                List<LoyaltyLevel> loyaltyLevels = LoyaltyDAO.getLoyaltyLevels();
+                LoyaltyAccount loyaltyAccount = LoyaltyDAO.getLoyaltyAccount(loyaltyAccountId);
+                Customer customer = CustomerDAO.getCustomer(customerId);
+
+                request.setAttribute("customer", customer);
+                request.setAttribute("loyaltyAccount", loyaltyAccount);
+                request.setAttribute("loyaltyLevels", loyaltyLevels);
+                RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=2&has-loyalty-account=1");
+                view.forward(request, response);
+            } catch (Exception err) {
+                // The forward didn't work
+                System.err.println(err.getMessage());
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            }
         }
     }
 

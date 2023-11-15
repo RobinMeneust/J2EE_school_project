@@ -28,7 +28,7 @@ public class OrdersHistoryController extends HttpServlet {
         try{
             Customer customer = CustomerDAO.getCustomer(customerId);
             request.setAttribute("customer", customer);
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=3");
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=3&has-loyalty-account=1");
             view.forward(request,response);
         }catch (Exception err){
             System.out.println(err.getMessage());

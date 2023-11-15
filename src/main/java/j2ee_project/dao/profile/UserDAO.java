@@ -1,6 +1,8 @@
 package j2ee_project.dao.profile;
 
+import j2ee_project.dao.AddressDAO;
 import j2ee_project.dao.HibernateUtil;
+import j2ee_project.model.Address;
 import j2ee_project.model.user.Customer;
 import org.hibernate.Session;
 import org.hibernate.query.MutationQuery;
@@ -51,6 +53,13 @@ public class UserDAO {
         }
         if (!customer.getAddress().getCountry().isEmpty()){
             addressQuery.setParameter("customerCountry",customer.getAddress().getCountry());
+        }
+        Customer customer1 = getUser(customer.getId());
+        if (customer1.getAddress()==null){
+            Address addressIfNotExist = customer.getAddress();
+            addressIfNotExist = AddressDAO.addAddressIfNotExists(addressIfNotExist);
+            MutationQuery customerQuery = session.createMutationQuery("UPDATE Customer SET address=:address WHERE id=:idCustomer").setParameter("address",addressIfNotExist).setParameter("idCustomer",customer.getId());
+            customerQuery.executeUpdate();
         }
         userQuery.executeUpdate();
         addressQuery.executeUpdate();

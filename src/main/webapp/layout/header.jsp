@@ -32,7 +32,7 @@
                     <c:set var="customer" value="${cf:getCustomer(user)}"/>
                     <c:choose>
                         <c:when test="${not empty customer}">
-                            <c:set var="profileIconLink" value="profile-informations"/>
+                            <c:set var="profileIconLink" value="profile-informations?customerId=${customer.id}"/>
                         </c:when>
                         <c:otherwise>
                             <c:set var="profileIconLink" value="login"/>

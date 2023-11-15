@@ -19,8 +19,7 @@ public class ProfileInformationsController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String customerIdStr = request.getParameter("customerId");
-        int customerId;
-        customerId = 2;
+        int customerId = 1;
 
         if(customerIdStr != null && !customerIdStr.trim().isEmpty()) {
             try {
@@ -31,7 +30,7 @@ public class ProfileInformationsController extends HttpServlet {
         try {
             Customer customer = CustomerDAO.getCustomer(customerId);
             request.setAttribute("customer", customer);
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=1");
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=1&has-loyalty-account=1");
             view.forward(request, response);
         } catch(Exception err) {
             // The forward didn't work
@@ -81,7 +80,7 @@ public class ProfileInformationsController extends HttpServlet {
         try {
             Customer customert = CustomerDAO.getCustomer(userId);
             request.setAttribute("customer", customert);
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=1");
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=1&has-loyalty-account=1");
             view.forward(request, response);
         } catch(Exception err) {
             // The forward didn't work

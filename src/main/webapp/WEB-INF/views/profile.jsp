@@ -81,6 +81,7 @@
     LoyaltyAccount loyaltyAccount = (LoyaltyAccount) request.getAttribute("loyaltyAccount");
     List<LoyaltyLevel> loyaltyLevels = (List<LoyaltyLevel>) request.getAttribute("loyaltyLevels");
     String activeTab = request.getParameter("active-tab");
+    int hasLoyaltyAccount = Integer.parseInt(request.getParameter("has-loyalty-account"));
     Address address;
     String customerFirstName = null;
     String customerLastName = null;
@@ -98,16 +99,19 @@
         customerLastName = customer.getLastName();
         customerEmail = customer.getEmail();
         customerPhoneNumber = customer.getPhoneNumber();
-        customerAddress = address.getStreetAddress();
-        customerPostalCode = address.getPostalCode();
-        customerCountry = address.getCountry();
-        customerCity = address.getCity();
+        if (customer.getAddress()!=null) {
+            customerAddress = address.getStreetAddress();
+            customerPostalCode = address.getPostalCode();
+            customerCountry = address.getCountry();
+            customerCity = address.getCity();
+        }
         orders = customer.getOrders();
     }%>
 <c:set var="orders" value="<%=orders%>"/>
 <c:set var="customer" value="<%=customer%>"/>
 <c:set var="loyaltyLevels" value="<%=loyaltyLevels%>"/>
 <c:set var="activeTab" value="<%=activeTab%>"/>
+<c:set var="hasLoyaltyAccount" value="<%=hasLoyaltyAccount%>"/>
 <c:set var="loyaltyAccount" value="<%=loyaltyAccount%>"/>
 
 
@@ -167,104 +171,105 @@
                 </div>
                 <div class="tab-pane fade <c:if test="${activeTab == 2}">show active</c:if>" id="nav-loyalty-account" role="tabpanel" aria-labelledby="nav-loyalty-account-tab"> <h2>Loyalty account</h2>
                     <p></p>
-                    <p>You have : <c:out value="${loyaltyAccount.getLoyaltyPoints()}"  /> loyalty points. </p>
-                    <div id="container" class="container mt-5">
-                        <div class="container horizontal-scrollable">
-                            <div class="progress px-1" style="height: 3px;">
-                                <div class="progress-bar" role="progressbar" style="width: 0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <div class="step-container d-flex justify-content-between">
-                                <% if(loyaltyLevels!=null){for (LoyaltyLevel loyaltyLevel : loyaltyLevels) {%>
-                                    <div class="step-circle" onclick="displayStep(<%=loyaltyLevel.getId()%>)">
-                                        <%=loyaltyLevel.getId()%></div>
-                                <%}}%>
-                            </div>
-                        </div>
-                        <%if(loyaltyLevels!=null){ for (LoyaltyLevel loyaltyLevel : loyaltyLevels) {%>
-                            <div class="step step-<%=loyaltyLevel.getId()%>">
-                                <form id="multi-step-form" action="loyalty-redeem?customerId=${customer.id}&loyaltyAccountId=${customer.loyaltyAccount.id}&loyaltyLevelId=<%=loyaltyLevel.getId()%>" method="post">
-
-                                <h3><%= loyaltyLevel.getDiscount().getDiscountPercentage()%>% Discount</h3>
-                                <div class="mb-3">
-                                    <%if(loyaltyAccount.getLoyaltyPoints()>loyaltyLevel.getRequiredPoints()){
-                                        if (loyaltyAccount.isLevelUsed(loyaltyLevel)){%>
-                                            <p> already redeemed</p>
-                                        <%}else{%>
-                                            <button type="submit" class="btn btn-success">Redeem</button>
-                                        <%}
-                                    }else{%>
-                                        <p> You do not have enough loyalty points</p>
-                                    <%}%>
+                    <c:if test="${hasLoyaltyAccount == 1}">
+                        <p>You have : <c:out value="${loyaltyAccount.getLoyaltyPoints()}"  /> loyalty points. </p>
+                        <div id="container" class="container mt-5">
+                            <div class="container horizontal-scrollable">
+                                <div class="progress px-1" style="height: 3px;">
+                                    <div class="progress-bar" role="progressbar" style="width: 0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
-                                <% if (loyaltyLevel.getId() > 1) {
-                                    if (loyaltyLevel.getId() > loyaltyLevels.size()) {%>
-                                        <button type="button" class="btn btn-primary prev-step">Previous</button>
-                                        <button type="button" class="btn btn-primary next-step">Next</button>
-                                    <%} else {%>
-                                <button type="button" class="btn btn-primary prev-step">Previous</button>
-                                    <%}%>
-                                <%} else {%>
-                                    <button type="button" class="btn btn-primary next-step">Next</button>
-                                <%}%>
-                                </form>
+                                <div class="step-container d-flex justify-content-between">
+                                    <% if(loyaltyLevels!=null){for (LoyaltyLevel loyaltyLevel : loyaltyLevels) {%>
+                                        <div class="step-circle" onclick="displayStep(<%=loyaltyLevel.getId()%>)">
+                                            <%=loyaltyLevel.getId()%></div>
+                                    <%}}%>
+                                </div>
                             </div>
+                            <%if(loyaltyLevels!=null){ for (LoyaltyLevel loyaltyLevel : loyaltyLevels) {%>
+                                <div class="step step-<%=loyaltyLevel.getId()%>">
+                                    <form id="multi-step-form" action="loyalty-redeem?customerId=${customer.id}&loyaltyAccountId=${customer.loyaltyAccount.id}&loyaltyLevelId=<%=loyaltyLevel.getId()%>" method="post">
+
+                                    <h3><%= loyaltyLevel.getDiscount().getDiscountPercentage()%>% Discount</h3>
+                                    <div class="mb-3">
+                                        <%if(loyaltyAccount.getLoyaltyPoints()>loyaltyLevel.getRequiredPoints()){
+                                            if (loyaltyAccount.isLevelUsed(loyaltyLevel)){%>
+                                                <p> already redeemed</p>
+                                            <%}else{%>
+                                                <button type="submit" class="btn btn-success">Redeem</button>
+                                            <%}
+                                        }else{%>
+                                            <p> You do not have enough loyalty points</p>
+                                        <%}%>
+                                    </div>
+                                    <% if (loyaltyLevel.getId() > 1) {
+                                        if (loyaltyLevel.getId() > loyaltyLevels.size()) {%>
+                                            <button type="button" class="btn btn-primary prev-step">Previous</button>
+                                            <button type="button" class="btn btn-primary next-step">Next</button>
+                                        <%} else {%>
+                                    <button type="button" class="btn btn-primary prev-step">Previous</button>
+                                        <%}%>
+                                    <%} else {%>
+                                    <button type="button" class="btn btn-primary next-step">Next</button>
+                                        <%}%>
+                                    </form>
+                                </div>
                             <%}}%>
-
-                    </div>
-
-                    <script>
-                        var currentStep = 1;
-                        var updateProgressBar;
-
-                        function displayStep(stepNumber) {
-                            if (stepNumber >= 1 && stepNumber <= ${loyaltyLevels.size()}) {
-                                $(".step-" + currentStep).hide();
-                                $(".step-" + stepNumber).show();
-                                currentStep = stepNumber;
-                                updateProgressBar();
+                        </div>
+                        <script>
+                            var currentStep = 1;
+                            var updateProgressBar;
+                            function displayStep(stepNumber) {
+                                if (stepNumber >= 1 && stepNumber <= ${loyaltyLevels.size()}) {
+                                    $(".step-" + currentStep).hide();
+                                    $(".step-" + stepNumber).show();
+                                    currentStep = stepNumber;
+                                    updateProgressBar();
+                                }
                             }
-                        }
 
-                        $(document).ready(function() {
+                            $(document).ready(function() {
 
-                            setTimeout(function (){
-                                $(".step").hide();
-                                $(".step-1").show();
-                            },20);
+                                setTimeout(function (){
+                                    $(".step").hide();
+                                    $(".step-1").show();
+                                },20);
 
-                            $('#multi-step-form').find('.step').slice(1).hide();
+                                $('#multi-step-form').find('.step').slice(1).hide();
 
-                            $(".next-step").click(function() {
-                                if (currentStep < ${loyaltyLevels.size()}) {
-                                    $(".step-" + currentStep);
-                                    currentStep++;
-                                    setTimeout(function() {
-                                        $(".step").hide();
-                                        $(".step-" + currentStep).show();
-                                        updateProgressBar();
-                                    }, 20);
+                                $(".next-step").click(function() {
+                                    if (currentStep < ${loyaltyLevels.size()}) {
+                                        $(".step-" + currentStep);
+                                        currentStep++;
+                                        setTimeout(function() {
+                                            $(".step").hide();
+                                            $(".step-" + currentStep).show();
+                                            updateProgressBar();
+                                        }, 20);
+                                    }
+                                });
+
+                                $(".prev-step").click(function() {
+                                    if (currentStep > 1) {
+                                        $(".step-" + currentStep);
+                                        currentStep--;
+                                        setTimeout(function() {
+                                            $(".step").hide();
+                                            $(".step-" + currentStep).show();
+                                            updateProgressBar();
+                                        }, 20);
+                                    }
+                                });
+
+                                updateProgressBar = function() {
+                                    var progressPercentage = ((currentStep-1)/(${loyaltyLevels.size()}-1)) * 100;
+                                    $(".progress-bar").css("width", progressPercentage + "%");
                                 }
                             });
-
-                            $(".prev-step").click(function() {
-                                if (currentStep > 1) {
-                                    $(".step-" + currentStep);
-                                    currentStep--;
-                                    setTimeout(function() {
-                                        $(".step").hide();
-                                        $(".step-" + currentStep).show();
-                                        updateProgressBar();
-                                    }, 20);
-                                }
-                            });
-
-                            updateProgressBar = function() {
-                                var progressPercentage = ((currentStep-1)/(${loyaltyLevels.size()}-1)) * 100;
-                                $(".progress-bar").css("width", progressPercentage + "%");
-                            }
-                        });
-                    </script>
-
+                        </script>
+                    </c:if>
+                    <c:if test="${hasLoyaltyAccount == 0}">
+                        <p>You do not have a loyalty Account</p>
+                    </c:if>
                 </div>
                 <div class="tab-pane fade <c:if test="${activeTab == 3}">show active</c:if>" id="nav-order-history" role="tabpanel" aria-labelledby="nav-order-history-tab"> <h2>Order history</h2>
                     <table class="table table-striped table-hover" id="customers-table" style="width: 100%" data-filter-control-visible="false">

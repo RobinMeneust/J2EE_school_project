@@ -15,7 +15,7 @@ import java.util.Calendar;
 import java.util.Map;
 
 /**
- * This class is a servlet used register customer. It's a controller in the MVC architecture of this project.
+ * This class is a servlet used to send contact message. It's a controller in the MVC architecture of this project.
  *
  * @author Lucas VELAY
  */
@@ -23,19 +23,7 @@ import java.util.Map;
 public class ContactController extends HttpServlet {
 
     /**
-     * Redirect to the sender of this request and set an error message since GET queries aren't accepted by this servlet
-     * @param request Request object received by the servlet
-     * @param response Response to be sent
-     * @throws ServletException If the servlet encountered difficulty at some point
-     * @throws IOException If an I/O operation has failed or is interrupted
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
-
-    /**
-     * Register a customer with the parameters given in the request object. Different errors can be sent to the sender in the request object if a problem occur
+     * Send a contact mail to our mailbox and register the mail in the database Different errors can be sent to the sender in the request object if a problem occur
      * @param request Request object received by the servlet
      * @param response Response to be sent
      * @throws ServletException If the servlet encountered difficulty at some point
@@ -75,6 +63,11 @@ public class ContactController extends HttpServlet {
 
     }
 
+    /**
+     * Send a mail with the form contact data
+     *
+     * @param contactDTO Data Transfer Object which contain the data of the mail to send
+     */
     private void sendContactMail(ContactDTO contactDTO){
         Mail mail = new Mail();
         MailManager mailManager = MailManager.getInstance();

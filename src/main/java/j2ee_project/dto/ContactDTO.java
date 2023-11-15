@@ -4,6 +4,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+/**
+ * This class is a Data Transfer Object which contain and check form contact data
+ *
+ * @author Lucas VELAY
+ */
 public class ContactDTO {
 
     @NotBlank(message = "First name can not be blank.")

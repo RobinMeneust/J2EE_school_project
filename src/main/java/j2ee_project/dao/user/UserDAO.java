@@ -4,8 +4,18 @@ import j2ee_project.dao.HibernateUtil;
 import j2ee_project.model.user.User;
 import org.hibernate.Session;
 
+/**
+ * This class is utility class for the methods that interacts with the database.
+ *
+ * @author Lucas VELAY
+ */
 public class UserDAO {
 
+    /**
+     * Delete a user from the database
+     *
+     * @param user the user to delete
+     */
     public static void deleteUser(User user){
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
@@ -14,6 +24,11 @@ public class UserDAO {
         session.close();
     }
 
+    /**
+     * Add a user in the database
+     *
+     * @param user the user to add
+     */
     public static void addUser(User user){
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
@@ -23,7 +38,7 @@ public class UserDAO {
     }
 
     /**
-     * Check if an email is in the database
+     * Check if an email and a phone number are in the database
      *
      * @param email the email to check
      * @return the boolean indicating the presence of the email

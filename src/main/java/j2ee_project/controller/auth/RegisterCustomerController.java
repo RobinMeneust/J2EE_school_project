@@ -33,7 +33,13 @@ public class RegisterCustomerController extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        try {
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/register.jsp");
+            view.forward(request,response);
+        }catch (Exception err){
+            System.out.println(err.getMessage());
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 
     /**

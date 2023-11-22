@@ -268,6 +268,8 @@ INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, ima
 INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Catan', 20, 34, 'Catan, previously known as The Settlers of Catan is a board game created by Klaus Teuber in 1995 in Germany.\n Players take on the roles of settlers attempting to build and develop holdings while trading and acquiring resources.', 1, 'img/products/catan.jpg');
 INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Munchkin', 20, 23, 'Munchkin is a dedicated deck card game written by Steve Jackson and illustrated by John Kovalic.\n 3 to 6 players compete to kill monsters and grab magic items the first to reach level 10 wins.', 2, 'img/products/munchkin.jpg');
 INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('7Wonders', 20, 45, '7wonders is a board game created by Antoine Bauza in 2010. Each player lead one of the 7 great cities of the Ancient World building their city to become the greatest.', 1, 'img/products/7wonders.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('9*9 Goban', 20, 55, 'A 9*9 Goban. A Goban in a gameboard used to pay Go', 1, 'img/products/goban.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Shogi', 20, 45, 'Shogi is a strategy board game. It is one the most popular board games in Japan and is in the same family of games as Western xhess, chanturanga, Indian chess and janggi.', 1, 'img/products/shogi.jpg');
 
 
 

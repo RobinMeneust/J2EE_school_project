@@ -12,10 +12,12 @@
     <title>Contact</title>
     <jsp:include page="../../include.jsp"/>
     <script src="${pageContext.request.contextPath}/dependencies/jquery/jquery.validate.min.js"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/contact.css">
 </head>
 <body>
 <jsp:include page="../../layout/header.jsp"/>
 <main>
+    <h1>Contact us</h1>
     <form id="contactForm" name="contactForm" method="post" action="${pageContext.request.contextPath}/contact-controller">
         <c:if test="${requestScope.SuccessSending != null}">
             <div class="alert alert-success" role="alert">
@@ -57,13 +59,13 @@
         </div>
         <div class="form-group">
             <label for="bodyMessage">Message</label>
-            <textarea type="text" class="form-control ${requestScope.InputError.bodyMessage != null ? 'is-invalid' : ''}" id="bodyMessage" name="bodyMessage" aria-describedby="phoneNumberHelp" placeholder="Message" required></textarea>
+            <textarea type="text" class="form-control ${requestScope.InputError.bodyMessage != null ? 'is-invalid' : ''}" id="bodyMessage" name="bodyMessage" aria-describedby="phoneNumberHelp" placeholder="Message" required rows="7"></textarea>
             <div class="invalid-feedback">
                 <c:out value="${requestScope.InputError.bodyMessage}"/>
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button id="submitButton" type="submit" class="btn btn-primary">Submit</button>
     </form>
 </main>
 <jsp:include page="../../layout/footer.jsp"/>

@@ -14,6 +14,7 @@
             <li class="nav-item"><a href="browse-products" class="nav-link px-2 text-muted">Products</a></li>
             <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Profile</a></li>
             <li class="nav-item"><a href="cart" class="nav-link px-2 text-muted">Cart</a></li>
+            <li class="nav-item"><a href="contact" class="nav-link px-2 text-muted">Contact</a></li>
             <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
         </ul>
     </div>

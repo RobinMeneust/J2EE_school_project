@@ -14,13 +14,10 @@ public class Administrator extends Moderator{
         super();
     }
 
-/*    public Administrator(){
-        this.addPermission(new Permission(TypePermission.CAN_CREATE_CUSTOMER));
-        this.addPermission(new Permission(TypePermission.CAN_DELETE_CUSTOMER));
-        this.addPermission(new Permission(TypePermission.CAN_CREATE_DISCOUNT));
-        this.addPermission(new Permission(TypePermission.CAN_MANAGE_LOYALTY));
-        this.addPermission(new Permission(TypePermission.CAN_MANAGE_ORDER));
-    }*/
+    @Override
+    public boolean isAllowed(Permission permission) {
+        return true;
+    }
 
     @Override
     public boolean equals(Object o) {

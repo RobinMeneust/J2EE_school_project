@@ -22,14 +22,12 @@ CREATE TABLE IF NOT EXISTS User (
 );
 
 CREATE TABLE IF NOT EXISTS Moderator (
-    -- id INT PRIMARY KEY AUTO_INCREMENT,
     idUser INT PRIMARY KEY ,
     FOREIGN KEY (idUser) REFERENCES User(id)
 );
 
 CREATE TABLE IF NOT EXISTS Administrator (
-    -- id INT PRIMARY KEY AUTO_INCREMENT,
-    idModerator INT PRIMARY KEY ,
+    idModerator INT PRIMARY KEY,
     FOREIGN KEY (idModerator) REFERENCES Moderator(idUser)
 );
 
@@ -103,8 +101,7 @@ CREATE TABLE IF NOT EXISTS FeaturedProduct (
 );
 
 CREATE TABLE IF NOT EXISTS Customer (
-    -- id INT PRIMARY KEY AUTO_INCREMENT,
-    idUser INT PRIMARY KEY ,
+    idUser INT PRIMARY KEY,
     idAddress INT DEFAULT NULL,
     idLoyaltyAccount INT DEFAULT NULL UNIQUE,
     FOREIGN KEY (idUser) REFERENCES User(id),
@@ -174,7 +171,6 @@ INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Loyal
 
 INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Halloween sales', STR_TO_DATE('31/10/2023', '%d/%m/%Y'), STR_TO_DATE('31/10/2023', '%d/%m/%Y'), 15);
 
-
 INSERT INTO LoyaltyLevel(requiredPoints, idLoyaltyProgram, idDiscount) VALUES(15,1,1);
 INSERT INTO LoyaltyLevel(requiredPoints, idLoyaltyProgram, idDiscount) VALUES(25,1,2);
 
@@ -212,15 +208,6 @@ INSERT INTO Permission(permission) VALUES('CAN_MANAGE_CATEGORY');
 INSERT INTO Permission(permission) VALUES('CAN_MANAGE_CUSTOMER');
 INSERT INTO Permission(permission) VALUES('CAN_MANAGE_LOYALTY');
 INSERT INTO Permission(permission) VALUES('CAN_MANAGE_ORDER');
-
--- Admin has every permissions
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,1);
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,2);
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,3);
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,4);
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,5);
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,6);
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,7);
 
 INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(6,5); -- Can manage customer
 

@@ -68,6 +68,16 @@
 <c:set var="minPrice" value="<%=minPrice%>"/>
 <c:set var="maxPrice" value="<%=maxPrice%>"/>
 
+<c:url var="currentURLWithoutPage" value="browse-products?">
+    <c:forEach var="pageParameter" items="${param}">
+        <c:if test="${pageParameter.key != 'page'}">
+            <c:param name="${pageParameter.key}" value="${pageParameter.value}"/>
+        </c:if>
+    </c:forEach>
+</c:url>
+
+
+
 <div class="container mt-1 px-4">
     <h1 class="display-1">Browse products</h1>
     <button class="btn btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
@@ -163,9 +173,9 @@
     <nav>
         <ul class="pagination justify-content-center">
             <c:if test="${pageIndex>1}">
-                <li class="page-item"><a class="page-link" href="browse-products?page=1">First</a></li>
+                <li class="page-item"><a class="page-link" href="${currentURLWithoutPage}page=1">First</a></li>
                 <li class="page-item">
-                    <a class="page-link" href="browse-products?page=${pageIndex-1}" aria-label="Previous">
+                    <a class="page-link" href="${currentURLWithoutPage}page=${pageIndex-1}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
@@ -174,21 +184,21 @@
             <c:forEach var="i" begin="${Math.max(1,pageIndex-3)}" end="${Math.min(pageIndex+3 + Math.abs(pageIndex-3 - 1), totalPages)}" step="1">
                 <c:choose>
                     <c:when test="${i == pageIndex}">
-                        <li class="page-item active"><a class="page-link" href="browse-products?page=<c:out value="${i}"/>"><c:out value="${i}"/></a></li>
+                        <li class="page-item active"><a class="page-link" href="${currentURLWithoutPage}page=<c:out value="${i}"/>"><c:out value="${i}"/></a></li>
                     </c:when>
                     <c:otherwise>
-                        <li class="page-item"><a class="page-link" href="browse-products?page=<c:out value="${i}"/>"><c:out value="${i}"/></a></li>
+                        <li class="page-item"><a class="page-link" href="${currentURLWithoutPage}page=<c:out value="${i}"/>"><c:out value="${i}"/></a></li>
                     </c:otherwise>
                 </c:choose>
             </c:forEach>
 
             <c:if test="${pageIndex<totalPages}">
                 <li class="page-item">
-                    <a class="page-link" href="browse-products?page=${pageIndex+1}" aria-label="Next">
+                    <a class="page-link" href="${currentURLWithoutPage}page=${pageIndex+1}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
-                <li class="page-item"><a class="page-link" href="browse-products?page=<c:out value="${totalPages}"/>">Last</a></li>
+                <li class="page-item"><a class="page-link" href="${currentURLWithoutPage}page=<c:out value="${totalPages}"/>">Last</a></li>
             </c:if>
         </ul>
     </nav>

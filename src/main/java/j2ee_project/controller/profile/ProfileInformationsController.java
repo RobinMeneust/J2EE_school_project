@@ -4,6 +4,7 @@ import j2ee_project.dao.profile.CustomerDAO;
 import j2ee_project.dao.profile.UserDAO;
 import j2ee_project.model.Address;
 import j2ee_project.model.user.Customer;
+import j2ee_project.service.HashService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,6 +13,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 @WebServlet("/profile-informations")
 public class ProfileInformationsController extends HttpServlet {
@@ -61,10 +64,19 @@ public class ProfileInformationsController extends HttpServlet {
         Customer customer = new Customer();
 
         customer.setId(userId);
+        if(request.getParameter("userPassword")!=null){
+            String passwordNotHashed = request.getParameter("userPassword");
+            String hashedPassword;
+            try {
+                hashedPassword = HashService.generatePasswordHash(passwordNotHashed);
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                throw new RuntimeException(e);
+            }
+            customer.setPassword(hashedPassword);
+        }
         customer.setFirstName(request.getParameter("userFirstName"));
         customer.setLastName(request.getParameter("userLastName"));
         customer.setEmail(request.getParameter("userEmail"));
-        customer.setPassword(request.getParameter("userPassword"));
         customer.setPhoneNumber(request.getParameter("userPhoneNumber"));
 
         Address address = new Address();

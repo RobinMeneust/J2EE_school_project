@@ -1,8 +1,6 @@
 package j2ee_project.controller.profile;
 
 import j2ee_project.dao.profile.CustomerDAO;
-import j2ee_project.dao.profile.OrdersDAO;
-import j2ee_project.model.order.Orders;
 import j2ee_project.model.user.Customer;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -12,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet("/order-history")
 public class OrdersHistoryController extends HttpServlet {

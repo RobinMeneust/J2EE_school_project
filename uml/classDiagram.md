@@ -126,7 +126,7 @@ classDiagram
         -stockQuantity : int
         -unitPrice : float
         -description : String
-        -imageUrl : String
+        -imagePath : String
         -weight : float
         +setStockQuantity(int quantity)
     }

@@ -13,22 +13,28 @@
 <head>
     <title>Pay</title>
     <jsp:include page="../../include.jsp" />
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="${pageContext.request.contextPath}/js/checkout.js" defer></script>
 </head>
 <body>
 <jsp:include page="../../layout/header.jsp" />
-
 <div class="container">
-    <form action="pay" method="post">
-        <label for="card-number">Card Number:</label>
-        <input type="text" id="card-number" name="card-number" required value="4242424242424242"><br>
+    <%--For testing purposes use the card number: 4242424242424242--%>
+    <p>
+        You need to pay <span id="amount-to-be-paid"></span> €
+    </p>
+    <form id="payment-form">
+        <div id="payment-element" class="me-5 my-4 p-4 w-50" style="background-color: lightgray">
+            <!--Stripe.js injects the Payment Element-->
+        </div>
 
-        <label for="expiry-date">Expiry Date:</label>
-        <input type="text" id="expiry-date" name="expiry-date" value="01/30" required><br>
+        <button id="submit" class="pay-btn btn btn-primary" type="button">
+            <span class="spinner-pay-btn spinner-border spinner-border-sm visually-hidden" aria-hidden="true"></span>
+            <span class="spinner-pay-btn visually-hidden" role="status">Loading...</span>
+            <span id="pay-btn-text">Pay now</span>
+        </button>
 
-        <label for="cvv">CVV:</label>
-        <input type="text" id="cvv" name="cvv" required value="123"><br>
-
-        <input type="submit" value="Confirm">
+        <div id="payment-message" class="visually-hidden"></div>
     </form>
 </div>
 <jsp:include page="../../layout/footer.jsp" />

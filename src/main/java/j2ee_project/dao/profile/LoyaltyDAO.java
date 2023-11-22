@@ -4,6 +4,7 @@ import j2ee_project.dao.HibernateUtil;
 import j2ee_project.model.loyalty.LoyaltyAccount;
 import j2ee_project.model.loyalty.LoyaltyLevel;
 import org.hibernate.Session;
+import org.hibernate.query.MutationQuery;
 
 import java.util.List;
 
@@ -39,5 +40,27 @@ public class LoyaltyDAO {
     }
 
 
+    public static LoyaltyLevel getLoyaltyLevel(int idLoyaltyLevel) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        LoyaltyLevel loyaltyLevel = session.createQuery("FROM LoyaltyLevel WHERE id=:idLoyaltyLevel", LoyaltyLevel.class).setParameter("idLoyaltyLevel",idLoyaltyLevel).getSingleResult();
+        session.getTransaction().commit();
+        session.close();
+
+        return loyaltyLevel;
+    }
+
+    public static void createLevelUsed(int idLoyaltyAccount, int idLoyaltyLevel){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+
+        LoyaltyLevel loyaltyLevelUsed = getLoyaltyLevel(idLoyaltyLevel);
+        LoyaltyAccount loyaltyAccount = getLoyaltyAccount(idLoyaltyAccount);
+        loyaltyAccount.addLoyaltyLevelUsed(loyaltyLevelUsed);
+        session.merge(loyaltyAccount);
+
+        session.getTransaction().commit();
+        session.close();
+    }
 
 }

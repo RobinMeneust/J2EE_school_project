@@ -172,7 +172,7 @@
                         <c:forEach var = "product" items = "${products}">
                             <tr>
                                 <td>
-                                    <img style="width: 78px; height: 50px; object-fit: cover;"
+                                    <img style="width: 78px; height: 50px; object-fit: contain;"
                                          alt="product_img"
                                          src="<c:out value="product/image?id=${product.getId()}" />"
                                          class="card-img-top">

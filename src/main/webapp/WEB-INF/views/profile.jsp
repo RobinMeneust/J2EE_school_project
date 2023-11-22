@@ -8,12 +8,13 @@
 <%@ page import="java.util.List" %>
 <%@ page import="j2ee_project.model.order.Orders" %>
 <%@ page import="j2ee_project.model.loyalty.LoyaltyLevel" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="j2ee_project.model.loyalty.LoyaltyAccount" %>
 <%@ page import="j2ee_project.model.user.Customer" %>
 <%@ page import="j2ee_project.model.Address" %>
 <%@ page import="java.util.Set" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+        <%@ page import="j2ee_project.service.AuthService" %>
+        <%@ page import="j2ee_project.model.user.User" %>
+        <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
@@ -23,6 +24,19 @@
     <style>
         h2{
             text-align: center;
+        }
+
+        div.container-fluid{
+            width: 100%;
+            max-width: 100%;
+        }
+
+        div.tab-content{
+            width: 70%;
+        }
+
+        div.nav-tabs{
+            width: 30%;
         }
 
         .step-container {
@@ -65,8 +79,14 @@
 <jsp:include page="../../layout/header.jsp" />
 
 <%
-    Customer customer = (Customer) request.getAttribute("customer");
-    Address address = null;
+    Customer customer = AuthService.getCustomer((User) session.getAttribute("user"));
+    //Customer customer = (Customer) request.getAttribute("customer");
+    LoyaltyAccount loyaltyAccount = customer.getLoyaltyAccount();
+            //(LoyaltyAccount) request.getAttribute("loyaltyAccount");
+    List<LoyaltyLevel> loyaltyLevels = (List<LoyaltyLevel>) request.getAttribute("loyaltyLevels");
+    String activeTab = request.getParameter("active-tab");
+    int hasLoyaltyAccount = Integer.parseInt(request.getParameter("has-loyalty-account"));
+    Address address;
     String customerFirstName = null;
     String customerLastName = null;
     String customerPhoneNumber = null;
@@ -78,59 +98,52 @@
     Set<Orders> orders = null;
 
     if (request.getAttribute("customer") != null) {
-
         address = customer.getAddress();
         customerFirstName = customer.getFirstName();
         customerLastName = customer.getLastName();
         customerEmail = customer.getEmail();
         customerPhoneNumber = customer.getPhoneNumber();
-        customerAddress = address.getStreetAddress();
-        customerPostalCode = address.getPostalCode();
-        customerCountry = address.getCountry();
-        customerCity = address.getCity();
+        if (customer.getAddress()!=null) {
+            customerAddress = address.getStreetAddress();
+            customerPostalCode = address.getPostalCode();
+            customerCountry = address.getCountry();
+            customerCity = address.getCity();
+        }
         orders = customer.getOrders();
-    }
-    //List<Orders> orders = (List<Orders>) request.getAttribute("orders");
-    LoyaltyAccount loyaltyAccount = (LoyaltyAccount) request.getAttribute("loyaltyAccount");
-
-   List<LoyaltyLevel> loyaltyLevels = (List<LoyaltyLevel>) request.getAttribute("loyaltyLevels");
-
-   String activeTab = request.getParameter("active-tab");
-
-%>
+    }%>
 <c:set var="orders" value="<%=orders%>"/>
 <c:set var="customer" value="<%=customer%>"/>
 <c:set var="loyaltyLevels" value="<%=loyaltyLevels%>"/>
 <c:set var="activeTab" value="<%=activeTab%>"/>
+<c:set var="hasLoyaltyAccount" value="<%=hasLoyaltyAccount%>"/>
+<c:set var="loyaltyAccount" value="<%=loyaltyAccount%>"/>
+
 
 
     <div class="container-fluid" style="width: 100%;max-width: 100%;">
         <div class="d-flex align-items-start">
             <nav>
                 <div class="nav nav-tabs flex-column" id="nav-tab" role="tablist">
-                    <form action="profile-informations" method="get">
-                        <button class="nav-link <c:if test="${activeTab == 1}">active</c:if>" id="nav-profile-informations-tab" data-bs-toggle="tab" data-bs-target="#nav-profile-informations" type="submit" role="tab" aria-controls="nav-profile-informations" aria-selected="true">Profile informations</button>
-                        <button class="nav-link <c:if test="${activeTab == 2}">active</c:if>" formaction="" formmethod="get" id="nav-loyalty-account-tab" data-bs-toggle="tab" data-bs-target="#nav-loyalty-account" type="submit" role="tab" aria-controls="nav-loyalty-account" aria-selected="false"><a href="loyalty-redeem?customerId=${customer.id}&loyaltyAccountId=${customer.loyaltyAccount.id}">Loyalty account</a></button>
-                        <button class="nav-link <c:if test="${activeTab == 3}">active</c:if>" formaction=""  id="nav-order-history-tab" data-bs-toggle="tab" data-bs-target="#nav-order-history" type="submit" role="tab" aria-controls="nav-order-history" aria-selected="false"><a href="order-history?id=${customer.id}">Order history</a></button>
-                        <button class="nav-link <c:if test="${activeTab == 4}">active</c:if>" id="nav-preferences-tab" data-bs-toggle="tab" data-bs-target="#nav-preferences" type="submit" role="tab" aria-controls="nav-preferences" aria-selected="false">Preferences</button>
-                    </form>
+                    <button class="nav-link <c:if test="${activeTab == 1}">active</c:if>" id="nav-profile-informations-tab" data-bs-toggle="tab" data-bs-target="#nav-profile-informations" type="submit" role="tab" aria-controls="nav-profile-informations" aria-selected="true"><a href="profile-informations?customerId=${customer.id}">Profile informations</a></button>
+                        <button class="nav-link <c:if test="${activeTab == 2}">active</c:if>" id="nav-loyalty-account-tab" data-bs-toggle="tab" data-bs-target="#nav-loyalty-account" type="submit" role="tab" aria-controls="nav-loyalty-account" aria-selected="false"><a href="loyalty-redeem?customerId=${customer.id}&loyaltyAccountId=${customer.loyaltyAccount.id}">Loyalty account</a></button>
+                        <button class="nav-link <c:if test="${activeTab == 3}">active</c:if>" id="nav-order-history-tab" data-bs-toggle="tab" data-bs-target="#nav-order-history" type="submit" role="tab" aria-controls="nav-order-history" aria-selected="false"><a href="order-history?id=${customer.id}">Order history</a></button>
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
                 <div class="tab-pane fade <c:if test="${activeTab == 1}">show active</c:if>" id="nav-profile-informations" role="tabpanel" aria-labelledby="nav-profile-informations-tab"> <h2>Profile informations</h2>
                     <p></p>
-                    <form action="profile-informations">
+                    <form action="profile-informations?id=${customer.id}&addressId=${customer.address.id}" method="post">
                         <div class="form-group">
-                            <label for="userName">Name</label>
-                            <input type="text" class="form-control" id="userName" name="userName" placeholder="<%=customerFirstName%>">
+                            <label for="userFirstName">Name</label>
+                            <input type="text" class="form-control" id="userFirstName" name="userFirstName" value="<%=customerFirstName%>">
                         </div>
                         <div class="form-group">
-                            <label for="userSurname">Surname</label>
-                            <input type="text" class="form-control" id="userSurname" name="userSurname" placeholder="<%=customerLastName%>">
+                            <label for="userLastName">Surname</label>
+                            <input type="text" class="form-control" id="userLastName" name="userLastName" value="<%=customerLastName%>">
                         </div>
                         <div class="form-group">
                             <label for="userEmail">Email address</label>
-                            <input type="email" class="form-control" id="userEmail" name="userEmail" placeholder="<%=customerEmail%>">
+                            <input type="email" class="form-control" id="userEmail" name="userEmail" value="<%=customerEmail%>">
                         </div>
                         <div class="form-group">
                             <label for="userPassword">Password</label>
@@ -138,23 +151,23 @@
                         </div>
                         <div class="form-group">
                             <label for="userPhoneNumber">Phone number</label>
-                            <input type="text" class="form-control" id="userPhoneNumber" name="userPhoneNumber" placeholder="<%=customerPhoneNumber%>">
+                            <input type="text" class="form-control" id="userPhoneNumber" name="userPhoneNumber" value="<%=customerPhoneNumber%>">
                         </div>
                         <div class="form-group">
                             <label for="userAddress">Address</label>
-                            <input type="text" class="form-control" id="userAddress" name="userAddress" placeholder="<%=customerAddress%>">
+                            <input type="text" class="form-control" id="userAddress" name="userAddress" value="<%=customerAddress%>">
                         </div>
                         <div class="form-group">
                             <label for="userPostalCode">Postal code</label>
-                            <input type="text" class="form-control" id="userPostalCode" name="userPostalCode" placeholder="<%=customerPostalCode%>">
+                            <input type="text" class="form-control" id="userPostalCode" name="userPostalCode" value="<%=customerPostalCode%>">
                         </div>
                         <div class="form-group">
                             <label for="userCity">City</label>
-                            <input type="text" class="form-control" id="userCity" name="userCity" placeholder="<%=customerCity%>">
+                            <input type="text" class="form-control" id="userCity" name="userCity" value="<%=customerCity%>">
                         </div>
                         <div class="form-group">
                             <label for="userCountry">Country</label>
-                            <input type="text" class="form-control" id="userCountry" name="userCountry" placeholder="<%=customerCountry%>">
+                            <input type="text" class="form-control" id="userCountry" name="userCountry" value="<%=customerCountry%>">
                         </div>
                         <p></p>
                         <button type="submit" class="btn btn-primary">Update profile</button>
@@ -162,97 +175,105 @@
                 </div>
                 <div class="tab-pane fade <c:if test="${activeTab == 2}">show active</c:if>" id="nav-loyalty-account" role="tabpanel" aria-labelledby="nav-loyalty-account-tab"> <h2>Loyalty account</h2>
                     <p></p>
-                    <p>You have : <c:out value="${loyaltyAccount.getLoyaltyPoints()}"  /> loyalty points. </p>
-                    <div id="container" class="container mt-5">
-                        <div class="container horizontal-scrollable">
-                            <div class="progress px-1" style="height: 3px;">
-                                <div class="progress-bar" role="progressbar" style="width: 0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <div class="step-container d-flex justify-content-between">
-                                <% if(loyaltyLevels!=null){for (LoyaltyLevel loyaltyLevel : loyaltyLevels) {%>
-                                    <div class="step-circle" onclick="displayStep(<%=loyaltyLevel.getId()%>)">
-                                        <%=loyaltyLevel.getId()%></div>
-                                <%}}%>
-                            </div>
-                        </div>
-
-                        <form id="multi-step-form" action="">
-                            <%if(loyaltyLevels!=null){ for (LoyaltyLevel loyaltyLevel : loyaltyLevels) {%>
-                            <div class="step step-<%=loyaltyLevel.getId()%>">
-                                <h3><%= loyaltyLevel.getDiscount().getDiscountPercentage()%>% Discount</h3>
-                                <div class="mb-3">
-                                    <%if(loyaltyAccount.getLoyaltyPoints()>loyaltyLevel.getRequiredPoints()){
-                                        if (loyaltyAccount.isLevelUsed(loyaltyLevel)){%>
-                                            <p> already redeemed</p>
-                                        <%}else{%>
-                                            <button type="submit" class="btn btn-success">Redeem</button>
-                                        <%}
-                                    }else{%>
-                                        <p> You do not have enough loyalty points</p>
-                                    <%}%>
+                    <c:if test="${hasLoyaltyAccount == 1}">
+                        <p>You have : <c:out value="${loyaltyAccount.getLoyaltyPoints()}"  /> loyalty points. </p>
+                        <div id="container" class="container mt-5">
+                            <div class="container horizontal-scrollable">
+                                <div class="progress px-1" style="height: 3px;">
+                                    <div class="progress-bar" role="progressbar" style="width: 0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
-                                <% if (loyaltyLevel.getId() > 1) {
-                                    if (loyaltyLevel.getId() > loyaltyLevels.size()) {%>
-                                        <button type="button" class="btn btn-primary prev-step">Previous</button>
-                                        <button type="button" class="btn btn-primary next-step">Next</button>
-                                    <%} else {%>
-                                <button type="button" class="btn btn-primary prev-step">Previous</button>
-                                    <%}%>
-                                <%} else {%>
-                                    <button type="button" class="btn btn-primary next-step">Next</button>
-                                <%}%>
+                                <div class="step-container d-flex justify-content-between">
+                                    <% if(loyaltyLevels!=null){for (LoyaltyLevel loyaltyLevel : loyaltyLevels) {%>
+                                        <div class="step-circle" onclick="displayStep(<%=loyaltyLevel.getId()%>)">
+                                            <%=loyaltyLevel.getId()%></div>
+                                    <%}}%>
+                                </div>
                             </div>
+                            <%if(loyaltyLevels!=null){ for (LoyaltyLevel loyaltyLevel : loyaltyLevels) {%>
+                                <div class="step step-<%=loyaltyLevel.getId()%>">
+                                    <form id="multi-step-form" action="loyalty-redeem?customerId=${customer.id}&loyaltyAccountId=${customer.loyaltyAccount.id}&loyaltyLevelId=<%=loyaltyLevel.getId()%>" method="post">
+
+                                    <h3><%= loyaltyLevel.getDiscount().getDiscountPercentage()%>% Discount</h3>
+                                    <div class="mb-3">
+                                        <%if(loyaltyAccount.getLoyaltyPoints()>loyaltyLevel.getRequiredPoints()){
+                                            if (loyaltyAccount.isLevelUsed(loyaltyLevel)){%>
+                                                <p> already redeemed</p>
+                                            <%}else{%>
+                                                <button type="submit" class="btn btn-success">Redeem</button>
+                                            <%}
+                                        }else{%>
+                                            <p> You do not have enough loyalty points</p>
+                                        <%}%>
+                                    </div>
+                                    <% if (loyaltyLevel.getId() > 1) {
+                                        if (loyaltyLevel.getId() > loyaltyLevels.size()) {%>
+                                            <button type="button" class="btn btn-primary prev-step">Previous</button>
+                                            <button type="button" class="btn btn-primary next-step">Next</button>
+                                        <%} else {%>
+                                    <button type="button" class="btn btn-primary prev-step">Previous</button>
+                                        <%}%>
+                                    <%} else {%>
+                                    <button type="button" class="btn btn-primary next-step">Next</button>
+                                        <%}%>
+                                    </form>
+                                </div>
                             <%}}%>
-                        </form>
-                    </div>
-
-                    <script>
-                        var currentStep = 1;
-                        var updateProgressBar;
-
-                        function displayStep(stepNumber) {
-                            if (stepNumber >= 1 && stepNumber <= ${loyaltyLevels.size()}) {
-                                $(".step-" + currentStep).hide();
-                                $(".step-" + stepNumber).show();
-                                currentStep = stepNumber;
-                                updateProgressBar();
+                        </div>
+                        <script>
+                            var currentStep = 1;
+                            var updateProgressBar;
+                            function displayStep(stepNumber) {
+                                if (stepNumber >= 1 && stepNumber <= ${loyaltyLevels.size()}) {
+                                    $(".step-" + currentStep).hide();
+                                    $(".step-" + stepNumber).show();
+                                    currentStep = stepNumber;
+                                    updateProgressBar();
+                                }
                             }
-                        }
 
-                        $(document).ready(function() {
-                            $('#multi-step-form').find('.step').slice(1).hide();
+                            $(document).ready(function() {
 
-                            $(".next-step").click(function() {
-                                if (currentStep < ${loyaltyLevels.size()}) {
-                                    $(".step-" + currentStep);
-                                    currentStep++;
-                                    setTimeout(function() {
-                                        $(".step").hide();
-                                        $(".step-" + currentStep).show();
-                                        updateProgressBar();
-                                    }, 20);
+                                setTimeout(function (){
+                                    $(".step").hide();
+                                    $(".step-1").show();
+                                },20);
+
+                                $('#multi-step-form').find('.step').slice(1).hide();
+
+                                $(".next-step").click(function() {
+                                    if (currentStep < ${loyaltyLevels.size()}) {
+                                        $(".step-" + currentStep);
+                                        currentStep++;
+                                        setTimeout(function() {
+                                            $(".step").hide();
+                                            $(".step-" + currentStep).show();
+                                            updateProgressBar();
+                                        }, 20);
+                                    }
+                                });
+
+                                $(".prev-step").click(function() {
+                                    if (currentStep > 1) {
+                                        $(".step-" + currentStep);
+                                        currentStep--;
+                                        setTimeout(function() {
+                                            $(".step").hide();
+                                            $(".step-" + currentStep).show();
+                                            updateProgressBar();
+                                        }, 20);
+                                    }
+                                });
+
+                                updateProgressBar = function() {
+                                    var progressPercentage = ((currentStep-1)/(${loyaltyLevels.size()}-1)) * 100;
+                                    $(".progress-bar").css("width", progressPercentage + "%");
                                 }
                             });
-
-                            $(".prev-step").click(function() {
-                                if (currentStep > 1) {
-                                    $(".step-" + currentStep);
-                                    currentStep--;
-                                    setTimeout(function() {
-                                        $(".step").hide();
-                                        $(".step-" + currentStep).show();
-                                        updateProgressBar();
-                                    }, 20);
-                                }
-                            });
-
-                            updateProgressBar = function() {
-                                var progressPercentage = ((currentStep-1)/(${loyaltyLevels.size()}-1)) * 100;
-                                $(".progress-bar").css("width", progressPercentage + "%");
-                            }
-                        });
-                    </script>
-
+                        </script>
+                    </c:if>
+                    <c:if test="${hasLoyaltyAccount == 0}">
+                        <p>You do not have a loyalty Account</p>
+                    </c:if>
                 </div>
                 <div class="tab-pane fade <c:if test="${activeTab == 3}">show active</c:if>" id="nav-order-history" role="tabpanel" aria-labelledby="nav-order-history-tab"> <h2>Order history</h2>
                     <table class="table table-striped table-hover" id="customers-table" style="width: 100%" data-filter-control-visible="false">
@@ -274,7 +295,6 @@
                         }%>
                     </table>
                 </div>
-                <div class="tab-pane fade <c:if test="${activeTab == 4}">show active</c:if>" id="nav-preferences" role="tabpanel" aria-labelledby="nav-preferences-tab">Preferences</div>
             </div>
         </div>
     </div>

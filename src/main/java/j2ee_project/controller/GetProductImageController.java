@@ -51,13 +51,10 @@ public class GetProductImageController extends HttpServlet {
         File root = new File(getServletContext().getRealPath("/")).getParentFile().getParentFile();
         Path imagePath = Paths.get(root.getPath()+"/"+product.getImagePath());
 
-        System.out.println("root: "+root.getPath());
-        System.out.println("path: "+imagePath.toString());
 
         try (InputStream in = Files.newInputStream(imagePath)) {
             response.setContentType(getServletContext().getMimeType(imagePath.toString()));
             Files.copy(imagePath, response.getOutputStream());
         }
     }
-
 }

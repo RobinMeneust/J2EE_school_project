@@ -4,6 +4,7 @@ import j2ee_project.dao.profile.CustomerDAO;
 import j2ee_project.dao.profile.UserDAO;
 import j2ee_project.model.Address;
 import j2ee_project.model.user.Customer;
+import j2ee_project.service.AuthService;
 import j2ee_project.service.HashService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -23,7 +24,6 @@ public class ProfileInformationsController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String customerIdStr = request.getParameter("customerId");
         int customerId = 1;
-
         if(customerIdStr != null && !customerIdStr.trim().isEmpty()) {
             try {
                 customerId = Integer.parseInt(customerIdStr);

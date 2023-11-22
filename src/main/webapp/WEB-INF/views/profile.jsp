@@ -12,7 +12,9 @@
 <%@ page import="j2ee_project.model.user.Customer" %>
 <%@ page import="j2ee_project.model.Address" %>
 <%@ page import="java.util.Set" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+        <%@ page import="j2ee_project.service.AuthService" %>
+        <%@ page import="j2ee_project.model.user.User" %>
+        <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
@@ -77,8 +79,10 @@
 <jsp:include page="../../layout/header.jsp" />
 
 <%
-    Customer customer = (Customer) request.getAttribute("customer");
-    LoyaltyAccount loyaltyAccount = (LoyaltyAccount) request.getAttribute("loyaltyAccount");
+    Customer customer = AuthService.getCustomer((User) session.getAttribute("user"));
+    //Customer customer = (Customer) request.getAttribute("customer");
+    LoyaltyAccount loyaltyAccount = customer.getLoyaltyAccount();
+            //(LoyaltyAccount) request.getAttribute("loyaltyAccount");
     List<LoyaltyLevel> loyaltyLevels = (List<LoyaltyLevel>) request.getAttribute("loyaltyLevels");
     String activeTab = request.getParameter("active-tab");
     int hasLoyaltyAccount = Integer.parseInt(request.getParameter("has-loyalty-account"));

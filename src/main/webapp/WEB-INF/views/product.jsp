@@ -44,7 +44,7 @@
     <h6 class="display-6 mb-3 text-secondary"><c:out value="${product.getCategory().getName()}"/></h6>
     <div class="row g-5 justify-content-start">
         <div class="col">
-            <img class="rounded" style="width: 420px; height: 300px; object-fit: cover;" alt="product_img" src="<c:out value="${pageContext.request.contextPath}/${product.getImagePath()}" />">
+            <img class="rounded" style="width: 420px; height: 300px; object-fit: contain;" alt="product_img" src="<c:out value="${pageContext.request.contextPath}/${product.getImagePath()}" />">
         </div>
         <div class="col" style="text-align: justify ;min-width:350px; max-width:600px">
             <p>

@@ -204,13 +204,13 @@ INSERT INTO Moderator(idUser) VALUES(6);
 INSERT INTO Moderator(idUser) VALUES(7);
 INSERT INTO Moderator(idUser) VALUES(8);
 
-INSERT INTO Permission(permission) VALUES('CAN_MANAGE_DISCOUNT');
+INSERT INTO Permission(permission) VALUES('CAN_MANAGE_CUSTOMER');
 INSERT INTO Permission(permission) VALUES('CAN_MANAGE_MODERATOR');
 INSERT INTO Permission(permission) VALUES('CAN_MANAGE_PRODUCT');
 INSERT INTO Permission(permission) VALUES('CAN_MANAGE_CATEGORY');
-INSERT INTO Permission(permission) VALUES('CAN_MANAGE_CUSTOMER');
-INSERT INTO Permission(permission) VALUES('CAN_MANAGE_LOYALTY');
 INSERT INTO Permission(permission) VALUES('CAN_MANAGE_ORDER');
+INSERT INTO Permission(permission) VALUES('CAN_MANAGE_DISCOUNT');
+INSERT INTO Permission(permission) VALUES('CAN_MANAGE_LOYALTY');
 
 -- Admin has every permissions
 INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,1);
@@ -221,14 +221,14 @@ INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,5);
 INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,6);
 INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,7);
 
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(6,5); -- Can manage customer
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(6,1); -- Can manage customer
 
 INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(7,3); -- Can manage product
 INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(7,4); -- Can manage category
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(7,7); -- Can manage order
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(7,5); -- Can manage order
 
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(8,6); -- Can manage loyalty
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(8,1); -- Can manage discount
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(8,7); -- Can manage loyalty
+INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(8,6); -- Can manage discount
 
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(2,1,1);
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(3,2,2);

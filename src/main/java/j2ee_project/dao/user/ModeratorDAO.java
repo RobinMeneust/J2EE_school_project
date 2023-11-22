@@ -2,8 +2,6 @@ package j2ee_project.dao.user;
 
 import j2ee_project.dao.HibernateUtil;
 import j2ee_project.model.user.Moderator;
-import j2ee_project.model.user.Permission;
-import j2ee_project.model.user.TypePermission;
 import org.hibernate.Session;
 
 import java.util.List;

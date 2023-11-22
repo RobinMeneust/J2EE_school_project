@@ -2,7 +2,6 @@ package j2ee_project.controller.catalog.product;
 
 import j2ee_project.dao.catalog.category.CategoryDAO;
 import j2ee_project.dao.catalog.product.ProductDAO;
-import j2ee_project.dao.discount.DiscountDAO;
 import j2ee_project.model.catalog.Category;
 import j2ee_project.model.catalog.Product;
 import jakarta.servlet.*;
@@ -33,7 +32,11 @@ public class AddProductController extends HttpServlet {
         product.setStockQuantity(Integer.parseInt(request.getParameter("stock-quantity")));
         product.setUnitPrice(Integer.parseInt(request.getParameter("unit-price")));
         product.setDescription(request.getParameter("description"));
-        //product.setWeight(Float.valueOf(request.getParameter("weight")));
+        String weight = request.getParameter("weight");
+        if (weight != null){
+            product.setWeight(Float.valueOf(weight));
+        }
+
         int categoryId = Integer.parseInt(request.getParameter("category"));
         Category category = CategoryDAO.getCategory(categoryId);
         product.setCategory(category);

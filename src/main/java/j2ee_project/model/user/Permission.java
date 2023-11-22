@@ -44,7 +44,6 @@ public class Permission {
 
         Permission that = (Permission) o;
 
-        if (id != that.id) return false;
         if (permission != null ? !permission.equals(that.permission) : that.permission != null) return false;
 
         return true;

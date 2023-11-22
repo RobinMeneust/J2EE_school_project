@@ -31,10 +31,12 @@ public class AddCategoryController extends HttpServlet {
         category.setName(request.getParameter("name"));
         category.setDescription(request.getParameter("description"));
 
-        int discountId = Integer.parseInt(request.getParameter("discount"));
-        Discount discount = DiscountDAO.getDiscount(discountId);
-        category.setDiscount(discount);
-
+        String discountStr = (request.getParameter("discount").isEmpty()) ? null : request.getParameter(("discount"));
+        if (discountStr != null) {
+            int discountId = Integer.parseInt(discountStr);
+            Discount discount = DiscountDAO.getDiscount(discountId);
+            category.setDiscount(discount);
+        }
         CategoryDAO.addCategory(category);
 
         try {

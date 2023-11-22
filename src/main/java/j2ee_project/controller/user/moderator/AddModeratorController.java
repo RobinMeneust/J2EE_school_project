@@ -1,7 +1,10 @@
 package j2ee_project.controller.user.moderator;
 
 import j2ee_project.dao.user.ModeratorDAO;
+import j2ee_project.dao.user.PermissionDAO;
 import j2ee_project.model.user.Moderator;
+import j2ee_project.model.user.Permission;
+import j2ee_project.model.user.TypePermission;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -29,8 +32,13 @@ public class AddModeratorController extends HttpServlet {
         moderator.setFirstName(request.getParameter("first-name"));
         moderator.setPassword(request.getParameter("password"));
 
+        for (String permissionStr : request.getParameterValues("permissions")){
+            TypePermission permission = TypePermission.values()[Integer.parseInt(permissionStr)];
+            moderator.addPermission(PermissionDAO.getPermission(permission));
+        }
+
         moderator.setEmail(request.getParameter("email"));
-        moderator.setPhoneNumber(request.getParameter("phone-number"));
+        moderator.setPhoneNumber((request.getParameter("phone-number").isEmpty()) ? null : request.getParameter("phone-number"));
 
         ModeratorDAO.addModerator(moderator);
 

@@ -38,7 +38,7 @@ public class AddCustomerController extends HttpServlet {
         customer.setAddress(address);
 
         customer.setEmail(request.getParameter("email"));
-        customer.setPhoneNumber(request.getParameter("phone-number"));
+        customer.setPhoneNumber((request.getParameter("phone-number").isEmpty()) ? null : request.getParameter("phone-number"));
 
         CustomerDAO.addCustomer(customer);
 

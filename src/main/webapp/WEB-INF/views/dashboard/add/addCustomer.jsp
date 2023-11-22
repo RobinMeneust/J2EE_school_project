@@ -55,7 +55,7 @@
                 </div>
                 <div class="col">
                     <label class="form-label" for="phone-number">Phone Number :</label>
-                    <input type="tel" class="form-control" id="phone-number" name="phone-number" placeholder="Enter phone number" required>
+                    <input type="tel" class="form-control" id="phone-number" name="phone-number" placeholder="Enter phone number">
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">

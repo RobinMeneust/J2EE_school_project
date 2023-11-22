@@ -31,7 +31,7 @@
 						</c:if>
 									<div class="col-sm text-center">
 										<a class="text-decoration-none text-body" href="get-product-page?id=${featuredProducts.get(i).getId()}">
-											<img style="width: 390px; height: 250px; object-fit: cover;" src="${pageContext.request.contextPath}/${featuredProducts.get(i).getImagePath()}" class="d-block" alt="${featuredProducts.get(i).getName()}_img">
+											<img style="width: 390px; height: 250px; object-fit: cover;" src="product/image?id=${featuredProducts.get(i).getId()}" class="d-block" alt="${featuredProducts.get(i).getName()}_img">
 											<div>
 												<h5><c:out value="${featuredProducts.get(i).getName()}"/></h5>
 											</div>

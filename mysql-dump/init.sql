@@ -149,8 +149,8 @@ CREATE TABLE IF NOT EXISTS Mail (
     id INT PRIMARY KEY AUTO_INCREMENT,
     fromAddress VARCHAR(50) NOT NULL,
     toAddress VARCHAR(50) NOT NULL,
-    subject VARCHAR(50) NOT NULL,
-    body VARCHAR(300) NOT NULL,
+    subject VARCHAR(64) NOT NULL,
+    body VARCHAR(512) NOT NULL,
     date Date NOT NULL
 );
 

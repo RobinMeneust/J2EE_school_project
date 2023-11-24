@@ -1,6 +1,8 @@
 package j2ee_project.dao.user;
 
 import j2ee_project.dao.JPAUtil;
+import j2ee_project.model.Address;
+import j2ee_project.model.user.Customer;
 import j2ee_project.model.user.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -19,11 +21,14 @@ public class UserDAO {
      * @param user the user to delete
      */
     public static void deleteUser(User user){
-        Session session = JPAUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        session.remove(user);
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        entityManager.remove(user);
+
+        transaction.commit();
+        entityManager.close();
     }
 
     /**
@@ -85,4 +90,50 @@ public class UserDAO {
         return  user;
     }
 
+    /**
+     *
+     * @param customer Customer new data (but with the same id)
+     */
+    public static void modifyCustomer(Customer customer){
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        Customer customerToBeEdited = entityManager.createQuery("FROM Customer WHERE id = :customerId", Customer.class).setParameter("customerId",customer.getId()).getSingleResult();
+
+        //TODO: WE SHOULD NOT EDIT THE ADDRESS BECAUSE IT MIGHT BE USED BY OTHER
+        if (!customer.getFirstName().isEmpty()){
+            customerToBeEdited.setFirstName(customer.getFirstName());
+        }
+        if (!customer.getLastName().isEmpty()){
+            customerToBeEdited.setLastName(customer.getLastName());
+        }
+        if (!customer.getPassword().isEmpty()){
+            customerToBeEdited.setPassword(customer.getPassword());
+        }
+        if (!customer.getEmail().isEmpty()){
+            customerToBeEdited.setEmail(customer.getEmail());
+        }
+        if (!customer.getPhoneNumber().isEmpty()){
+            customerToBeEdited.setPhoneNumber(customer.getPhoneNumber());
+        }
+
+        Address newAddress = customerToBeEdited.getAddress();
+
+        if (!customer.getAddress().getStreetAddress().isEmpty()){
+            newAddress.setStreetAddress(customer.getAddress().getStreetAddress());
+        }
+        if (!customer.getAddress().getPostalCode().isEmpty()){
+            newAddress.setPostalCode(customer.getAddress().getPostalCode());
+        }
+        if (!customer.getAddress().getCity().isEmpty()){
+            newAddress.setCity(customer.getAddress().getCity());
+        }
+        if (!customer.getAddress().getCountry().isEmpty()){
+            newAddress.setCountry(customer.getAddress().getCountry());
+        }
+
+        transaction.commit();
+        entityManager.close();
+    }
 }

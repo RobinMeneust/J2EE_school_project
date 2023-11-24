@@ -1,15 +1,20 @@
 package j2ee_project.dao;
 
 import j2ee_project.model.Address;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import org.hibernate.Session;
 
 public class AddressDAO {
     public static void addAddress(Address newAddress) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        session.persist(newAddress);
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        entityManager.persist(newAddress);
+
+        transaction.commit();
+        entityManager.close();
     }
 
     public static Address addAddressIfNotExists(Address newAddress) {
@@ -22,19 +27,22 @@ public class AddressDAO {
     }
 
     public static Address getAddress(Address address) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
         Address addressFetched = null;
         try {
-            addressFetched = session.createQuery("FROM Address WHERE streetAddress=:streetAddress AND postalCode =:postalCode AND city=:city AND country=:country", Address.class)
+            addressFetched = entityManager.createQuery("FROM Address WHERE streetAddress=:streetAddress AND postalCode =:postalCode AND city=:city AND country=:country", Address.class)
                     .setParameter("streetAddress", address.getStreetAddress())
                     .setParameter("postalCode",address.getPostalCode())
                     .setParameter("city",address.getCity())
                     .setParameter("country",address.getCountry())
                     .getSingleResult();
-            session.getTransaction().commit();
+            transaction.commit();
         } catch(Exception ignore) {}
-        session.close();
+
+        entityManager.close();
         return addressFetched;
     }
 }

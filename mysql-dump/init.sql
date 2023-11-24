@@ -236,7 +236,7 @@ INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(3,2,2);
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(4,3,NULL);
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(5,NULL,NULL);
 
-INSERT INTO Cart(idCustomer) VALUES(2);
+INSERT INTO Cart(idCustomer) VALUES(3);
 
 INSERT INTO Category(name, description, idDiscount) VALUES('strategy', 'A strategy game or strategic game is a game (e.g. a board game) in which the players\' uncoerced, and often autonomous, decision-making skills have a high significance in determining the outcome.', 1);
 INSERT INTO Category(name, description) VALUES('card game', 'A card game is any game using playing cards as the primary device with which the game is played, be they traditional or game-specific.');

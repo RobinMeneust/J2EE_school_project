@@ -8,6 +8,8 @@ import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
+import static j2ee_project.service.CartManager.copySessionCartToCustomer;
+
 /**
  * This class is a servlet used to log in a user. It's a controller in the MVC architecture of this project.
  *
@@ -29,7 +31,7 @@ public class LogInController extends HttpServlet {
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/login.jsp");
             view.forward(request,response);
         }catch (Exception err){
-            System.out.println(err.getMessage());
+            System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
@@ -59,7 +61,10 @@ public class LogInController extends HttpServlet {
             else {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
-                System.out.println(user);
+
+                // Copy the session cart to the current user cart (and override it if it's not empty) if the user is a customer
+                copySessionCartToCustomer(request, user);
+
                 response.sendRedirect(request.getContextPath() + noErrorDestination);
             }
         }catch (Exception e) {
@@ -69,4 +74,6 @@ public class LogInController extends HttpServlet {
 
         if (dispatcher != null) dispatcher.forward(request, response);
     }
+
+
 }

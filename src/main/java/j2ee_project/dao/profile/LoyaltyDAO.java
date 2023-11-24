@@ -1,10 +1,11 @@
 package j2ee_project.dao.profile;
 
-import j2ee_project.dao.HibernateUtil;
+import j2ee_project.dao.JPAUtil;
 import j2ee_project.model.loyalty.LoyaltyAccount;
 import j2ee_project.model.loyalty.LoyaltyLevel;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import org.hibernate.Session;
-import org.hibernate.query.MutationQuery;
 
 import java.util.List;
 
@@ -16,12 +17,14 @@ public class LoyaltyDAO {
      * @return a loyalty account
      */
     public static LoyaltyAccount getLoyaltyAccount(int loyaltyAccountId){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        LoyaltyAccount loyaltyAccount = session.createQuery("FROM LoyaltyAccount WHERE id=:loyaltyAccountId", LoyaltyAccount.class).setParameter("loyaltyAccountId", loyaltyAccountId).getSingleResult();
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
 
+        LoyaltyAccount loyaltyAccount = entityManager.createQuery("FROM LoyaltyAccount WHERE id=:loyaltyAccountId", LoyaltyAccount.class).setParameter("loyaltyAccountId", loyaltyAccountId).getSingleResult();
+
+        transaction.commit();
+        entityManager.close();
         return loyaltyAccount;
     }
 
@@ -30,37 +33,41 @@ public class LoyaltyDAO {
      * @return The list of all loyalty levels
      */
     public static List<LoyaltyLevel> getLoyaltyLevels(){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        List<LoyaltyLevel> loyaltyLevels = session.createQuery("FROM LoyaltyLevel", LoyaltyLevel.class).getResultList();
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
 
+        List<LoyaltyLevel> loyaltyLevels = entityManager.createQuery("FROM LoyaltyLevel", LoyaltyLevel.class).getResultList();
+
+        transaction.commit();
+        entityManager.close();
         return loyaltyLevels;
     }
 
 
     public static LoyaltyLevel getLoyaltyLevel(int idLoyaltyLevel) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        LoyaltyLevel loyaltyLevel = session.createQuery("FROM LoyaltyLevel WHERE id=:idLoyaltyLevel", LoyaltyLevel.class).setParameter("idLoyaltyLevel",idLoyaltyLevel).getSingleResult();
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
 
+        LoyaltyLevel loyaltyLevel = entityManager.createQuery("FROM LoyaltyLevel WHERE id=:idLoyaltyLevel", LoyaltyLevel.class).setParameter("idLoyaltyLevel",idLoyaltyLevel).getSingleResult();
+
+        transaction.commit();
+        entityManager.close();
         return loyaltyLevel;
     }
 
     public static void createLevelUsed(int idLoyaltyAccount, int idLoyaltyLevel){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
 
         LoyaltyLevel loyaltyLevelUsed = getLoyaltyLevel(idLoyaltyLevel);
         LoyaltyAccount loyaltyAccount = getLoyaltyAccount(idLoyaltyAccount);
         loyaltyAccount.addLoyaltyLevelUsed(loyaltyLevelUsed);
-        session.merge(loyaltyAccount);
 
-        session.getTransaction().commit();
-        session.close();
+        transaction.commit();
+        entityManager.close();
     }
 
 }

@@ -103,7 +103,6 @@ public class AddToCartController extends HttpServlet {
             request.setAttribute("sessionCart", cart);
         } else {
             CartDAO.addItem(cart, newItem); // Add to the cart of the customer (saved in the db)
-            request.removeAttribute("sessionCart");
         }
         response.setStatus(HttpServletResponse.SC_OK);
         PrintWriter out = response.getWriter();

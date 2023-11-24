@@ -1,13 +1,16 @@
 package j2ee_project.dao.catalog.product;
 
-import j2ee_project.dao.HibernateUtil;
-import j2ee_project.dao.catalog.category.CategoryDAO;
+import j2ee_project.dao.JPAUtil;
 import j2ee_project.model.catalog.FeaturedProduct;
 import j2ee_project.model.catalog.Product;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 
+import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -83,8 +86,9 @@ public class ProductDAO {
      * @return List of products that match with all of those filters
      */
     public static List<Product> getProducts(int begin, int size, String name, String category, String minPrice, String maxPrice) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
 
         HashMap<String,Object> queryObj = getQueryString("FROM Product AS p LEFT JOIN Category AS c ON p.category.id = c.id",name, category, minPrice, maxPrice);
         String queryStr = "";
@@ -101,15 +105,15 @@ public class ProductDAO {
             return new ArrayList<>();
         }
 
-        Query<Product> query = session.createQuery(queryStr, Product.class);
+        TypedQuery<Product> query = entityManager.createQuery(queryStr, Product.class);
         for(int i=0; i<params.size(); i++) {
             query.setParameter(i+1,params.get(i));
         }
 
-        List<Product> products =query.setFirstResult(begin).setMaxResults(size).getResultList();
-        session.getTransaction().commit();
-        session.close();
+        List<Product> products = query.setFirstResult(begin).setMaxResults(size).getResultList();
 
+        transaction.commit();
+        entityManager.close();
         return products;
     }
 
@@ -124,12 +128,14 @@ public class ProductDAO {
      * @return Product whose ID matched with the one provided
      */
     public static Product getProduct(int productId) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        Product product = session.createQuery("FROM Product WHERE id=:productId", Product.class).setParameter("productId", productId).getSingleResult();
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
 
+        Product product = entityManager.createQuery("FROM Product WHERE id=:productId", Product.class).setParameter("productId", productId).getSingleResult();
+
+        transaction.commit();
+        entityManager.close();
         return product;
     }
 
@@ -138,12 +144,14 @@ public class ProductDAO {
      * @return Featured products
      */
     public static List<FeaturedProduct> getFeaturedProducts() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        List<FeaturedProduct> featuredProducts = session.createQuery("FROM FeaturedProduct", FeaturedProduct.class).getResultList();
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
 
+        List<FeaturedProduct> featuredProducts = entityManager.createQuery("FROM FeaturedProduct", FeaturedProduct.class).getResultList();
+
+        transaction.commit();
+        entityManager.close();
         return featuredProducts;
     }
 
@@ -172,18 +180,18 @@ public class ProductDAO {
             return 0L;
         }
 
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
 
-        Query<Long> query = session.createQuery(queryStr, Long.class);
+        TypedQuery<Long> query = entityManager.createQuery(queryStr, Long.class);
         for(int i=0; i<params.size(); i++) {
             query.setParameter(i+1,params.get(i));
         }
-        Long size = query.uniqueResult();
+        Long size = query.getSingleResult();
 
-        session.getTransaction().commit();
-        session.close();
-
+        transaction.commit();
+        entityManager.close();
         return size;
     }
 
@@ -192,19 +200,25 @@ public class ProductDAO {
     }
 
     public static void deleteProduct(int productId){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        Product product = session.createQuery("FROM Product WHERE id=:productId",Product.class).setParameter("productId",productId).getSingleResult();
-        session.remove(product);
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        Product product = entityManager.createQuery("FROM Product WHERE id=:productId",Product.class).setParameter("productId",productId).getSingleResult();
+        entityManager.remove(product);
+
+        transaction.commit();
+        entityManager.close();
     }
 
     public static void addProduct(Product product){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        session.save(product);
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        entityManager.persist(product);
+
+        transaction.commit();
+        entityManager.close();
     }
 }

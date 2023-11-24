@@ -49,13 +49,11 @@ public class ConfirmCartController extends HttpServlet {
             response.sendRedirect("login");
             return;
         }
-        Cart cart;
-
-        cart = CartManager.getCart(session, customer);
+        Cart cart = CartManager.getCart(session, customer);
 
         Set<CartItem> cartItems = cart.getCartItems();
 
-        if(cartItems == null) {
+        if(cartItems == null || cartItems.isEmpty()) {
             //TODO: Return to the cart page with an error message
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "the cart is empty");
             return;

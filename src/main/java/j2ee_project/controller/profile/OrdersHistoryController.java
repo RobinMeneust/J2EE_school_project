@@ -1,6 +1,6 @@
 package j2ee_project.controller.profile;
 
-import j2ee_project.dao.profile.CustomerDAO;
+import j2ee_project.dao.user.CustomerDAO;
 import j2ee_project.model.user.Customer;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -31,7 +31,7 @@ public class OrdersHistoryController extends HttpServlet {
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=3&has-loyalty-account=1");
             view.forward(request,response);
         }catch (Exception err){
-            System.out.println(err.getMessage());
+            System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }

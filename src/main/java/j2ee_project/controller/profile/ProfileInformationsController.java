@@ -1,6 +1,6 @@
 package j2ee_project.controller.profile;
 
-import j2ee_project.dao.profile.CustomerDAO;
+import j2ee_project.dao.user.CustomerDAO;
 import j2ee_project.dao.profile.UserDAO;
 import j2ee_project.model.Address;
 import j2ee_project.model.user.Customer;

@@ -1,6 +1,6 @@
 package j2ee_project.controller.profile;
 
-import j2ee_project.dao.profile.CustomerDAO;
+import j2ee_project.dao.user.CustomerDAO;
 import j2ee_project.dao.profile.LoyaltyDAO;
 import j2ee_project.model.loyalty.LoyaltyAccount;
 import j2ee_project.model.loyalty.LoyaltyLevel;

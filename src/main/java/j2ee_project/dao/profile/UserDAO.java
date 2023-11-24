@@ -1,32 +1,38 @@
 package j2ee_project.dao.profile;
 
 import j2ee_project.dao.AddressDAO;
-import j2ee_project.dao.HibernateUtil;
+import j2ee_project.dao.JPAUtil;
 import j2ee_project.model.Address;
 import j2ee_project.model.user.Customer;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import org.hibernate.Session;
 import org.hibernate.query.MutationQuery;
-import org.hibernate.query.Query;
-import org.hibernate.query.QueryProducer;
 
 public class UserDAO {
 
     public static Customer getUser(int userId) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        Customer customer = session.createQuery("FROM User WHERE id=:userId", Customer.class).setParameter("userId", userId).getSingleResult();
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        Customer customer = entityManager.createQuery("FROM User WHERE id=:userId", Customer.class).setParameter("userId", userId).getSingleResult();
+
+        transaction.commit();
+        entityManager.close();
         return customer;
     }
 
     public static void modifyCustomer(Customer customer){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
         String userQueryStr = getUserUpdateQueryString(customer);
         String addressQueryString = getAddressUpdateQueryString(customer);
-        MutationQuery userQuery = session.createMutationQuery(userQueryStr).setParameter("userId",customer.getId());
-        MutationQuery addressQuery = session.createMutationQuery(addressQueryString).setParameter("userId",customer.getAddress().getId());
+        MutationQuery userQuery = entityManager.createMutationQuery(userQueryStr).setParameter("userId",customer.getId());
+        MutationQuery addressQuery = entityManager.createMutationQuery(addressQueryString).setParameter("userId",customer.getAddress().getId());
+
         if (!customer.getFirstName().isEmpty()){
             userQuery.setParameter("customerFirstName",customer.getFirstName());
         }
@@ -58,13 +64,14 @@ public class UserDAO {
         if (customer1.getAddress()==null){
             Address addressIfNotExist = customer.getAddress();
             addressIfNotExist = AddressDAO.addAddressIfNotExists(addressIfNotExist);
-            MutationQuery customerQuery = session.createMutationQuery("UPDATE Customer SET address=:address WHERE id=:idCustomer").setParameter("address",addressIfNotExist).setParameter("idCustomer",customer.getId());
+            MutationQuery customerQuery = entityManager.createMutationQuery("UPDATE Customer SET address=:address WHERE id=:idCustomer").setParameter("address",addressIfNotExist).setParameter("idCustomer",customer.getId());
             customerQuery.executeUpdate();
         }
         userQuery.executeUpdate();
         addressQuery.executeUpdate();
-        session.getTransaction().commit();
-        session.close();
+
+        transaction.commit();
+        entityManager.close();
     }
 
     public static String getUserUpdateQueryString(Customer customer) {

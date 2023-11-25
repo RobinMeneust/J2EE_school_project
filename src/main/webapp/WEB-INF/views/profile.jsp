@@ -151,7 +151,7 @@
                         </div>
                         <div class="form-group">
                             <label for="userPhoneNumber">Phone number</label>
-                            <input type="text" class="form-control" id="userPhoneNumber" name="userPhoneNumber" value="<%=customerPhoneNumber%>">
+                            <input type="text" class="form-control" id="userPhoneNumber" name="userPhoneNumber" value="<%=customerPhoneNumber == null ? "" : customerPhoneNumber%>">
                         </div>
                         <div class="form-group">
                             <label for="userAddress">Address</label>

@@ -1,6 +1,6 @@
 package j2ee_project.service;
 
-import j2ee_project.dao.user.CustomerDAO;
+import j2ee_project.dao.order.CartDAO;
 import j2ee_project.model.order.Cart;
 import j2ee_project.model.user.Customer;
 import j2ee_project.model.user.User;
@@ -50,10 +50,7 @@ public class CartManager {
 
 			if(cart != null && cart.getCartItems() != null && cart.getCartItems().size()>0) {
 				// Copy the cart
-				System.out.println("test customer: " + customer);
-				System.out.println("test cart: " + cart);
-				System.out.println("test cart items size: " + cart.getCartItems().size());
-				CustomerDAO.updateCart(customer, cart);
+				CartDAO.updateCart(customer, cart);
 			}
 			// The session cart and the user cart won't be sync, so it's better to clear the session cart and just use the user cart
 			request.removeAttribute("sessionCart");

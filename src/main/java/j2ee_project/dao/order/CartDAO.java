@@ -24,4 +24,15 @@ public class CartDAO {
         transaction.commit();
         entityManager.close();
     }
+
+    public static void addCart(Cart cart) {
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        entityManager.persist(cart);
+
+        transaction.commit();
+        entityManager.close();
+    }
 }

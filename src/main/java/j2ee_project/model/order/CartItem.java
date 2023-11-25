@@ -47,6 +47,9 @@ public class CartItem {
 
         if (id != cartItem.id) return false;
         if (!product.equals(cartItem.product)) return false;
+        if(!(quantity == cartItem.getQuantity())) return false;
+        if(!cart.equals(cartItem.getCart())) return false;
+        if(!order.equals(cartItem.getOrder())) return false;
 
         return true;
     }
@@ -69,5 +72,21 @@ public class CartItem {
     @Override
     public String toString() {
         return getProduct().toString() + " Qty: " + getQuantity();
+    }
+
+    public Orders getOrder() {
+        return order;
+    }
+
+    public void setOrder(Orders order) {
+        this.order = order;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 }

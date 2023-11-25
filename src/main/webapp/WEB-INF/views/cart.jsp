@@ -19,9 +19,9 @@
 <jsp:include page="../../layout/header.jsp" />
 <div class="container mt-1 px-4">
     <h1 class="display-1 mb-3">Your Cart</h1>
-    <c:set var="cart" value="${cf:getCart(sessionCart,null)}"/> <%-- change 'null' to a function to get the authenticated customer --%>
-    <c:set var="total" value="${0}"/>
     <c:set var="customer" value="${cf:getCustomer(user)}"/>
+    <c:set var="cart" value="${cf:getCart(sessionCart,customer)}"/> <%-- change 'null' to a function to get the authenticated customer --%>
+    <c:set var="total" value="${0}"/>
 
     <c:choose>
         <c:when test="${cart != null && cart.getCartItems() != null && cart.getCartItems().size() > 0}">

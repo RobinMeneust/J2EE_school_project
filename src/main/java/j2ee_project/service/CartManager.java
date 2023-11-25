@@ -48,8 +48,11 @@ public class CartManager {
 		if(customer != null) {
 			Cart cart = CartManager.getSessionCart(session);
 
-			if(cart != null) {
+			if(cart != null && cart.getCartItems() != null && cart.getCartItems().size()>0) {
 				// Copy the cart
+				System.out.println("test customer: " + customer);
+				System.out.println("test cart: " + cart);
+				System.out.println("test cart items size: " + cart.getCartItems().size());
 				CustomerDAO.updateCart(customer, cart);
 			}
 			// The session cart and the user cart won't be sync, so it's better to clear the session cart and just use the user cart

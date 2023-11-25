@@ -68,6 +68,7 @@ public class LogInController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + noErrorDestination);
             }
         }catch (Exception e) {
+            System.err.println(e.getMessage());
             request.setAttribute("LoggingProcessError","Error during logging, check your email and your password");
             dispatcher = request.getRequestDispatcher(errorDestination);
         }

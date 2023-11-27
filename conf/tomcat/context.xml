@@ -1,3 +1,12 @@
 <Context antiResourceLocking="false" privileged="true" >
     <Manager sessionAttributeValueClassNameFilter="java\.lang\.(?:Boolean|Integer|Long|Number|String)|org\.apache\.catalina\.filters\.CsrfPreventionFilter\$LruCache(?:\$1)?|java\.util\.(?:Linked)?HashMap"/>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>images</web-resource-name>
+            <url-pattern>/images/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>images-admin</role-name>
+        </auth-constraint>
+    </security-constraint>
 </Context>

@@ -1,11 +1,14 @@
 package j2ee_project.dto;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-
+/**
+ * This class is a Data Transfer Object which contain and check User data
+ *
+ * @author Lucas VELAY
+ */
 public class UserDTO {
 
     @NotBlank(message = "First name can not be blank.")

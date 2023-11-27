@@ -9,6 +9,14 @@ import java.security.spec.InvalidKeySpecException;
 
 public class HashService {
 
+    /**
+     * Generate the password hash
+     *
+     * @param password the origin password
+     * @return the hashed password
+     * @throws NoSuchAlgorithmException if no Provider supports a SecureRandomSpi implementation for the specified algorithm
+     * @throws InvalidKeySpecException the exception for invalid key specifications.
+     */
     public static String generatePasswordHash(String password)
             throws NoSuchAlgorithmException, InvalidKeySpecException
     {
@@ -23,6 +31,12 @@ public class HashService {
         return iterations + ":" + toHex(salt) + ":" + toHex(hash);
     }
 
+    /**
+     * Get the salt used in the hashed password generation
+     *
+     * @return the generated salt
+     * @throws NoSuchAlgorithmException if no Provider supports a SecureRandomSpi implementation for the specified algorithm
+     */
     private static byte[] getSalt() throws NoSuchAlgorithmException
     {
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
@@ -31,6 +45,12 @@ public class HashService {
         return salt;
     }
 
+    /**
+     * Convert byte to hexadecimal format
+     *
+     * @param array array of byte
+     * @return the converted hexadecimal
+     */
     private static String toHex(byte[] array)
     {
         BigInteger bi = new BigInteger(1, array);
@@ -45,6 +65,15 @@ public class HashService {
         }
     }
 
+    /**
+     * Check if a password corresponds with a hashed password
+     *
+     * @param originalPassword the password to check
+     * @param storedPassword the hashed password
+     * @return true or false according to the passwords correspond
+     * @throws NoSuchAlgorithmException if no Provider supports a SecureRandomSpi implementation for the specified algorithm
+     * @throws InvalidKeySpecException the exception for invalid key specifications.
+     */
     public static boolean validatePassword(String originalPassword, String storedPassword)
             throws NoSuchAlgorithmException, InvalidKeySpecException
     {
@@ -66,6 +95,18 @@ public class HashService {
         }
         return diff == 0;
     }
+    /**
+     * Convert byte to hexadecimal format
+     *
+     * @param array array of byte
+     * @return the converted hexadecimal
+     */
+    /**
+     * Convert hexadecimal format to byte array
+     *
+     * @param hex hexadecimal string
+     * @return the converted array of byte
+     */
     private static byte[] fromHex(String hex)
     {
         byte[] bytes = new byte[hex.length() / 2];

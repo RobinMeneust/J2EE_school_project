@@ -14,7 +14,7 @@ import java.util.Set;
 @PrimaryKeyJoinColumn(name = "idUser")
 public class Customer extends User{
 
-    @OneToOne(mappedBy = "customer",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "customer",cascade = CascadeType.ALL, orphanRemoval = true)
     private Cart cart;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idAddress", referencedColumnName = "id")
@@ -22,7 +22,7 @@ public class Customer extends User{
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idLoyaltyAccount", referencedColumnName = "id")
     private LoyaltyAccount loyaltyAccount;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Orders> orders;
 
     public Customer(CustomerDTO customerDTO){

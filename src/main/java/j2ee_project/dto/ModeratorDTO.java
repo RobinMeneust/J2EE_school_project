@@ -5,6 +5,11 @@ import j2ee_project.model.user.TypePermission;
 
 import java.util.Set;
 
+/**
+ * This class is a Data Transfer Object which contain and check Moderator data
+ *
+ * @author Lucas VELAY
+ */
 public class ModeratorDTO extends UserDTO{
 
     private Set<Permission> permissions;

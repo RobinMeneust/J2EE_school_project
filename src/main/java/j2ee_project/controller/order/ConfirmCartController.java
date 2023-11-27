@@ -2,6 +2,7 @@ package j2ee_project.controller.order;
 
 import j2ee_project.dao.AddressDAO;
 import j2ee_project.dao.discount.DiscountDAO;
+import j2ee_project.dao.order.CartItemDAO;
 import j2ee_project.dao.order.OrdersDAO;
 import j2ee_project.model.Address;
 import j2ee_project.model.Discount;
@@ -86,6 +87,7 @@ public class ConfirmCartController extends HttpServlet {
 
         Orders newOrder = new Orders(cart.getTotal(), new Date(Calendar.getInstance().getTimeInMillis()), cartItems, customer, deliveryAddress);
         OrdersDAO.addOrder(newOrder);
+        CartItemDAO.setOrder(cart,newOrder.getId());
         response.sendRedirect("pay?order-id="+newOrder.getId());
     }
 }

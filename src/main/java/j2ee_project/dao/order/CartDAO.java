@@ -90,7 +90,6 @@ public class CartDAO {
             customerDbObject.setCart(cart);
 
             transaction.commit();
-            System.out.println("end copy cart");
         } catch (Exception e) {
             System.err.println("Transactions failed "+e.getMessage());
         }

@@ -4,6 +4,7 @@ import j2ee_project.dao.JPAUtil;
 import j2ee_project.dao.user.CustomerDAO;
 import j2ee_project.model.order.Cart;
 import j2ee_project.model.order.CartItem;
+import j2ee_project.model.order.Orders;
 import j2ee_project.model.user.Customer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -42,7 +43,6 @@ public class CartItemDAO {
             cartItemDBObj.setQuantity(quantity);
         }
 
-        System.out.println(cartItemDBObj.getQuantity()+" "+quantity);
 
         transaction.commit();
         entityManager.close();
@@ -86,4 +86,22 @@ public class CartItemDAO {
 
         return id;
 	}
+
+    public static void setOrder(Cart cart, int id) {
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        try {
+            transaction.begin();
+            Cart cartDBObj = entityManager.find(Cart.class,cart.getId());
+            Orders orderDBObj = entityManager.find(Orders.class, id);
+
+            for (CartItem item : cartDBObj.getCartItems()) {
+                item.setOrder(orderDBObj);
+            }
+            transaction.commit();
+        } finally {
+            entityManager.close();
+        }
+    }
 }

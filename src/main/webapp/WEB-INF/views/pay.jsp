@@ -29,6 +29,7 @@
             response.sendError(HttpServletResponse.SC_BAD_REQUEST,"order-id param is required and must be an integer");
         }
         Orders order = OrdersDAO.getOrder(orderIdStr);
+
         if(order == null || order.getCartItems() == null || order.getCartItems().isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST,"The order associated to order-id is invalid or empty");
         }

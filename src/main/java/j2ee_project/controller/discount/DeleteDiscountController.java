@@ -27,7 +27,7 @@ public class DeleteDiscountController extends HttpServlet {
         try {
             response.sendRedirect("dashboard?tab=discounts");
         }catch (Exception err){
-            System.out.println(err.getMessage());
+            System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }

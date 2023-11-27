@@ -18,7 +18,7 @@ public class GetModeratorController extends HttpServlet {
             List<Moderator> moderators = ModeratorDAO.getModerators();
             request.setAttribute("moderators", moderators);
         }catch (Exception err){
-            System.out.println(err.getMessage());
+            System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }

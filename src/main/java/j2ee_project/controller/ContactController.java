@@ -44,12 +44,11 @@ public class ContactController extends HttpServlet {
         RequestDispatcher dispatcher = null;
         if(inputErrors.isEmpty()){
             try {
-                System.out.println(contact);
                 sendContactMail(contact);
                 request.setAttribute("SuccessSending","Success sending");
                 dispatcher = request.getRequestDispatcher(noErrorDestination);
             } catch(Exception exception){
-                System.out.println(exception.getMessage());
+                System.err.println(exception.getMessage());
                 request.setAttribute("ContactSendingError","Error during sending");
                 dispatcher = request.getRequestDispatcher(errorDestination);
             }

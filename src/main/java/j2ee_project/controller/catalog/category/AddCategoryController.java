@@ -19,7 +19,7 @@ public class AddCategoryController extends HttpServlet {
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/add/addCategory.jsp");
             view.forward(request,response);
         }catch (Exception err){
-            System.out.println(err.getMessage());
+            System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
@@ -42,7 +42,7 @@ public class AddCategoryController extends HttpServlet {
         try {
             response.sendRedirect("dashboard?tab=categories");
         }catch (Exception err){
-            System.out.println(err.getMessage());
+            System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }

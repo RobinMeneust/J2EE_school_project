@@ -1,6 +1,6 @@
 package j2ee_project.controller.order;
 
-import j2ee_project.dao.order.CartDAO;
+import j2ee_project.dao.order.CartItemDAO;
 import j2ee_project.model.order.Cart;
 import j2ee_project.model.order.CartItem;
 import j2ee_project.model.user.Customer;
@@ -57,7 +57,11 @@ public class EditCartItemQuantityController extends HttpServlet {
 		}
 
         HttpSession session = request.getSession();
-        Customer customer = null; // TODO: check if the user is connected and if he is, set this var
+        Object obj = session.getAttribute("user");
+        Customer customer = null;
+        if(obj instanceof Customer) {
+            customer = (Customer) obj;
+        }
         Cart cart;
 
         if(customer == null) {
@@ -84,7 +88,7 @@ public class EditCartItemQuantityController extends HttpServlet {
                         item.setQuantity(quantity);
                     }
                 } else {
-                    CartDAO.editItemQuantity(item, quantity);
+                    CartItemDAO.editItemQuantity(item, quantity);
                 }
                 break;
             }

@@ -16,6 +16,8 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.Map;
 
+import static j2ee_project.service.CartManager.copySessionCartToCustomer;
+
 /**
  * This class is a servlet used register customer. It's a controller in the MVC architecture of this project.
  *
@@ -37,7 +39,7 @@ public class RegisterCustomerController extends HttpServlet {
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/register.jsp");
             view.forward(request,response);
         }catch (Exception err){
-            System.out.println(err.getMessage());
+            System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
@@ -67,16 +69,17 @@ public class RegisterCustomerController extends HttpServlet {
             if (!UserDAO.emailOrPhoneNumberIsInDb(customer.getEmail(), customer.getPhoneNumber())){
                 try {
                     User user = AuthService.registerCustomer(customer);
-                    System.out.println(user);
 
                     sendConfirmationMail(user.getEmail());
 
+                    // Copy the session cart to the current user cart (and override it if it's not empty) if the user is a customer
+                    copySessionCartToCustomer(request, user);
+
                     HttpSession session = request.getSession();
                     session.setAttribute("user", user);
-                    System.out.println(session.getAttribute("user"));
                     response.sendRedirect(request.getContextPath() + noErrorDestination);
                 } catch(Exception exception){
-                    System.out.println(exception.getMessage());
+                    System.err.println(exception.getMessage());
                     request.setAttribute("RegisterProcessError","Error during register process");
                     dispatcher = request.getRequestDispatcher(errorDestination);
                 }

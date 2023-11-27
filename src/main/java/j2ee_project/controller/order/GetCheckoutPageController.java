@@ -21,6 +21,7 @@ public class GetCheckoutPageController extends HttpServlet
 {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        //TODO: remove the previous cart here ?
         try {
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/checkout.jsp");
             view.forward(request, response);

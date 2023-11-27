@@ -39,6 +39,7 @@ public class GetProductPageController extends HttpServlet
 
         if(productId<=0) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Product ID must be positive");
+            return;
         }
 
         try {

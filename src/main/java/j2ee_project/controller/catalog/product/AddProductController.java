@@ -19,7 +19,7 @@ public class AddProductController extends HttpServlet {
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/add/addProduct.jsp");
             view.forward(request,response);
         }catch (Exception err){
-            System.out.println(err.getMessage());
+            System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
@@ -46,7 +46,7 @@ public class AddProductController extends HttpServlet {
         try {
             response.sendRedirect("dashboard?tab=products");
         }catch (Exception err){
-            System.out.println(err.getMessage());
+            System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }

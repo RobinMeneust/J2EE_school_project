@@ -1,7 +1,9 @@
 package j2ee_project.dao.user;
 
-import j2ee_project.dao.HibernateUtil;
+import j2ee_project.dao.JPAUtil;
 import j2ee_project.model.user.Moderator;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import org.hibernate.Session;
 
 import java.util.List;
@@ -9,37 +11,49 @@ import java.util.List;
 public class ModeratorDAO {
 
     public static List<Moderator> getModerators(){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        List<Moderator> moderators = session.createQuery("FROM Moderator ",Moderator.class).getResultList();
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        List<Moderator> moderators = entityManager.createQuery("FROM Moderator ",Moderator.class).getResultList();
+
+        transaction.commit();
+        entityManager.close();
         return moderators;
     }
 
     public static Moderator getModerator(int moderatorId){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        Moderator moderator = session.createQuery("FROM Moderator WHERE id=:moderatorId", Moderator.class).setParameter("moderatorId",moderatorId).getSingleResult();
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        Moderator moderator = entityManager.createQuery("FROM Moderator WHERE id=:moderatorId", Moderator.class).setParameter("moderatorId",moderatorId).getSingleResult();
+
+        transaction.commit();
+        entityManager.close();
         return moderator;
     }
 
     public static void deleteModerator(int moderatorId){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        Moderator moderator = session.createQuery("FROM Moderator WHERE id=:moderatorId",Moderator.class).setParameter("moderatorId",moderatorId).getSingleResult();
-        session.remove(moderator);
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        Moderator moderator = entityManager.createQuery("FROM Moderator WHERE id=:moderatorId",Moderator.class).setParameter("moderatorId",moderatorId).getSingleResult();
+        entityManager.remove(moderator);
+
+        transaction.commit();
+        entityManager.close();
     }
 
     public static void addModerator(Moderator moderator){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        session.save(moderator);
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        entityManager.persist(moderator);
+
+        transaction.commit();
+        entityManager.close();
     }
 }

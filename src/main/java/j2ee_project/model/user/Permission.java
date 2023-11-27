@@ -9,7 +9,7 @@ public class Permission {
     @Column(name = "id", nullable = false)
     private int id;
     @Basic
-    @Column(name = "permission", nullable = false, length = 50)
+    @Column(name = "permission", nullable = false, length = 50, unique = true)
     @Enumerated(EnumType.STRING)
     private TypePermission permission;
 

@@ -23,7 +23,7 @@ public class Orders {
     @Column(name = "orderStatus", nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", fetch=FetchType.EAGER)
     private Set<CartItem> cartItems;
     @ManyToOne
     @JoinColumn(name = "idCustomer", referencedColumnName = "idUser", nullable = false)

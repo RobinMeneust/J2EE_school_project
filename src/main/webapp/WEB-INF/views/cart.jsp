@@ -20,11 +20,11 @@
 <div class="container mt-1 px-4">
     <h1 class="display-1 mb-3">Your Cart</h1>
     <c:set var="customer" value="${cf:getCustomer(user)}"/>
-    <c:set var="cart" value="${cf:getCart(sessionCart,customer)}"/> <%-- change 'null' to a function to get the authenticated customer --%>
+    <c:set var="cart" value="${cf:getCart(sessionCart,customer)}"/>
     <c:set var="total" value="${0}"/>
 
     <c:choose>
-        <c:when test="${cart != null && cart.getCartItems() != null && cart.getCartItems().size() > 0}">
+        <c:when test="${cart != null && cart.getCartItems() != null && !cart.getCartItems().isEmpty()}">
             <form action="confirm-cart" method="post">
                 <c:if test="${not empty customer}">
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">

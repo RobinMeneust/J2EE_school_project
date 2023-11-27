@@ -95,6 +95,9 @@ public class AddToCartController extends HttpServlet {
             request.setAttribute("sessionCart", cart);
         } else {
             CartDAO.addItem(cart, newItem); // Add to the cart of the customer (saved in the db)
+            // Refresh the user cart
+            customer.setCart(CartDAO.getCartFromCustomerId(customer.getId()));
+            session.setAttribute("user", customer);
         }
         response.setStatus(HttpServletResponse.SC_OK);
         PrintWriter out = response.getWriter();

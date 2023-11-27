@@ -1,6 +1,7 @@
 package j2ee_project.dao.order;
 
 import j2ee_project.dao.JPAUtil;
+import j2ee_project.dao.user.CustomerDAO;
 import j2ee_project.model.order.Cart;
 import j2ee_project.model.order.CartItem;
 import j2ee_project.model.user.Customer;
@@ -55,14 +56,22 @@ public class CartDAO {
         entityManager.close();
     }
 
+    /**
+     * Update the cart only if the customer's cart is empty
+     * @param customer
+     * @param cart
+     */
     public static void updateCart(Customer customer, Cart cart) {
         Cart oldCart = customer.getCart();
-        // Remove previous cart items
-        CartItemDAO.removeCartItems(oldCart);
-        removeCart(oldCart);
+        if(oldCart != null && oldCart.getCartItems() != null && !oldCart.getCartItems().isEmpty()) {
+            // Cancelled : The cart should not be updated since the old one in still active
+            return;
+        }
+
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
 
         try {
+            CartDAO.removeCart(oldCart); // Remove the old cart to persist a new one
             EntityTransaction transaction = entityManager.getTransaction();
             transaction.begin();
 
@@ -72,16 +81,30 @@ public class CartDAO {
                 return;
             }
             cart.setCustomer(customerDbObject);
+            cart.setId(0); // To persist a new cart
 
             entityManager.persist(cart);
             customerDbObject.setCart(cart);
 
             transaction.commit();
+            System.out.println("end copy cart");
         } catch (Exception e) {
             System.err.println("Transactions failed "+e.getMessage());
         }
         finally {
             entityManager.close();
         }
+    }
+
+    public static Cart getCartFromCustomerId(int id) {
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        Cart cart = entityManager.createQuery("FROM Cart WHERE customer.id = :customerId",Cart.class).setParameter("customerId",id).getSingleResult();
+
+        transaction.commit();
+        entityManager.close();
+        return cart;
     }
 }

@@ -1,8 +1,10 @@
 package j2ee_project.dao.order;
 
 import j2ee_project.dao.JPAUtil;
+import j2ee_project.dao.user.CustomerDAO;
 import j2ee_project.model.order.Cart;
 import j2ee_project.model.order.CartItem;
+import j2ee_project.model.user.Customer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import org.hibernate.Session;
@@ -16,16 +18,31 @@ import java.util.Set;
  */
 public class CartItemDAO {
 
-    public static void editItemQuantity(CartItem cartItem, int quantity) {
+    public static void editItemQuantity(Customer customer, int cartItemId, int quantity) {
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        if(quantity<=0) {
-            entityManager.remove(cartItem);
-        } else {
-            cartItem.setQuantity(quantity);
+        CartItem cartItemDBObj = entityManager.find(CartItem.class,cartItemId);
+
+        if(cartItemDBObj == null || cartItemDBObj.getCart() == null || customer == null || !customer.equals(cartItemDBObj.getCart().getCustomer())) {
+            //TODO: throw an Exception
+            return;
         }
+
+        if(cartItemDBObj == null) {
+            //TODO: throw an Exception
+            return;
+        }
+
+        if(quantity<=0) {
+            cartItemDBObj.getCart().getCartItems().remove(cartItemDBObj);
+            entityManager.remove(cartItemDBObj);
+        } else {
+            cartItemDBObj.setQuantity(quantity);
+        }
+
+        System.out.println(cartItemDBObj.getQuantity()+" "+quantity);
 
         transaction.commit();
         entityManager.close();

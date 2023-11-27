@@ -34,22 +34,25 @@ public class CartManager {
 
 	public static Cart getCart(Cart sessionCart, Customer customer) {
 		if(customer != null /* && AUTHENTICATED && IS IN DATABASE*/) {
+			System.out.println("customer not null and cart = "+customer.getCart()+" items: " + customer.getCart() == null ? "null" : (customer.getCart().getCartItems() == null ? "items null" : "cart not empty, size = "+customer.getCart().getCartItems().size()));
 			return customer.getCart();
 		} else if(sessionCart != null && sessionCart.getId() <= 0) {
+			System.out.println("not null and not customer");
 			// If it's not null and not associated to a customer
 			return sessionCart;
 		}
+		System.out.println("null cart");
 		return null;
 	}
 
-	public static void copySessionCartToCustomer(HttpServletRequest request, User user) {
+	public static void copySessionCartToCustomer(HttpServletRequest request, Customer customer) {
 		HttpSession session = request.getSession();
-		Customer customer = getCustomer(user);
 		if(customer != null) {
 			Cart cart = CartManager.getSessionCart(session);
 
-			if(cart != null && cart.getCartItems() != null && cart.getCartItems().size()>0) {
+			if(cart != null && cart.getCartItems() != null && !cart.getCartItems().isEmpty()) {
 				// Copy the cart
+				System.out.println("copy cart");
 				CartDAO.updateCart(customer, cart);
 			}
 			// The session cart and the user cart won't be sync, so it's better to clear the session cart and just use the user cart

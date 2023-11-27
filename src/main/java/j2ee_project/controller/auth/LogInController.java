@@ -1,5 +1,7 @@
 package j2ee_project.controller.auth;
 
+import j2ee_project.dao.order.CartDAO;
+import j2ee_project.model.user.Customer;
 import j2ee_project.model.user.User;
 import j2ee_project.service.AuthService;
 import jakarta.servlet.*;
@@ -63,7 +65,14 @@ public class LogInController extends HttpServlet {
                 session.setAttribute("user", user);
 
                 // Copy the session cart to the current user cart (and override it if it's not empty) if the user is a customer
-                copySessionCartToCustomer(request, user);
+                if(user instanceof Customer) {
+                    Customer customer = (Customer) user;
+                    copySessionCartToCustomer(request, customer);
+
+                    // Refresh the user cart
+                    customer.setCart(CartDAO.getCartFromCustomerId(customer.getId()));
+                    session.setAttribute("user", customer);
+                }
 
                 response.sendRedirect(request.getContextPath() + noErrorDestination);
             }

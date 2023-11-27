@@ -19,7 +19,7 @@ public class Cart {
     @OneToOne
     @JoinColumn(name = "idCustomer", referencedColumnName = "idUser", nullable = false)
     private Customer customer;
-    @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.MERGE}, orphanRemoval = true)
     private Set<CartItem> cartItems;
 
     public int getId() {

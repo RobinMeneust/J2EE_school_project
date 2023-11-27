@@ -14,7 +14,7 @@ public class GetProductsController extends HttpServlet {
         try {
             request.setAttribute("products", ProductDAO.getProducts());
         }catch (Exception err){
-            System.out.println(err.getMessage());
+            System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }

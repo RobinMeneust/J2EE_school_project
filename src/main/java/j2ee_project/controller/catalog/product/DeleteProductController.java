@@ -22,12 +22,13 @@ public class DeleteProductController extends HttpServlet {
 
         if(productId<=0) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Product ID must be positive");
+            return;
         }
         ProductDAO.deleteProduct(productId);
         try {
             response.sendRedirect("dashboard");
         }catch (Exception err){
-            System.out.println(err.getMessage());
+            System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }

@@ -15,7 +15,7 @@ public class GetCustomersController extends HttpServlet {
         try {
             request.setAttribute("customers", CustomerDAO.getCustomers());
         }catch (Exception err){
-            System.out.println(err.getMessage());
+            System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }

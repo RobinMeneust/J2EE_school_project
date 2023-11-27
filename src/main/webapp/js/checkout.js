@@ -3,6 +3,7 @@ let globalClientSecret = null;
 let stripe = null;
 let amountToBePaid= null;
 let doAbort = false;
+let customerData = null;
 
 let publishableStripeKeyPromise = fetch("get-stripe-publishable-key").then((response) => {
     return response.json();
@@ -12,6 +13,18 @@ let publishableStripeKeyPromise = fetch("get-stripe-publishable-key").then((resp
     } else {
         return "";
     }
+});
+
+let customerDataPromise = fetch("session/customer/data?out=json").then((response) => {
+    return response.json();
+}).then((data) => {
+    let result = {"first-name":"","last-name":"","email":""}
+    for(let key in ["first-name","last-name","email"]) {
+        if(key in data) {
+            result[key] = data[key].trim();
+        }
+    }
+    return result;
 });
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -45,6 +58,7 @@ async function initialize() {
     if(doAbort) return;
     stripe = Stripe(await publishableStripeKeyPromise);
     amountToBePaid = await amountToBePaidPromise;
+    customerData = await customerDataPromise;
 
     $("#amount-to-be-paid").text(amountToBePaid);
 
@@ -72,9 +86,8 @@ async function handleSubmit(e) {
         payment_method: {
             card: elements.getElement('card'),
             billing_details: {
-                // TODO fetch from session variable (user)
-                name: 'John Doe',
-                email: 'john@example.com',
+                name: customerData["first-name"] + customerData["last-name"],
+                email: customerData.email,
             },
         },
     });

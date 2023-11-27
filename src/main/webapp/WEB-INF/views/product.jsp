@@ -44,9 +44,9 @@
     <h6 class="display-6 mb-3 text-secondary"><c:out value="${product.getCategory().getName()}"/></h6>
     <div class="row g-5 justify-content-start">
         <div class="col">
-            <img class="rounded" style="width: 420px; height: 300px; object-fit: cover;" alt="product_img" src="<c:out value="${pageContext.request.contextPath}/${product.getImagePath()}" />">
+            <img class="rounded" style="width: 420px; height: 300px; object-fit: contain;" alt="product_img" src="<c:out value="product/image?id=${product.getId()}" />">
         </div>
-        <div class="col" style="text-align: justify; min-width:350px; max-width:600px">
+        <div class="col" style="text-align: justify ;min-width:350px; max-width:600px">
             <p>
                 <c:out value="${product.getDescription()}" />
             </p>
@@ -55,11 +55,11 @@
             <div class="p-2 mb-auto">
                 <c:choose>
                     <c:when test="${discountPercentage != null && discountPercentage > 0}">
-                        <span class="text-secondary text-decoration-line-through">$<c:out value="${product.getUnitPrice()}"/></span> <span class="text-success"><c:out value="(-${discountPercentage} %)"/></span>
-                        <h6 class="display-6"><c:out value="${product.getUnitPrice()*(1-(discountPercentage/100))}"/> €</h6>
+                        <span class="text-secondary text-decoration-line-through"><c:out value="${product.getUnitPrice()} €"/></span> <span class="text-success"><c:out value="(-${discountPercentage} %)"/></span>
+                        <h6 class="display-6"><c:out value="${product.getUnitPrice()*(1-(discountPercentage/100))} €"/></h6>
                     </c:when>
                     <c:otherwise>
-                        <h6 class="display-6"><c:out value="${product.getUnitPrice()}"/> €</h6>
+                        <h6 class="display-6"><c:out value="${product.getUnitPrice()} €"/></h6>
                     </c:otherwise>
                 </c:choose>
             </div>

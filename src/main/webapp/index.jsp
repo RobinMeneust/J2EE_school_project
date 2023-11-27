@@ -18,6 +18,15 @@
 	<c:set var="categories" value="${cf:getCategories()}"/>
 
 	<div class="container">
+		<h1>TEMP</h1>
+		<form action="product/image" method="post" enctype="multipart/form-data">
+			<label for="file">New product image</label>
+			<input type="file" id="file" name="file" accept="image/*">
+			<input type="number" id="id" name="id" value="1">
+			<br>
+			<input type="submit" value="Upload">
+		</form>
+
 		<c:if test="${featuredProducts != null && featuredProducts.size() != 0}">
 		<div class="mb-5">
 			<h2 class="display-2 p-3">Featured products</h2>
@@ -31,7 +40,7 @@
 						</c:if>
 									<div class="col-sm text-center">
 										<a class="text-decoration-none text-body" href="get-product-page?id=${featuredProducts.get(i).getId()}">
-											<img style="width: 390px; height: 250px; object-fit: cover;" src="${pageContext.request.contextPath}/${featuredProducts.get(i).getImagePath()}" class="d-block" alt="${featuredProducts.get(i).getName()}_img">
+											<img style="width: 390px; height: 250px; object-fit: contain;" src="product/image?id=${featuredProducts.get(i).getId()}" class="d-block" alt="${featuredProducts.get(i).getName()}_img">
 											<div>
 												<h5><c:out value="${featuredProducts.get(i).getName()}"/></h5>
 											</div>

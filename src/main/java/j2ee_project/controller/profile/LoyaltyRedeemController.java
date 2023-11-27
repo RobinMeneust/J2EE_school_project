@@ -1,6 +1,6 @@
 package j2ee_project.controller.profile;
 
-import j2ee_project.dao.profile.CustomerDAO;
+import j2ee_project.dao.user.CustomerDAO;
 import j2ee_project.dao.profile.LoyaltyDAO;
 import j2ee_project.model.loyalty.LoyaltyAccount;
 import j2ee_project.model.loyalty.LoyaltyLevel;
@@ -30,36 +30,55 @@ public class LoyaltyRedeemController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String customerIdStr = request.getParameter("customerId");
         String loyaltyAccountIdStr = request.getParameter("loyaltyAccountId");
-        System.out.println(customerIdStr);
         int customerId = 1;
         int loyaltyAccountId = 1;
 
-        if(customerIdStr != null && !customerIdStr.trim().isEmpty()) {
+        if (customerIdStr != null && !customerIdStr.trim().isEmpty()) {
             try {
                 customerId = Integer.parseInt(customerIdStr);
-            } catch(Exception ignore) {}
+            } catch (Exception ignore) {
+            }
         }
 
-        if(loyaltyAccountIdStr != null && !loyaltyAccountIdStr.trim().isEmpty()) {
+        if (loyaltyAccountIdStr != null && !loyaltyAccountIdStr.trim().isEmpty()) {
             try {
                 loyaltyAccountId = Integer.parseInt(loyaltyAccountIdStr);
-            } catch(Exception ignore) {}
+            } catch (Exception ignore) {
+            }
         }
 
-        try {
-            List<LoyaltyLevel> loyaltyLevels = LoyaltyDAO.getLoyaltyLevels();
-            LoyaltyAccount loyaltyAccount = LoyaltyDAO.getLoyaltyAccount(loyaltyAccountId);
-            Customer customer = CustomerDAO.getCustomer(customerId);
+        if (loyaltyAccountIdStr == null || loyaltyAccountIdStr.trim().isEmpty()){
+            try {
+                List<LoyaltyLevel> loyaltyLevels = LoyaltyDAO.getLoyaltyLevels();
+                LoyaltyAccount loyaltyAccount = LoyaltyDAO.getLoyaltyAccount(loyaltyAccountId);
+                Customer customer = CustomerDAO.getCustomer(customerId);
 
-            request.setAttribute("customer", customer);
-            request.setAttribute("loyaltyAccount", loyaltyAccount);
-            request.setAttribute("loyaltyLevels", loyaltyLevels);
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=2");
-            view.forward(request, response);
-        } catch(Exception err) {
-            // The forward didn't work
-            System.err.println(err.getMessage());
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                request.setAttribute("customer", customer);
+                request.setAttribute("loyaltyAccount", loyaltyAccount);
+                request.setAttribute("loyaltyLevels", loyaltyLevels);
+                RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=2&has-loyalty-account=0");
+                view.forward(request, response);
+            } catch (Exception err) {
+                // The forward didn't work
+                System.err.println(err.getMessage());
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            }
+        }else {
+            try {
+                List<LoyaltyLevel> loyaltyLevels = LoyaltyDAO.getLoyaltyLevels();
+                LoyaltyAccount loyaltyAccount = LoyaltyDAO.getLoyaltyAccount(loyaltyAccountId);
+                Customer customer = CustomerDAO.getCustomer(customerId);
+
+                request.setAttribute("customer", customer);
+                request.setAttribute("loyaltyAccount", loyaltyAccount);
+                request.setAttribute("loyaltyLevels", loyaltyLevels);
+                RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=2&has-loyalty-account=1");
+                view.forward(request, response);
+            } catch (Exception err) {
+                // The forward didn't work
+                System.err.println(err.getMessage());
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            }
         }
     }
 
@@ -72,6 +91,31 @@ public class LoyaltyRedeemController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String j;
+        String loyaltyAccountIdStr = request.getParameter("loyaltyAccountId");
+        String loyaltyLevelIdStr = request.getParameter("loyaltyLevelId");
+
+        int loyaltyAccountId = 1;
+        int loyaltyLevelId = 1;
+
+        if(loyaltyAccountIdStr != null && !loyaltyAccountIdStr.trim().isEmpty()) {
+            try {
+                loyaltyAccountId = Integer.parseInt(loyaltyAccountIdStr);
+            } catch(Exception ignore) {}
+        }
+
+        if(loyaltyLevelIdStr != null && !loyaltyLevelIdStr.trim().isEmpty()) {
+            try {
+                loyaltyLevelId = Integer.parseInt(loyaltyLevelIdStr);
+            } catch(Exception ignore) {}
+        }
+
+        try{
+            LoyaltyDAO.createLevelUsed(loyaltyAccountId,loyaltyLevelId);
+            doGet(request,response);
+        }catch (Exception err) {
+            // The forward didn't work
+            System.err.println(err.getMessage());
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 }

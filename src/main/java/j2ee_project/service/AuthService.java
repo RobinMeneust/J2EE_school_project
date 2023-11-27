@@ -36,7 +36,6 @@ public class AuthService {
      */
     public static User logIn(String email, String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
         User user = UserDAO.getUserFromEmail(email);
-        System.out.println(user);
         if(user == null){
             return null;
         }

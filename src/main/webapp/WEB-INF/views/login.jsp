@@ -12,10 +12,12 @@
     <title>Register</title>
     <jsp:include page="../../include.jsp"/>
     <script src="${pageContext.request.contextPath}/dependencies/jquery/jquery.validate.min.js"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/auth_pages.css">
 </head>
 <body>
     <jsp:include page="../../layout/header.jsp"/>
 <main>
+    <h1>Login</h1>
     <form id="loginForm" method="post" action="${pageContext.request.contextPath}/login-controller">
         <c:if test="${requestScope.LoggingProcessError != null}">
             <div class="alert alert-danger" role="alert">
@@ -36,7 +38,7 @@
                 <c:out value="${requestScope.InputError.password}"/>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button id="submitButton" type="submit" class="btn btn-primary">Submit</button>
     </form>
 </main>
     <jsp:include page="../../layout/footer.jsp"/>

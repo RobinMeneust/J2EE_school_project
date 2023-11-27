@@ -18,6 +18,15 @@
 	<c:set var="categories" value="${cf:getCategories()}"/>
 
 	<div class="container">
+		<h1>TEMP</h1>
+		<form action="product/image" method="post" enctype="multipart/form-data">
+			<label for="file">New product image</label>
+			<input type="file" id="file" name="file" accept="image/*">
+			<input type="number" id="id" name="id" value="1">
+			<br>
+			<input type="submit" value="Upload">
+		</form>
+
 		<c:if test="${featuredProducts != null && featuredProducts.size() != 0}">
 		<div class="mb-5">
 			<h2 class="display-2 p-3">Featured products</h2>

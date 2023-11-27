@@ -221,4 +221,21 @@ public class ProductDAO {
         transaction.commit();
         entityManager.close();
     }
+
+    public static void setProductImagePath(int productId, String path) {
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        if(path==null || path.trim().isEmpty()) {
+            //TODO return an error
+            return;
+        }
+
+        Product product = entityManager.createQuery("FROM Product WHERE id=:productId", Product.class).setParameter("productId", productId).getSingleResult();
+        product.setImagePath(path);
+
+        transaction.commit();
+        entityManager.close();
+    }
 }

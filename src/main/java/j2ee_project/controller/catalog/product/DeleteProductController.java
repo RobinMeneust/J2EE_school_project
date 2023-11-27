@@ -22,6 +22,7 @@ public class DeleteProductController extends HttpServlet {
 
         if(productId<=0) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Product ID must be positive");
+            return;
         }
         ProductDAO.deleteProduct(productId);
         try {

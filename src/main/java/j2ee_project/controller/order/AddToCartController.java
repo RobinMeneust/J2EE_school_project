@@ -92,7 +92,7 @@ public class AddToCartController extends HttpServlet {
         if(customer == null) {
             newItem.setCart(cart);
             cart.getCartItems().add(newItem); // Add to the cart object (not saved in the db)
-            request.setAttribute("sessionCart", cart);
+            session.setAttribute("sessionCart", cart);
         } else {
             CartDAO.addItem(cart, newItem); // Add to the cart of the customer (saved in the db)
             // Refresh the user cart

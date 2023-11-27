@@ -17,11 +17,14 @@ import org.hibernate.Session;
 public class CartDAO {
 
     public static void addItem(Cart cart, CartItem item) {
+        int itemId = CartItemDAO.newItem(item);
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        cart.getCartItems().add(item);
+        CartItem itemDBObj = entityManager.find(CartItem.class,itemId);
+        itemDBObj.setCart(cart);
+        cart.getCartItems().add(itemDBObj);
 
         transaction.commit();
         entityManager.close();

@@ -56,7 +56,7 @@ public class CartManager {
 				CartDAO.updateCart(customer, cart);
 			}
 			// The session cart and the user cart won't be sync, so it's better to clear the session cart and just use the user cart
-			request.removeAttribute("sessionCart");
+			session.removeAttribute("sessionCart");
 		}
 	}
 }

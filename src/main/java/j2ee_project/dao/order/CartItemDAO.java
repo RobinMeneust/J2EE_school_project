@@ -71,4 +71,19 @@ public class CartItemDAO {
         transaction.commit();
         entityManager.close();
     }
+
+	public static int newItem(CartItem item) {
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        entityManager.persist(item);
+        entityManager.flush();
+        int id = item.getId();
+
+        transaction.commit();
+        entityManager.close();
+
+        return id;
+	}
 }

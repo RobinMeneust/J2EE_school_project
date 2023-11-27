@@ -30,7 +30,8 @@
 
 <c:set var="product" value="<%=product%>"/>
 <c:set var="discountPercentage" value="<%=discountPercentage%>"/>
-<c:set var="cart" value="${cf:getCart(sessionCart,null)}"/> <%-- change 'null' to a function to get the authenticated customer --%>
+<c:set var="customer" value="${cf:getCustomer(user)}"/>
+<c:set var="cart" value="${cf:getCart(sessionCart,customer)}"/>
 
 
 <div class="container mt-1 px-2 pb-5 mb-5">

@@ -150,7 +150,7 @@
                                         <hr class="w-100"/>
                                         <div class="row py-2 w-100">
                                             <div class="col text-start"><b>TOTAL</b></div>
-                                            <div class="col text-end"><c:out value="g{totalWithLoyaltyDiscount + 5} €"/></div>
+                                            <div class="col text-end"><c:out value="${totalWithLoyaltyDiscount + 5} €"/></div>
                                         </div>
                                         <div class="row py-2 w-100">
                                             <input class="col btn btn-primary" type="submit" value="Confirm">

@@ -15,13 +15,17 @@ let publishableStripeKeyPromise = fetch("get-stripe-publishable-key").then((resp
     }
 });
 
-let customerDataPromise = fetch("session/customer/data?out=json").then((response) => {
+let customerDataPromise = fetch("session/customer").then((response) => {
     return response.json();
 }).then((data) => {
     let result = {"first-name":"","last-name":"","email":""}
+    if(!("user" in data)) {
+        return result;
+    }
+
     for(let key in ["first-name","last-name","email"]) {
-        if(key in data) {
-            result[key] = data[key].trim();
+        if(key in data["user"]) {
+            result[key] = data["user"][key].trim();
         }
     }
     return result;

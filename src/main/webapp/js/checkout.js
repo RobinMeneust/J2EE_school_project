@@ -105,7 +105,7 @@ async function handleSubmit(e) {
             showMessage("An unexpected error occurred.");
         }
     } else if (paymentIntent.status === 'succeeded') {
-        window.location.href = `checkout`;
+        window.location.href = `receipt?order-id=`+urlParams.get("order-id");
     } else {
         console.log('Payment is not yet confirmed');
     }

@@ -1,6 +1,7 @@
 package j2ee_project.model.order;
 
 import j2ee_project.model.Address;
+import j2ee_project.model.Discount;
 import j2ee_project.model.user.Customer;
 import jakarta.persistence.*;
 
@@ -13,6 +14,7 @@ public class Orders {
     @Id
     @Column(name = "id", nullable = false)
     private int id;
+
     @Basic
     @Column(name = "total", nullable = false)
     private float total;
@@ -23,8 +25,8 @@ public class Orders {
     @Column(name = "orderStatus", nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
-    @OneToMany(mappedBy = "order", fetch=FetchType.EAGER)
-    private Set<CartItem> cartItems;
+    @OneToMany(mappedBy = "order", fetch=FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    private Set<OrderItem> orderItems;
     @ManyToOne
     @JoinColumn(name = "idCustomer", referencedColumnName = "idUser", nullable = false)
     private Customer customer;
@@ -35,13 +37,17 @@ public class Orders {
 
     public Orders() { }
 
-    public Orders(float total, Date date, Set<CartItem> cartItems, Customer customer, Address address) {
+    public Orders(float total, Date date, Customer customer, Address address) {
         this.total = total;
         this.date = date;
-        this.cartItems = cartItems;
+        this.orderItems = null;
         this.customer = customer;
         this.address = address;
         this.orderStatus = OrderStatus.WAITING_PAYMENT;
+    }
+
+    public void setTotal(float total) {
+        this.total = total;
     }
 
     public int getId() {
@@ -54,10 +60,6 @@ public class Orders {
 
     public float getTotal() {
         return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
     }
 
     public Date getDate() {
@@ -100,12 +102,12 @@ public class Orders {
         return result;
     }
 
-    public Set<CartItem> getCartItems() {
-        return cartItems;
+    public Set<OrderItem> getOrderItems() {
+        return orderItems;
     }
 
-    public void setCartItems(Set<CartItem> cartItems) {
-        this.cartItems = cartItems;
+    public void setOrderItems(Set<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 
     public Customer getCustomer() {
@@ -122,5 +124,14 @@ public class Orders {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        String str = "ORDER n°"+id+"\n";
+        for(OrderItem item : getOrderItems()) {
+            str += "- "+item.getProduct().getName()+"   ("+item.getQuantity()+")  price: "+item.getTotal()+"\n";
+        }
+        return str;
     }
 }

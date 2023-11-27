@@ -23,6 +23,7 @@
         <class>j2ee_project.model.loyalty.LoyaltyProgram</class>
         <class>j2ee_project.model.catalog.FeaturedProduct</class>
         <class>j2ee_project.model.user.Permission</class>
+        <class>j2ee_project.model.order.OrderItem</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
             <property name="jakarta.persistence.jdbc.url"    value="jdbc:mysql://db:3306/j2ee_project_db" />

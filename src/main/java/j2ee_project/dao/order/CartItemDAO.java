@@ -86,22 +86,4 @@ public class CartItemDAO {
 
         return id;
 	}
-
-    public static void setOrder(Cart cart, int id) {
-        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
-
-        try {
-            transaction.begin();
-            Cart cartDBObj = entityManager.find(Cart.class,cart.getId());
-            Orders orderDBObj = entityManager.find(Orders.class, id);
-
-            for (CartItem item : cartDBObj.getCartItems()) {
-                item.setOrder(orderDBObj);
-            }
-            transaction.commit();
-        } finally {
-            entityManager.close();
-        }
-    }
 }

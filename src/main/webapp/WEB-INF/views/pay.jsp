@@ -1,7 +1,8 @@
-<%@ page import="j2ee_project.model.order.Orders" %>
-<%@ page import="j2ee_project.dao.order.OrdersDAO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="cf" uri="/WEB-INF/functions.tld"%>
+<%@ page import="j2ee_project.dao.order.OrdersDAO"%>
+<%@ page import="j2ee_project.model.order.Orders"%>
+
 <%--
   Created by IntelliJ IDEA.
   User: robin
@@ -30,7 +31,7 @@
         }
         Orders order = OrdersDAO.getOrder(orderIdStr);
 
-        if(order == null || order.getCartItems() == null || order.getCartItems().isEmpty()) {
+        if(order == null || order.getOrderItems() == null || order.getOrderItems().isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST,"The order associated to order-id is invalid or empty");
         }
     %>
@@ -44,7 +45,7 @@
     <div>
         <h5>Order:</h5>
         <ul class="list-group">
-            <c:forEach items="${order.getCartItems()}" var="item">
+            <c:forEach items="${order.getOrderItems()}" var="item">
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     ${item.getProduct().getName()}
                     <span class="badge bg-primary rounded-pill">${item.getQuantity()}</span>

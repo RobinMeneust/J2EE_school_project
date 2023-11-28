@@ -5,11 +5,14 @@ import j2ee_project.dao.user.PermissionDAO;
 import j2ee_project.model.user.Moderator;
 import j2ee_project.model.user.Permission;
 import j2ee_project.model.user.TypePermission;
+import j2ee_project.service.HashService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 @WebServlet("/add-moderator")
 public class AddModeratorController extends HttpServlet {
@@ -30,7 +33,12 @@ public class AddModeratorController extends HttpServlet {
 
         moderator.setLastName(request.getParameter("last-name"));
         moderator.setFirstName(request.getParameter("first-name"));
-        moderator.setPassword(request.getParameter("password"));
+        String password = request.getParameter("password");
+        try {
+            moderator.setPassword(HashService.generatePasswordHash(password));
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            throw new RuntimeException(e);
+        }
 
         for (String permissionStr : request.getParameterValues("permissions")){
             TypePermission permission = TypePermission.values()[Integer.parseInt(permissionStr)];

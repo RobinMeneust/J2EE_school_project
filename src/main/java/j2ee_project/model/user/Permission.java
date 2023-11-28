@@ -29,9 +29,7 @@ public class Permission {
         this.permission = permission;
     }
 
-    public Permission(){
-
-    }
+    public Permission(){}
 
     public Permission(TypePermission permission){
         this.permission = permission;

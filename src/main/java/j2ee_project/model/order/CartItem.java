@@ -15,9 +15,7 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "idProduct", referencedColumnName = "id", nullable = false)
     private Product product;
-    @ManyToOne
-    @JoinColumn(name = "idOrder", referencedColumnName = "id", nullable = true)
-    private Orders order;
+
     @ManyToOne
     @JoinColumn(name = "idCart", referencedColumnName = "id", nullable = true)
     private Cart cart;
@@ -49,7 +47,6 @@ public class CartItem {
         if (!product.equals(cartItem.product)) return false;
         if(!(quantity == cartItem.getQuantity())) return false;
         if(!cart.equals(cartItem.getCart())) return false;
-        if(!order.equals(cartItem.getOrder())) return false;
 
         return true;
     }
@@ -72,14 +69,6 @@ public class CartItem {
     @Override
     public String toString() {
         return getProduct().toString() + " Qty: " + getQuantity();
-    }
-
-    public Orders getOrder() {
-        return order;
-    }
-
-    public void setOrder(Orders order) {
-        this.order = order;
     }
 
     public Cart getCart() {

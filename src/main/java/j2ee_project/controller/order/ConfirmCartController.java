@@ -2,14 +2,16 @@ package j2ee_project.controller.order;
 
 import j2ee_project.dao.AddressDAO;
 import j2ee_project.dao.discount.DiscountDAO;
+import j2ee_project.dao.order.CartItemDAO;
+import j2ee_project.dao.order.OrderItemsDAO;
 import j2ee_project.dao.order.OrdersDAO;
 import j2ee_project.model.Address;
 import j2ee_project.model.Discount;
 import j2ee_project.model.order.Cart;
 import j2ee_project.model.order.CartItem;
+import j2ee_project.model.order.OrderItem;
 import j2ee_project.model.order.Orders;
 import j2ee_project.service.CartManager;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -84,8 +86,10 @@ public class ConfirmCartController extends HttpServlet {
 
         deliveryAddress = AddressDAO.addAddressIfNotExists(deliveryAddress);
 
-        Orders newOrder = new Orders(cart.getTotal(), new Date(Calendar.getInstance().getTimeInMillis()), cartItems, customer, deliveryAddress);
+        Orders newOrder = new Orders(cart.getTotal(), new Date(Calendar.getInstance().getTimeInMillis()), customer, deliveryAddress);
         OrdersDAO.addOrder(newOrder);
+        OrderItemsDAO.addFromCart(cart, newOrder);
+
         response.sendRedirect("pay?order-id="+newOrder.getId());
     }
 }

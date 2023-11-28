@@ -30,7 +30,8 @@
 
 <c:set var="product" value="<%=product%>"/>
 <c:set var="discountPercentage" value="<%=discountPercentage%>"/>
-<c:set var="cart" value="${cf:getCart(sessionCart,null)}"/> <%-- change 'null' to a function to get the authenticated customer --%>
+<c:set var="customer" value="${cf:getCustomer(user)}"/>
+<c:set var="cart" value="${cf:getCart(sessionCart,customer)}"/>
 
 
 <div class="container mt-1 px-2 pb-5 mb-5">
@@ -55,18 +56,18 @@
             <div class="p-2 mb-auto">
                 <c:choose>
                     <c:when test="${discountPercentage != null && discountPercentage > 0}">
-                        <span class="text-secondary text-decoration-line-through">$<c:out value="${product.getUnitPrice()}"/></span> <span class="text-success"><c:out value="(-${discountPercentage} %)"/></span>
-                        <h6 class="display-6">$<c:out value="${product.getUnitPrice()*(1-(discountPercentage/100))}"/></h6>
+                        <span class="text-secondary text-decoration-line-through"><c:out value="${product.getUnitPrice()} €"/></span> <span class="text-success"><c:out value="(-${discountPercentage} %)"/></span>
+                        <h6 class="display-6"><c:out value="${product.getUnitPrice()*(1-(discountPercentage/100))} €"/></h6>
                     </c:when>
                     <c:otherwise>
-                        <h6 class="display-6">$<c:out value="${product.getUnitPrice()}"/></h6>
+                        <h6 class="display-6"><c:out value="${product.getUnitPrice()} €"/></h6>
                     </c:otherwise>
                 </c:choose>
             </div>
             <div class="p-2 mb-auto w-100">
                 <div class="row">
                     <div class="col text-start"><span class="material-symbols-outlined">local_shipping</span> <span>Home delivery</span></div>
-                    <div class="col text-end">$5.00 Shipping</div>
+                    <div class="col text-end">5.00 € Shipping</div>
                 </div>
             </div>
             <c:choose>

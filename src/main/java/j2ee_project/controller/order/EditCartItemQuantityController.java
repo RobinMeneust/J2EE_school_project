@@ -1,9 +1,13 @@
 package j2ee_project.controller.order;
 
+import j2ee_project.dao.order.CartDAO;
 import j2ee_project.dao.order.CartItemDAO;
+import j2ee_project.dao.user.CustomerDAO;
+import j2ee_project.dao.user.UserDAO;
 import j2ee_project.model.order.Cart;
 import j2ee_project.model.order.CartItem;
 import j2ee_project.model.user.Customer;
+import j2ee_project.model.user.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -34,6 +38,7 @@ public class EditCartItemQuantityController extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        // Get params
         String idStr = request.getParameter("id");
 		String quantityStr = request.getParameter("quantity");
 
@@ -57,41 +62,47 @@ public class EditCartItemQuantityController extends HttpServlet {
 		}
 
         HttpSession session = request.getSession();
+
+        // Get customer
+
         Object obj = session.getAttribute("user");
         Customer customer = null;
         if(obj instanceof Customer) {
             customer = (Customer) obj;
         }
+
+        // Get cart
+
         Cart cart;
 
         if(customer == null) {
             cart = CartManager.getSessionCart(session);
-        } else {
-            cart = customer.getCart();
-        }
+            Set<CartItem> cartItems = cart.getCartItems();
 
-        Set<CartItem> cartItems = cart.getCartItems();
+            if(cartItems == null) {
+                cartItems = new HashSet<>();
+                cart.setCartItems(cartItems);
+            }
 
-        if(cartItems == null) {
-            cartItems = new HashSet<>();
-            cart.setCartItems(cartItems);
-        }
 
-        Iterator<CartItem> it = cartItems.iterator();
-        while(it.hasNext()) {
-            CartItem item = it.next();
-            if(item.getId() == id) {
-                if(customer == null) {
+            Iterator<CartItem> it = cartItems.iterator();
+
+            while(it.hasNext()) {
+                CartItem item = it.next();
+                if(item.getId() == id) {
                     if(quantity<=0) {
                         it.remove();
                     } else {
                         item.setQuantity(quantity);
                     }
-                } else {
-                    CartItemDAO.editItemQuantity(item, quantity);
+                    break;
                 }
-                break;
             }
+        } else {
+            CartItemDAO.editItemQuantity(customer, id, quantity);
+            // Refresh the user cart
+            customer.setCart(CartDAO.getCartFromCustomerId(customer.getId()));
+            session.setAttribute("user", customer);
         }
 
         response.sendRedirect("cart");

@@ -135,11 +135,20 @@ CREATE TABLE IF NOT EXISTS CartItem (
     quantity INT NOT NULL,
     idCart INT,
     idProduct INT NOT NULL,
-    idOrder INT,
     FOREIGN KEY (idCart) REFERENCES Cart(id),
     FOREIGN KEY (idProduct) REFERENCES Product(id),
+    CONSTRAINT valid_quantity_cart_item CHECK(quantity >= 0)
+);
+
+CREATE TABLE IF NOT EXISTS OrderItem (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    quantity INT NOT NULL,
+    idOrder INT,
+    idProduct INT NOT NULL,
+    total FLOAT NOT NULL, -- Price with discounts and considering the quantity (exact payed price)
     FOREIGN KEY (idOrder) REFERENCES Orders(id),
-    CONSTRAINT valid_quantity CHECK(quantity >= 0)
+    FOREIGN KEY (idProduct) REFERENCES Product(id),
+    CONSTRAINT valid_quantity_order CHECK(quantity >= 0)
 );
 
 CREATE TABLE IF NOT EXISTS Mail (
@@ -269,7 +278,7 @@ INSERT INTO Mail(fromAddress, toAddress, subject, body, date) VALUES('example@ex
 
 
 INSERT INTO Orders(total, date, orderStatus, idCustomer, idAddress) VALUES(30, STR_TO_DATE('30/10/2023', '%d/%m/%Y'), 'SHIPPED', 2, 1);
-INSERT INTO CartItem(quantity, idOrder, idProduct) VALUES(2,1,1);
+INSERT INTO OrderItem(quantity, idOrder, idProduct,total) VALUES(2,1,1,2);
 
 INSERT INTO FeaturedProduct(idProduct) VALUES(1);
 INSERT INTO FeaturedProduct(idProduct) VALUES(2);

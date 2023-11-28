@@ -87,4 +87,15 @@ public class UserDAO {
         return  user;
     }
 
+	public static Object getUser(int id) {
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        User user = entityManager.find(User.class,id);
+
+        transaction.commit();
+        entityManager.close();
+        return user;
+	}
 }

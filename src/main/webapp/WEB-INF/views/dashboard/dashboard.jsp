@@ -21,20 +21,28 @@
         });
     </script>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard/dashboard.css">
+    <script>
+        function confirmDelete(type, id) {
+            let confirmation = confirm("Are you sure you want to delete this one?");
+            if (confirmation) {
+                window.location.href = "delete-" + type + "?id=" + id;
+            }
+        }
+    </script>
 </head>
 <body>
     <jsp:include page="../../../layout/header.jsp" />
     <c:set var="tab" value="${param.tab}"/>
-    <c:set var="moderator" value="${cf:getModerator(sessionScope.user)}"/>
+    <c:set var="user" value="${cf:getModerator(sessionScope.user)}"/>
     <div class="container-fluid p-0">
         <div class="d-flex">
             <div class="div-tabs mt-4">
                 <div class="nav nav-pills d-flex flex-column align-items-stretch" id="pills-tab" role="tablist" aria-orientation="vertical">
-                    <c:if test="${moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CUSTOMER)) || moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_MODERATOR))}">
+                    <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CUSTOMER)) || user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_MODERATOR))}">
                         <div>
                             <span class="field-title">Users</span>
                             <hr>
-                            <c:if test="${moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CUSTOMER))}">
+                            <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CUSTOMER))}">
                                 <span class="d-flex justify-content-between flex-row">
                                     <button onclick="changeURLParameter('customers')"
                                         class="nav-link
@@ -57,7 +65,7 @@
                                 </button>
                             </span>
                             </c:if>
-                            <c:if test="${moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_MODERATOR))}">
+                            <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_MODERATOR))}">
                                 <span class="d-flex justify-content-between flex-row">
                                     <button onclick="changeURLParameter('moderators')"
                                         class="nav-link
@@ -82,11 +90,11 @@
                             </c:if>
                         </div>
                     </c:if>
-                    <c:if test="${moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_PRODUCT)) || moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CATEGORY))}">
+                    <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_PRODUCT)) || user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CATEGORY))}">
                         <div class="mt-5">
                             <span class="field-title">Catalogue</span>
                             <hr>
-                            <c:if test="${moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_PRODUCT))}">
+                            <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_PRODUCT))}">
                                 <span class="d-flex justify-content-between flex-row">
                                     <button onclick="changeURLParameter('products')"
                                         class="nav-link
@@ -109,7 +117,7 @@
                                     </button>
                                 </span>
                             </c:if>
-                            <c:if test="${moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CATEGORY))}">
+                            <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CATEGORY))}">
                                 <span class="d-flex justify-content-between flex-row">
                                     <button onclick="changeURLParameter('categories')"
                                         class="nav-link
@@ -136,11 +144,11 @@
                             </c:if>
                         </div>
                     </c:if>
-                    <c:if test="${moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_DISCOUNT)) || moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_LOYALTY))}">
+                    <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_DISCOUNT)) || user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_LOYALTY))}">
                         <div class="mt-5">
                             <span class="field-title">Offers</span>
                             <hr>
-                            <c:if test="${moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_DISCOUNT))}">
+                            <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_DISCOUNT))}">
                                 <span class="d-flex justify-content-between flex-row">
                                     <button onclick="changeURLParameter('discounts')"
                                         class="nav-link
@@ -165,7 +173,7 @@
                                     </button>
                                 </span>
                             </c:if>
-                            <c:if test="${moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_LOYALTY))}">
+                            <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_LOYALTY))}">
                                 <span class="d-flex justify-content-between flex-row">
                                     <button onclick="changeURLParameter('loyalty-program')"
                                         class="nav-link
@@ -195,7 +203,7 @@
                 </div>
             </div>
             <div class="tab-content me-3 ms-3" id="pills-tabContent">
-                <c:if test="${moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CUSTOMER))}">
+                <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CUSTOMER))}">
                     <div class="tab-pane fade
                                 <c:if test="${tab=='customers'}">
                                     <c:out value="show"/>
@@ -240,9 +248,9 @@
                                             </a>
                                         </td>
                                         <td class="text-center col-1">
-                                            <a href="delete-customer?id=${customer.id}">
-                                                <button class="btn rounded"><span class="material-symbols-outlined">delete</span></button>
-                                            </a>
+                                            <button onclick="confirmDelete('customer', ${customer.id})" class="btn rounded">
+                                                <span class="material-symbols-outlined">delete</span>
+                                            </button>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -250,7 +258,7 @@
                     </table>
                     </div>
                 </c:if>
-                <c:if test="${moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_MODERATOR))}">
+                <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_MODERATOR))}">
                     <div class="tab-pane fade
                                     <c:if test="${tab=='moderators'}">
                                         <c:out value="show"/>
@@ -299,9 +307,9 @@
                                         </a>
                                     </td>
                                     <td class="text-center col-1">
-                                        <a href="delete-moderator?id=${moderator.id}">
-                                            <button class="btn rounded"><span class="material-symbols-outlined">delete</span></button>
-                                        </a>
+                                        <button onclick="confirmDelete('moderator', ${moderator.id})" class="btn rounded">
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -309,7 +317,7 @@
                         </table>
                     </div>
                 </c:if>
-                <c:if test="${moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_PRODUCT))}">
+                <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_PRODUCT))}">
                     <div class="tab-pane fade
                                     <c:if test="${tab=='products'}">
                                         <c:out value="show"/>
@@ -357,9 +365,9 @@
                                             </a>
                                         </td>
                                         <td class="text-center col-1">
-                                            <a href="delete-product?id=${product.id}">
-                                                <button class="btn rounded"><span class="material-symbols-outlined">delete</span></button>
-                                            </a>
+                                            <button onclick="confirmDelete('product', ${product.id})" class="btn rounded">
+                                                <span class="material-symbols-outlined">delete</span>
+                                            </button>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -367,7 +375,7 @@
                         </table>
                     </div>
                 </c:if>
-                <c:if test="${moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CATEGORY))}">
+                <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CATEGORY))}">
                     <div class="tab-pane fade
                                     <c:if test="${tab=='categories'}">
                                         <c:out value="show"/>
@@ -406,9 +414,9 @@
                                         </a>
                                     </td>
                                     <td class="text-center col-1">
-                                        <a href="delete-category?id=${category.id}">
-                                            <button class="btn rounded"><span class="material-symbols-outlined">delete</span></button>
-                                        </a>
+                                        <button onclick="confirmDelete('category', ${category.id})" class="btn rounded">
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -416,7 +424,7 @@
                         </table>
                     </div>
                 </c:if>
-                <c:if test="${moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_DISCOUNT))}">
+                <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_DISCOUNT))}">
                     <div class="tab-pane fade
                                     <c:if test="${tab=='discounts'}">
                                         <c:out value="show"/>
@@ -453,9 +461,9 @@
                                         </a>
                                     </td>
                                     <td class="text-center col-1">
-                                        <a href="delete-discount?id=${discount.id}">
-                                            <button class="btn rounded"><span class="material-symbols-outlined">delete</span></button>
-                                        </a>
+                                        <button onclick="confirmDelete('discount', ${discount.id})" class="btn rounded">
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -463,7 +471,7 @@
                         </table>
                     </div>
                 </c:if>
-                <c:if test="${moderator.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_LOYALTY))}">
+                <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_LOYALTY))}">
                     <div class="tab-pane fade
                                     <c:if test="${tab=='loyalty-program'}">
                                         <c:out value="show"/>

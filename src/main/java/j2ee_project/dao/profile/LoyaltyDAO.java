@@ -21,7 +21,10 @@ public class LoyaltyDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        LoyaltyAccount loyaltyAccount = entityManager.createQuery("FROM LoyaltyAccount WHERE id=:loyaltyAccountId", LoyaltyAccount.class).setParameter("loyaltyAccountId", loyaltyAccountId).getSingleResult();
+        LoyaltyAccount loyaltyAccount = null;
+        try {
+            loyaltyAccount = entityManager.createQuery("FROM LoyaltyAccount WHERE id=:loyaltyAccountId", LoyaltyAccount.class).setParameter("loyaltyAccountId", loyaltyAccountId).getSingleResult();
+        } catch (Exception ignore) {}
 
         transaction.commit();
         entityManager.close();
@@ -50,7 +53,10 @@ public class LoyaltyDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        LoyaltyLevel loyaltyLevel = entityManager.createQuery("FROM LoyaltyLevel WHERE id=:idLoyaltyLevel", LoyaltyLevel.class).setParameter("idLoyaltyLevel",idLoyaltyLevel).getSingleResult();
+        LoyaltyLevel loyaltyLevel = null;
+        try {
+            loyaltyLevel = entityManager.createQuery("FROM LoyaltyLevel WHERE id=:idLoyaltyLevel", LoyaltyLevel.class).setParameter("idLoyaltyLevel",idLoyaltyLevel).getSingleResult();
+        } catch (Exception ignore) {}
 
         transaction.commit();
         entityManager.close();

@@ -157,6 +157,9 @@
                         </p>
                         <p class="card-text text-success mb-1 mt-1">
                             <c:choose>
+                                <c:when test="${product.getStockQuantity()==0}">
+                                    <button class="btn btn-danger" disabled>Out of stock</button>
+                                </c:when>
                                 <c:when test="${cart != null && cart.getCartItems() != null && cart.containsProduct(product.getId())}">
                                     <button class="btn btn-success" disabled>Already in cart</button>
                                 </c:when>

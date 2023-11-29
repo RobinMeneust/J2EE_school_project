@@ -55,10 +55,13 @@ public class UserDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        int countEmail = entityManager.createQuery("SELECT COUNT(*) FROM User WHERE email=:email OR phoneNumber=:phoneNumber", Integer.class)
-                .setParameter("email", email)
-                .setParameter("phoneNumber", phoneNumber)
-                .getSingleResult();
+        int countEmail = 0;
+        try {
+            countEmail = entityManager.createQuery("SELECT COUNT(*) FROM User WHERE email=:email OR phoneNumber=:phoneNumber", Integer.class)
+                    .setParameter("email", email)
+                    .setParameter("phoneNumber", phoneNumber)
+                    .getSingleResult();
+        } catch (Exception ignore) {}
 
         transaction.commit();
         entityManager.close();
@@ -77,10 +80,12 @@ public class UserDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        User user;
-        user = entityManager.createQuery("FROM User WHERE email=:email", User.class)
-                .setParameter("email", email)
-                .getSingleResult();
+        User user = null;
+        try {
+            user = entityManager.createQuery("FROM User WHERE email=:email", User.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+        } catch (Exception ignore) {}
 
         transaction.commit();
         entityManager.close();

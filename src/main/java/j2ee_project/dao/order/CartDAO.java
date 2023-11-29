@@ -103,8 +103,10 @@ public class CartDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Cart cart = entityManager.createQuery("FROM Cart WHERE customer.id = :customerId",Cart.class).setParameter("customerId",id).getSingleResult();
-
+        Cart cart = null;
+        try {
+            cart = entityManager.createQuery("FROM Cart WHERE customer.id = :customerId", Cart.class).setParameter("customerId", id).getSingleResult();
+        } catch (Exception ignore) {}
         transaction.commit();
         entityManager.close();
         return cart;

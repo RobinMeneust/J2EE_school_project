@@ -35,7 +35,11 @@ public class MailDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Mail mail = entityManager.createQuery("FROM Mail WHERE id = :mailId", j2ee_project.model.Mail.class).getSingleResult();
+        Mail mail = null;
+
+        try {
+            mail = entityManager.createQuery("FROM Mail WHERE id = :mailId", j2ee_project.model.Mail.class).getSingleResult();
+        } catch (Exception ignore) {}
 
         if(mail != null) {
             entityManager.remove(mail);

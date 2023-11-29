@@ -67,6 +67,14 @@ public class AddToCartController extends HttpServlet {
 
         cart = CartManager.getCart(session, customer);
 
+        if(cart == null) {
+            // We need to create a new cart
+            cart = new Cart();
+            cart.setCustomer(customer);
+
+            CartDAO.addCart(cart);
+        }
+
         Set<CartItem> cartItems = cart.getCartItems();
 
         if(cartItems == null) {

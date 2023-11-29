@@ -14,7 +14,7 @@
     <h1 class="display-1 mb-3">Your Receipt</h1>
     <c:choose>
         <c:when test="${order != null && order.getOrderItems() != null && !order.getOrderItems().isEmpty()}">
-            <table>
+            <table class="table table-striped">
                 <tr>
                     <th>Name</th>
                     <th>Quantity</th>

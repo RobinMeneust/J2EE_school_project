@@ -39,7 +39,7 @@ public class LoyaltyDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        List<LoyaltyLevel> loyaltyLevels = entityManager.createQuery("FROM LoyaltyLevel", LoyaltyLevel.class).getResultList();
+        List<LoyaltyLevel> loyaltyLevels = entityManager.createQuery("FROM LoyaltyLevel ORDER BY requiredPoints", LoyaltyLevel.class).getResultList();
 
         transaction.commit();
         entityManager.close();

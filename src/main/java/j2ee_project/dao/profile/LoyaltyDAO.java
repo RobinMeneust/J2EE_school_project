@@ -5,7 +5,6 @@ import j2ee_project.model.loyalty.LoyaltyAccount;
 import j2ee_project.model.loyalty.LoyaltyLevel;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import org.hibernate.Session;
 
 import java.util.List;
 
@@ -64,6 +63,7 @@ public class LoyaltyDAO {
     }
 
     public static void createLevelUsed(int idLoyaltyAccount, int idLoyaltyLevel){
+        System.out.println("create level usd entered");
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
@@ -72,8 +72,9 @@ public class LoyaltyDAO {
         LoyaltyAccount loyaltyAccount = getLoyaltyAccount(idLoyaltyAccount);
         loyaltyAccount.addLoyaltyLevelUsed(loyaltyLevelUsed);
 
+        entityManager.merge(loyaltyAccount);
+        
         transaction.commit();
         entityManager.close();
     }
-
 }

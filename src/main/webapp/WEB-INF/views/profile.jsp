@@ -79,8 +79,9 @@
 <jsp:include page="../../layout/header.jsp" />
 
 <%
-    Customer customer = AuthService.getCustomer((User) session.getAttribute("user"));
-    //Customer customer = (Customer) request.getAttribute("customer");
+    //Customer customer = AuthService.getCustomer((User) session.getAttribute("user"));
+    Customer customer = (Customer) request.getAttribute("customer");
+    customer.getLoyaltyAccount().getLoyaltyProgram().getLoyaltyLevels();
     LoyaltyAccount loyaltyAccount = customer.getLoyaltyAccount();
             //(LoyaltyAccount) request.getAttribute("loyaltyAccount");
     List<LoyaltyLevel> loyaltyLevels = (List<LoyaltyLevel>) request.getAttribute("loyaltyLevels");

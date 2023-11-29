@@ -30,8 +30,8 @@ public class LoyaltyRedeemController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String customerIdStr = request.getParameter("customerId");
         String loyaltyAccountIdStr = request.getParameter("loyaltyAccountId");
-        int customerId = 1;
-        int loyaltyAccountId = 1;
+        int customerId = 0;
+        int loyaltyAccountId = 0;
 
         if (customerIdStr != null && !customerIdStr.trim().isEmpty()) {
             try {
@@ -46,6 +46,7 @@ public class LoyaltyRedeemController extends HttpServlet {
             } catch (Exception ignore) {
             }
         }
+        System.out.println("customerId : "+customerId+" LoyaltyAccountId : "+ loyaltyAccountId);
 
         if (loyaltyAccountIdStr == null || loyaltyAccountIdStr.trim().isEmpty()){
             try {
@@ -94,8 +95,8 @@ public class LoyaltyRedeemController extends HttpServlet {
         String loyaltyAccountIdStr = request.getParameter("loyaltyAccountId");
         String loyaltyLevelIdStr = request.getParameter("loyaltyLevelId");
 
-        int loyaltyAccountId = 1;
-        int loyaltyLevelId = 1;
+        int loyaltyAccountId = 0;
+        int loyaltyLevelId = 0;
 
         if(loyaltyAccountIdStr != null && !loyaltyAccountIdStr.trim().isEmpty()) {
             try {
@@ -109,7 +110,11 @@ public class LoyaltyRedeemController extends HttpServlet {
             } catch(Exception ignore) {}
         }
 
+        System.out.println("loyaltyLevelId : "+loyaltyLevelId+" LoyaltyAccountId : "+ loyaltyAccountId);
+
+
         try{
+            System.out.println("try");
             LoyaltyDAO.createLevelUsed(loyaltyAccountId,loyaltyLevelId);
             doGet(request,response);
         }catch (Exception err) {

@@ -136,7 +136,7 @@ public class Orders {
     }
 
     private void loadItemsFromCart(Cart cart) {
-        this.setOrderItems(HashSet.newHashSet(0));
+        this.setOrderItems(new HashSet<>());
         if(cart == null || cart.getCartItems() == null) {
             return;
         }

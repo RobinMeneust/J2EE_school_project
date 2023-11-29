@@ -1,5 +1,8 @@
 package j2ee_project.controller.order;
 
+import j2ee_project.dao.order.OrdersDAO;
+import j2ee_project.model.order.OrderStatus;
+import j2ee_project.model.order.Orders;
 import j2ee_project.model.user.Customer;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -28,6 +31,18 @@ public class GetPayPageController extends HttpServlet
         }
 
         //TODO: Check if the given order id (order-id) is in the state WAITING_PAYMENT
+        String orderId = request.getParameter("order-id");
+        Orders order = OrdersDAO.getOrder(orderId);
+
+        if(order == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No order is associated to this ID");
+            return;
+        }
+
+        if(order.getOrderStatus() != OrderStatus.WAITING_PAYMENT) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You have already paid for this order");
+            return;
+        }
 
         try {
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/pay.jsp");

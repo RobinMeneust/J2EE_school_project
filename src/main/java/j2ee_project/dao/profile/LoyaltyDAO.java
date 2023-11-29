@@ -68,8 +68,8 @@ public class LoyaltyDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        LoyaltyLevel loyaltyLevelUsed = getLoyaltyLevel(idLoyaltyLevel);
-        LoyaltyAccount loyaltyAccount = getLoyaltyAccount(idLoyaltyAccount);
+        LoyaltyLevel loyaltyLevelUsed = entityManager.find(LoyaltyLevel.class, idLoyaltyLevel);
+        LoyaltyAccount loyaltyAccount = entityManager.find(LoyaltyAccount.class, idLoyaltyAccount);
         loyaltyAccount.addLoyaltyLevelUsed(loyaltyLevelUsed);
 
         transaction.commit();

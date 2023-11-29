@@ -19,7 +19,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
@@ -41,14 +43,14 @@ public class AddLoyaltyLevelDiscountToCart extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        response.setContentType("application/json");
-        String idStr = request.getParameter("id");
+        BufferedReader reader = request.getReader();
+        JSONTokener tokener = new JSONTokener(reader);
+        JSONObject paramsObject = new JSONObject(tokener);
+
         int id = -1;
-        if(idStr != null && !idStr.trim().isEmpty()) {
-            try {
-                id = Integer.parseInt(idStr);
-            } catch(Exception ignore) {}
-        }
+        try {
+            id = paramsObject.getInt("id");
+        } catch (Exception ignore) {}
 
         LoyaltyLevel loyaltyLevel = LoyaltyLevelDAO.getLoyaltyLevel(id);
 
@@ -85,6 +87,10 @@ public class AddLoyaltyLevelDiscountToCart extends HttpServlet {
         }
 
         CartDAO.setDiscount(cart.getId(), loyaltyLevel.getDiscount());
+
+        // Refresh the user's cart
+        customer.setCart(CartDAO.getCartFromCustomerId(customer.getId()));
+        session.setAttribute("user", customer);
 
         response.setStatus(HttpServletResponse.SC_OK);
     }

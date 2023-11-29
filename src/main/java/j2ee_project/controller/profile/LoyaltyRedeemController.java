@@ -30,8 +30,8 @@ public class LoyaltyRedeemController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String customerIdStr = request.getParameter("customerId");
         String loyaltyAccountIdStr = request.getParameter("loyaltyAccountId");
-        int customerId = 1;
-        int loyaltyAccountId = 1;
+        int customerId = -1;
+        int loyaltyAccountId = -1;
 
         if (customerIdStr != null && !customerIdStr.trim().isEmpty()) {
             try {
@@ -94,8 +94,8 @@ public class LoyaltyRedeemController extends HttpServlet {
         String loyaltyAccountIdStr = request.getParameter("loyaltyAccountId");
         String loyaltyLevelIdStr = request.getParameter("loyaltyLevelId");
 
-        int loyaltyAccountId = 1;
-        int loyaltyLevelId = 1;
+        int loyaltyAccountId = -1;
+        int loyaltyLevelId = -1;
 
         if(loyaltyAccountIdStr != null && !loyaltyAccountIdStr.trim().isEmpty()) {
             try {

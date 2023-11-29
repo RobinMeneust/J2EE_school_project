@@ -30,7 +30,6 @@ public class GetPayPageController extends HttpServlet
             response.sendRedirect("login");
         }
 
-        //TODO: Check if the given order id (order-id) is in the state WAITING_PAYMENT
         String orderId = request.getParameter("order-id");
         Orders order = OrdersDAO.getOrder(orderId);
 

@@ -160,7 +160,7 @@
                                             <div class="row py-2 w-100">
                                                 <c:set var="totalWithLoyaltyDiscount" value="${total - (total*(cart.getDiscount().getDiscountPercentage()/100))}"/>
                                                 <div class="col text-start"><span>Discount</span></div>
-                                                <div class="col text-end">- <fmt:formatNumber type = "number" maxFractionDigits  = "2" value = "${total*(cart.getDiscount().getDiscountPercentage()/100)}"/> €</div>
+                                                <div class="col text-end text-success">- <c:out value="${cart.getDiscount().getDiscountPercentage()}"/> %</div>
                                             </div>
                                             <hr class="w-100"/>
                                         </c:if>
@@ -194,14 +194,13 @@
 
 <script>
     async function selectLoyaltyLevel() {
-        console.log("event");
         let selectedLoyaltyLevelId = $("#loyalty-level-id").find(":selected").val();
         if(selectedLoyaltyLevelId != null) {
-            await fetch("/cart/loyalty-level-discount", {
+            await fetch("cart/loyalty-level-discount", {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({"id":selectedLoyaltyLevelId}),
+                body: JSON.stringify({"id":parseInt(selectedLoyaltyLevelId)}),
                 method: "POST",
             }).catch((e) => {
                console.error(e);

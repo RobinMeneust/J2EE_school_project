@@ -167,6 +167,23 @@ CREATE TABLE IF NOT EXISTS ModeratorPermission (
     PRIMARY KEY(idModerator, idPermission)
 );
 
+SET GLOBAL event_scheduler = ON;
+
+CREATE TABLE IF NOT EXISTS ForgottenPassword(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    idUser INT NOT NULL,
+    token VARCHAR(50) NOT NULL,
+    expiryDate DATE NOT NULL,
+    FOREIGN KEY (idUser) REFERENCES User(id)
+);
+
+CREATE EVENT cleaningForgottenPassword
+    ON SCHEDULE
+        EVERY 1 MINUTE ENABLE
+    DO
+        DELETE FROM ForgottenPassword f
+        WHERE f.expiryDate < CURRENT_DATE;
+
 INSERT INTO LoyaltyProgram(durationNbDays) VALUES(365);
 
 INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Loyalty level reward', STR_TO_DATE('28/10/2023', '%d/%m/%Y'), STR_TO_DATE('28/12/2023', '%d/%m/%Y'), 10); -- This type of discount will be created only when it's claimed and will be filled with the current date to the current date + N days

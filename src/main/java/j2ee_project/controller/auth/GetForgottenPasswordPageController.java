@@ -1,21 +1,24 @@
 package j2ee_project.controller.auth;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
 /**
- * This class is a servlet used to get the register page. It's a controller in the MVC architecture of this project.
+ * This class is a servlet used to get the forgotten password page. It's a controller in the MVC architecture of this project.
  *
  * @author Lucas VELAY
  */
-@WebServlet(value = "/register")
-public class getRegisterPageController extends HttpServlet {
+@WebServlet(value = "/forgotten-password")
+public class GetForgottenPasswordPageController extends HttpServlet {
 
     /**
-     * Get a page to register on the website
+     * Get page to ask to change password on the website
      * @param request Request object received by the servlet
      * @param response Response to be sent
      * @throws ServletException If the request for the GET could not be handled
@@ -25,7 +28,7 @@ public class getRegisterPageController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         try {
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/register.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/forgottenPassword.jsp");
             view.forward(request, response);
         } catch(Exception err) {
             // The forward didn't work
@@ -33,4 +36,5 @@ public class getRegisterPageController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
+
 }

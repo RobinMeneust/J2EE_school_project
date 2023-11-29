@@ -2,6 +2,7 @@ package j2ee_project.dao.user;
 
 import j2ee_project.dao.HibernateUtil;
 import j2ee_project.model.user.User;
+import jakarta.persistence.NoResultException;
 import org.hibernate.Session;
 
 /**
@@ -38,6 +39,19 @@ public class UserDAO {
     }
 
     /**
+     * Update a user in the database
+     *
+     * @param user the user to add
+     */
+    public static void updateUser(User user){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.update(user);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    /**
      * Check if an email and a phone number are in the database
      *
      * @param email the email to check
@@ -55,6 +69,23 @@ public class UserDAO {
         return countEmail > 0;
     }
 
+    /**
+     * Check if an email is in the database
+     *
+     * @param email the email to check
+     * @return the boolean indicating the presence of the email
+     */
+    public static boolean emailIsInDb(String email){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        int countEmail = session.createNativeQuery("SELECT COUNT(*) FROM User WHERE email=:email", Integer.class)
+                .setParameter("email", email)
+                .uniqueResult();
+        session.getTransaction().commit();
+        session.close();
+        return countEmail > 0;
+    }
+
 
     /**
      * Get user from the database with his email
@@ -66,9 +97,13 @@ public class UserDAO {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         User user;
-        user = session.createQuery("FROM User WHERE email=:email", User.class)
-                .setParameter("email", email)
-                .getSingleResult();
+        try{
+            user = session.createQuery("FROM User WHERE email=:email", User.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+        }catch (Exception exception){
+            user = null;
+        }
         session.getTransaction().commit();
         session.close();
         return  user;

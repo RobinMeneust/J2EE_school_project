@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Base64;
 
 public class HashService {
 
@@ -115,6 +116,21 @@ public class HashService {
             bytes[i] = (byte)Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
         }
         return bytes;
+    }
+
+    public static String generateToken(int length) {
+        SecureRandom secureRandom;
+        byte[] tokenBytes = new byte[length];
+
+        try {
+            secureRandom = SecureRandom.getInstanceStrong(); // Utilisation d'un algorithme sécurisé
+            secureRandom.nextBytes(tokenBytes); // Remplissage du tableau de bytes avec des données aléatoires
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            // Gérer l'exception comme nécessaire
+        }
+
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);
     }
 
 }

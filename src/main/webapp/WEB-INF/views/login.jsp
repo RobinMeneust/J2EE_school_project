@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Register</title>
+    <title>Login</title>
     <jsp:include page="../../include.jsp"/>
     <script src="${pageContext.request.contextPath}/dependencies/jquery/jquery.validate.min.js"></script>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/auth_pages.css">
@@ -37,6 +37,9 @@
             <div class="invalid-feedback">
                 <c:out value="${requestScope.InputError.password}"/>
             </div>
+        </div>
+        <div>
+            <a href="forgotten-password">Forgotten password</a>
         </div>
         <button id="submitButton" type="submit" class="btn btn-primary">Submit</button>
     </form>

@@ -81,7 +81,9 @@
 <%
     //Customer customer = AuthService.getCustomer((User) session.getAttribute("user"));
     Customer customer = (Customer) request.getAttribute("customer");
-    customer.getLoyaltyAccount().getLoyaltyProgram().getLoyaltyLevels();
+    if(customer == null) {
+        response.sendRedirect("login");
+    }
     LoyaltyAccount loyaltyAccount = customer.getLoyaltyAccount();
             //(LoyaltyAccount) request.getAttribute("loyaltyAccount");
     List<LoyaltyLevel> loyaltyLevels = (List<LoyaltyLevel>) request.getAttribute("loyaltyLevels");
@@ -218,6 +220,29 @@
                                 </div>
                             <%}}%>
                         </div>
+                        <c:if test="${not empty loyaltyAccount.getAvailableDiscounts()}">
+                            <div>
+                                <h6 class="display-6">Available discounts</h6>
+                                <table class="table table-striped">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                        <th>Start date</th>
+                                        <th>End date</th>
+                                    </tr>
+                                    <c:forEach var="discount" items="${loyaltyAccount.getAvailableDiscounts()}">
+                                        <c:if test="${!discount.hasExpired()}">
+                                            <tr>
+                                                <td><c:out value="${discount.getName()}"/></td>
+                                                <td>- <c:out value="${discount.getDiscountPercentage()}"/> %</td>
+                                                <td><c:out value="${discount.getStartDate()}"/></td>
+                                                <td><c:out value="${discount.getEndDate()}"/></td>
+                                            </tr>
+                                        </c:if>
+                                    </c:forEach>
+                                </table>
+                            </div>
+                        </c:if>
                         <script>
                             var currentStep = 1;
                             var updateProgressBar;

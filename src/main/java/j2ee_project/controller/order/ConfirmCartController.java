@@ -3,7 +3,6 @@ package j2ee_project.controller.order;
 import j2ee_project.dao.AddressDAO;
 import j2ee_project.dao.discount.DiscountDAO;
 import j2ee_project.dao.order.CartItemDAO;
-import j2ee_project.dao.order.OrderItemsDAO;
 import j2ee_project.dao.order.OrdersDAO;
 import j2ee_project.model.Address;
 import j2ee_project.model.Discount;
@@ -62,7 +61,7 @@ public class ConfirmCartController extends HttpServlet {
         }
         for(CartItem item : cartItems) {
             if(item.getQuantity() > item.getProduct().getStockQuantity()) {
-                //TODO: Return to the cart page with the new product values
+                //TODO: Return to the cart page and give suggestions to change the ordered quantity to match with the stock quantity
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "the stock quantities has been updated and are lesser than the quantity you ordered");
                 return;
             }

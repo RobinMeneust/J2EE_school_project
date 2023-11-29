@@ -6,6 +6,7 @@ import j2ee_project.dao.order.OrdersDAO;
 import j2ee_project.model.Mail;
 import j2ee_project.model.order.CartItem;
 import j2ee_project.model.order.OrderItem;
+import j2ee_project.model.order.OrderStatus;
 import j2ee_project.model.order.Orders;
 import j2ee_project.model.user.Customer;
 import j2ee_project.service.AuthService;
@@ -32,7 +33,6 @@ public class GetReceiptPageController extends HttpServlet
 {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        //TODO: remove the previous cart here
         HttpSession session = request.getSession();
 
         Object obj = session.getAttribute("user");
@@ -51,8 +51,18 @@ public class GetReceiptPageController extends HttpServlet
             return;
         }
 
+        if(order.getOrderStatus() == OrderStatus.WAITING_PAYMENT) {
+            OrdersDAO.setStatus(order, OrderStatus.PREPARING);
+            CartDAO.removeCart(customer.getCart());
+            sendReceiptMail(customer, order);
+
+            // Refresh the user's cart
+            customer.setCart(null);
+            session.setAttribute("user", customer);
+        }
+
         request.setAttribute("order",order);
-        sendReceiptMail(customer, order);
+
 
         try {
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/receipt.jsp");

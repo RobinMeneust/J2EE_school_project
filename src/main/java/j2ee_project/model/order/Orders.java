@@ -23,7 +23,7 @@ public class Orders {
     @Column(name = "orderStatus", nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
-    @OneToMany(mappedBy = "order", fetch=FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @OneToMany(mappedBy = "order", fetch=FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE})
     private Set<OrderItem> orderItems;
     @ManyToOne
     @JoinColumn(name = "idCustomer", referencedColumnName = "idUser", nullable = false)

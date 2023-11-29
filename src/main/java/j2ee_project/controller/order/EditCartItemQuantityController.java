@@ -100,7 +100,7 @@ public class EditCartItemQuantityController extends HttpServlet {
             }
         } else {
             CartItemDAO.editItemQuantity(customer, id, quantity);
-            // Refresh the user cart
+            // Refresh the user's cart
             customer.setCart(CartDAO.getCartFromCustomerId(customer.getId()));
             session.setAttribute("user", customer);
         }

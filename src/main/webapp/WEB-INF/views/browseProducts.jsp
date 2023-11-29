@@ -186,7 +186,7 @@
                 </li>
             </c:if>
 
-            <c:forEach var="i" begin="${Math.max(1,pageIndex-3)}" end="${Math.min(pageIndex+3 + Math.abs(pageIndex-3 - 1), totalPages)}" step="1">
+            <c:forEach var="i" begin="${Math.max(1,pageIndex-3)}" end="${Math.min(pageIndex+3, totalPages)}" step="1">
                 <c:choose>
                     <c:when test="${i == pageIndex}">
                         <li class="page-item active"><a class="page-link" href="${currentURLWithoutPage}page=<c:out value="${i}"/>"><c:out value="${i}"/></a></li>

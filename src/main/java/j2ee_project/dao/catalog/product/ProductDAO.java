@@ -194,8 +194,10 @@ public class ProductDAO {
 
         Long size = 0L;
         try {
-            query.getSingleResult();
-        } catch (Exception ignore) {}
+            size = query.getSingleResult();
+        } catch (Exception ignore) {
+            System.out.println("NO RESULT");
+        }
 
         transaction.commit();
         entityManager.close();

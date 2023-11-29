@@ -35,7 +35,11 @@ public class CategoryDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Category category = entityManager.createQuery("FROM Category WHERE id=:categoryId",Category.class).setParameter("categoryId",categoryId).getSingleResult();
+        Category category = null;
+
+        try {
+            entityManager.createQuery("FROM Category WHERE id=:categoryId", Category.class).setParameter("categoryId", categoryId).getSingleResult();
+        } catch (Exception ignore) {}
 
         transaction.commit();
         entityManager.close();
@@ -47,8 +51,12 @@ public class CategoryDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Category category = entityManager.createQuery("FROM Category WHERE id=:categoryId",Category.class).setParameter("categoryId",categoryId).getSingleResult();
-        entityManager.remove(category);
+        try {
+            Category category = entityManager.createQuery("FROM Category WHERE id=:categoryId", Category.class).setParameter("categoryId", categoryId).getSingleResult();
+            entityManager.remove(category);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         transaction.commit();
         entityManager.close();

@@ -73,6 +73,14 @@ CREATE TABLE IF NOT EXISTS LoyaltyLevel (
     CONSTRAINT valid_required_points_nb CHECK (requiredPoints >= 0)
 );
 
+CREATE TABLE IF NOT EXISTS LoyaltyAccountDiscounts (
+    idLoyaltyAccount INT NOT NULL,
+    idDiscount INT NOT NULL,
+    FOREIGN KEY (idLoyaltyAccount) REFERENCES LoyaltyAccount(id),
+    FOREIGN KEY (idDiscount) REFERENCES Discount(id),
+    PRIMARY KEY(idLoyaltyAccount, idDiscount)
+);
+
 CREATE TABLE IF NOT EXISTS LoyaltyAccountLevelUsed (
     idLoyaltyAccount INT NOT NULL,
     idLoyaltyLevel INT NOT NULL,

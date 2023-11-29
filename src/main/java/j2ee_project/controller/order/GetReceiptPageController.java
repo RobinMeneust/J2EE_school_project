@@ -1,13 +1,14 @@
 package j2ee_project.controller.order;
 
 import j2ee_project.dao.MailDAO;
+import j2ee_project.dao.discount.DiscountDAO;
+import j2ee_project.dao.loyalty.LoyaltyAccountDAO;
 import j2ee_project.dao.order.CartDAO;
 import j2ee_project.dao.order.OrdersDAO;
+import j2ee_project.model.Discount;
 import j2ee_project.model.Mail;
-import j2ee_project.model.order.CartItem;
-import j2ee_project.model.order.OrderItem;
-import j2ee_project.model.order.OrderStatus;
-import j2ee_project.model.order.Orders;
+import j2ee_project.model.loyalty.LoyaltyAccount;
+import j2ee_project.model.order.*;
 import j2ee_project.model.user.Customer;
 import j2ee_project.service.AuthService;
 import j2ee_project.service.MailManager;
@@ -52,6 +53,12 @@ public class GetReceiptPageController extends HttpServlet
         }
 
         if(order.getOrderStatus() == OrderStatus.WAITING_PAYMENT) {
+            Cart cart = CartDAO.getCartFromCustomerId(customer.getId());
+            Discount discount = cart.getDiscount();
+            if(discount != null && customer.getLoyaltyAccount() != null && customer.getLoyaltyAccount().getAvailableDiscounts() != null && customer.getLoyaltyAccount().getAvailableDiscounts().contains(discount)) {
+                LoyaltyAccountDAO.removeDiscount(customer.getLoyaltyAccount(), discount);
+            }
+
             OrdersDAO.setStatus(order, OrderStatus.PREPARING);
             CartDAO.removeCart(customer.getCart());
             sendReceiptMail(customer, order);
@@ -59,8 +66,6 @@ public class GetReceiptPageController extends HttpServlet
             // Refresh the user's cart
             customer.setCart(null);
             session.setAttribute("user", customer);
-
-            //TODO : Mark the discount as "used" in the loyalty account if a discount has been used
         }
 
         request.setAttribute("order",order);

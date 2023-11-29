@@ -3,6 +3,8 @@ package j2ee_project.model;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Discount {
@@ -87,5 +89,10 @@ public class Discount {
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         result = 31 * result + discountPercentage;
         return result;
+    }
+
+    public boolean hasExpired() {
+        Date today = new java.sql.Date(new java.util.Date().getTime());
+        return getEndDate().compareTo(today) <= 0;
     }
 }

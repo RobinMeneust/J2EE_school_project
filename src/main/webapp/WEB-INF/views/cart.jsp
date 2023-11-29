@@ -23,6 +23,11 @@
     <c:set var="customer" value="${cf:getCustomer(user)}"/>
     <c:set var="cart" value="${cf:getCart(sessionCart,customer)}"/>
     <c:set var="total" value="${0}"/>
+    <c:set var="tab" value="${param.get('tab').toString()}"/>
+    <c:if test="${empty tab || tab != 'confirmation' || empty customer}">
+<%--  Default current tab value      --%>
+        <c:set var="tab" value="cart"/>
+    </c:if>
 
     <c:choose>
         <c:when test="${cart != null && cart.getCartItems() != null && !cart.getCartItems().isEmpty()}">
@@ -30,15 +35,15 @@
                 <c:if test="${not empty customer}">
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Cart</button>
+                            <button onclick="updateTabParam('cart')" class="nav-link <c:if test="${tab == 'cart'}">active</c:if>" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Cart</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Delivery & confirmation</button>
+                            <button onclick="updateTabParam('confirmation')" class="nav-link <c:if test="${tab == 'confirmation'}">active</c:if>" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Delivery & confirmation</button>
                         </li>
                     </ul>
                 </c:if>
                 <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                    <div class="tab-pane fade <c:if test="${tab == 'cart'}">show active</c:if>" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                         <table class="col table text-center">
                             <tr>
                                 <th class="col"></th>
@@ -93,7 +98,7 @@
                         </c:if>
                     </div>
                     <c:if test="${not empty customer}">
-                        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                        <div class="tab-pane fade <c:if test="${tab == 'confirmation'}">show active</c:if>" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                             <div class="row g-3">
                                     <%--TODO: Check the form content--%>
                                 <div class="col-xl-6 col-md-6 col-xs-6">
@@ -120,31 +125,26 @@
                                 </div>
 
                                 <c:set var="loyaltyAccount" value="${customer.getLoyaltyAccount()}"/>
-                                <c:set var="loyaltyProgram" value="${null}"/>
-                                <c:if test="${not empty loyaltyAccount}">
-                                    <c:set var="loyaltyProgram" value="${loyaltyAccount.getLoyaltyProgram()}"/>
-                                </c:if>
 
                                 <div class="col-xl-6 col-md-6 col-xs-6">
-                                    <c:if test="${not empty loyaltyProgram}">
+                                    <c:if test="${not empty loyaltyAccount && not empty loyaltyAccount.getAvailableDiscounts() && !loyaltyAccount.getAvailableDiscounts().isEmpty()}">
                                         <div class="bg-secondary-subtle shadow p-3 mb-4 rounded d-flex align-items-start flex-column" style="min-width:250px; max-width:450px">
-                                            <label class="mb-1" for="loyalty-level-id">Select a discount</label>
+                                            <label class="mb-1" for="discount-id">Select a discount</label>
                                             <div class="row g-2 w-100">
                                                 <div class="col-10">
-                                                    <select class="form-select" id="loyalty-level-id" name="loyalty-level-id">
+                                                    <select class="form-select" id="discount-id" name="discount-id">
                                                         <option selected value="">No Discount</option>
-                                                        <c:forEach var="loyaltyLevel" items="${loyaltyProgram.getLoyaltyLevels()}">
-                                                            <c:if test="${!loyaltyAccount.isLevelUsed(loyaltyLevel)}">
-                                                                <c:set var="loyaltyDiscount" value="${loyaltyLevel.getDiscount()}"/>
-                                                                <option value="<c:out value="${loyaltyLevel.getId()}"/>">
-                                                                    <c:out value="${loyaltyDiscount.getName()} (- ${loyaltyDiscount.getDiscountPercentage()} %)"/>
+                                                        <c:forEach var="discount" items="${loyaltyAccount.getAvailableDiscounts()}">
+                                                            <c:if test="${!discount.hasExpired()}">
+                                                                <option value="<c:out value="${discount.getId()}"/>">
+                                                                    <c:out value="${discount.getName()} (- ${discount.getDiscountPercentage()} %)"/>
                                                                 </option>
                                                             </c:if>
                                                         </c:forEach>
                                                     </select>
                                                 </div>
                                                 <div class="col-2">
-                                                    <button type="button" onclick="selectLoyaltyLevel()" class="btn" title="confirm"><span class="material-symbols-outlined">done</span></button>
+                                                    <button type="button" onclick="selectDiscount()" class="btn" title="confirm"><span class="material-symbols-outlined">done</span></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -193,14 +193,20 @@
 </div>
 
 <script>
-    async function selectLoyaltyLevel() {
-        let selectedLoyaltyLevelId = $("#loyalty-level-id").find(":selected").val();
-        if(selectedLoyaltyLevelId != null) {
+    function updateTabParam(newValue) {
+        if(newValue === "cart" || newValue === "confirmation") {
+            location.href = "cart?tab="+newValue;
+        }
+    }
+
+    async function selectDiscount() {
+        let selectedDiscountId = $("#discount-id").find(":selected").val();
+        if(selectedDiscountId != null) {
             await fetch("cart/loyalty-level-discount", {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({"id":parseInt(selectedLoyaltyLevelId)}),
+                body: JSON.stringify({"id":parseInt(selectedDiscountId)}),
                 method: "POST",
             }).catch((e) => {
                console.error(e);

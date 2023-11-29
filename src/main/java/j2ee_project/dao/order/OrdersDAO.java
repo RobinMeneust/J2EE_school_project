@@ -39,7 +39,6 @@ public class OrdersDAO {
         transaction.begin();
 
         Orders order = entityManager.find(Orders.class,orderId);
-        System.out.println("ORDER ("+orderId+") = "+order);
 
         transaction.commit();
         entityManager.close();

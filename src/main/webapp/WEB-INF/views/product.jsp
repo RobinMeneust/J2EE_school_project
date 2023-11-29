@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="j2ee_project.model.catalog.Product" %>
 <%@ page import="j2ee_project.model.Discount" %>
 <%@ taglib prefix="cf" uri="/WEB-INF/functions.tld"%>
@@ -56,11 +57,11 @@
             <div class="p-2 mb-auto">
                 <c:choose>
                     <c:when test="${discountPercentage != null && discountPercentage > 0}">
-                        <span class="text-secondary text-decoration-line-through"><c:out value="${product.getUnitPrice()} €"/></span> <span class="text-success"><c:out value="(-${discountPercentage} %)"/></span>
-                        <h6 class="display-6"><c:out value="${product.getUnitPrice()*(1-(discountPercentage/100))} €"/></h6>
+                        <span class="text-secondary text-decoration-line-through"><fmt:formatNumber type = "number" maxFractionDigits  = "2" value = "${product.getUnitPrice()}"/> €</span> <span class="text-success"><c:out value="(-${discountPercentage} %)"/></span>
+                        <h6 class="display-6"><fmt:formatNumber type = "number" maxFractionDigits  = "2" value = "${product.getUnitPrice()*(1-(discountPercentage/100))}"/> €</h6>
                     </c:when>
                     <c:otherwise>
-                        <h6 class="display-6"><c:out value="${product.getUnitPrice()} €"/></h6>
+                        <h6 class="display-6"><fmt:formatNumber type = "number" maxFractionDigits  = "2" value = "${product.getUnitPrice()}"/> €</h6>
                     </c:otherwise>
                 </c:choose>
             </div>

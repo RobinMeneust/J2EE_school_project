@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="j2ee_project.model.catalog.Product" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
@@ -148,7 +149,7 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <span class="font-weight-bold"><c:out value="${product.getName()}" /></span>
-                            <span class="font-weight-bold"><c:out value="${product.getUnitPrice()} €" /></span>
+                            <span class="font-weight-bold"><fmt:formatNumber type = "number" maxFractionDigits  = "2" value = "${product.getUnitPrice()}"/> €</span>
                         </div>
                         <p class="card-text text-success mb-1 mt-1">
                             <c:if test="${not empty product.getCategory().getDiscount() && product.getCategory().getDiscount().getDiscountPercentage() > 0}">

@@ -86,9 +86,8 @@ public class ConfirmCartController extends HttpServlet {
 
         deliveryAddress = AddressDAO.addAddressIfNotExists(deliveryAddress);
 
-        Orders newOrder = new Orders(cart.getTotal(), new Date(Calendar.getInstance().getTimeInMillis()), customer, deliveryAddress);
+        Orders newOrder = new Orders(cart, new Date(Calendar.getInstance().getTimeInMillis()), customer, deliveryAddress);
         OrdersDAO.addOrder(newOrder);
-        OrderItemsDAO.addFromCart(cart, newOrder);
 
         response.sendRedirect("pay?order-id="+newOrder.getId());
     }

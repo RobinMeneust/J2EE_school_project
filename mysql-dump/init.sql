@@ -112,14 +112,12 @@ CREATE TABLE IF NOT EXISTS Customer (
 
 CREATE TABLE IF NOT EXISTS Orders (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    total FLOAT NOT NULL,
     date DATE NOT NULL,
     orderStatus VARCHAR(30) NOT NULL,
     idCustomer INT NOT NULL,
     idAddress INT NOT NULL,
     FOREIGN KEY (idCustomer) REFERENCES Customer(idUser),
-    FOREIGN KEY (idAddress) REFERENCES Address(id),
-    CONSTRAINT valid_total_price CHECK(total >= 0)
+    FOREIGN KEY (idAddress) REFERENCES Address(id)
 );
 
 CREATE TABLE IF NOT EXISTS Cart (
@@ -277,7 +275,7 @@ INSERT INTO LoyaltyAccountLevelUsed(idLoyaltyAccount, idLoyaltyLevel) VALUES(1,1
 INSERT INTO Mail(fromAddress, toAddress, subject, body, date) VALUES('example@example.com', 'example@example.com', 'Test mail', 'This is the body of a mail used for testing purposes', STR_TO_DATE('30/10/2023', '%d/%m/%Y'));
 
 
-INSERT INTO Orders(total, date, orderStatus, idCustomer, idAddress) VALUES(30, STR_TO_DATE('30/10/2023', '%d/%m/%Y'), 'SHIPPED', 2, 1);
+INSERT INTO Orders(date, orderStatus, idCustomer, idAddress) VALUES(STR_TO_DATE('30/10/2023', '%d/%m/%Y'), 'SHIPPED', 2, 1);
 INSERT INTO OrderItem(quantity, idOrder, idProduct,total) VALUES(2,1,1,2);
 
 INSERT INTO FeaturedProduct(idProduct) VALUES(1);

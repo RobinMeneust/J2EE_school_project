@@ -38,12 +38,8 @@ public class OrdersDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Orders order;
-        try {
-            order = entityManager.createQuery("FROM Orders WHERE id=:orderId", Orders.class).setParameter("orderId", orderId).getSingleResult();
-        } catch(Exception e) {
-            order = null;
-        }
+        Orders order = entityManager.find(Orders.class,orderId);
+        System.out.println("ORDER ("+orderId+") = "+order);
 
         transaction.commit();
         entityManager.close();

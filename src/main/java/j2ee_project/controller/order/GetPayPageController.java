@@ -27,6 +27,8 @@ public class GetPayPageController extends HttpServlet
             response.sendRedirect("login");
         }
 
+        //TODO: Check if the given order id (order-id) is in the state WAITING_PAYMENT
+
         try {
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/pay.jsp");
             view.forward(request, response);

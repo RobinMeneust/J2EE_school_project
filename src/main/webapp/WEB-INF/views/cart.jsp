@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="cf" uri="/WEB-INF/functions.tld"%>
 <%--
   Created by IntelliJ IDEA.
@@ -64,7 +65,7 @@
                                         </c:otherwise>
                                     </c:choose>
                                     <c:set var="total" value="${total + price}"/>
-                                    <td class="align-middle col"><c:out value="${price} €"/></td>
+                                    <td class="align-middle col"><fmt:formatNumber type = "number" maxFractionDigits  = "2" value = "${price}"/> €</td>
 
                                         <%--Actions--%>
                                     <td class="align-middle p-0">
@@ -131,7 +132,7 @@
                                     <div class="bg-secondary-subtle shadow p-3 rounded d-flex align-items-start flex-column" style="min-width:250px; max-width:450px">
                                         <div class="row py-2 w-100">
                                             <div class="col text-start"><b>Cart</b></div>
-                                            <div class="col text-end"><c:out value="${total}"/> €</div>
+                                            <div class="col text-end"><fmt:formatNumber type = "number" maxFractionDigits  = "2" value = "${total}"/> €</div>
                                         </div>
                                         <hr class="w-100"/>
                                         <c:set var="totalWithLoyaltyDiscount" value="${total}"/>
@@ -139,7 +140,7 @@
                                             <div class="row py-2 w-100">
                                                 <c:set var="totalWithLoyaltyDiscount" value="${total - (total*(discount/100))}"/>
                                                 <div class="col text-start"><span>Discount</span></div>
-                                                <div class="col text-end"><c:out value="- ${total*(discount/100)}"/> €</div>
+                                                <div class="col text-end">- <fmt:formatNumber type = "number" maxFractionDigits  = "2" value = "${total*(discount/100)}"/> €</div>
                                             </div>
                                             <hr class="w-100"/>
                                         </c:if>
@@ -150,7 +151,7 @@
                                         <hr class="w-100"/>
                                         <div class="row py-2 w-100">
                                             <div class="col text-start"><b>TOTAL</b></div>
-                                            <div class="col text-end"><c:out value="${totalWithLoyaltyDiscount + 5} €"/></div>
+                                            <div class="col text-end"><fmt:formatNumber type = "number" maxFractionDigits  = "2" value = "${totalWithLoyaltyDiscount + 5}"/> €</div>
                                         </div>
                                         <div class="row py-2 w-100">
                                             <input class="col btn btn-primary" type="submit" value="Confirm">

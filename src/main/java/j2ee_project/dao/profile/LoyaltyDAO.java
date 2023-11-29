@@ -5,7 +5,6 @@ import j2ee_project.model.loyalty.LoyaltyAccount;
 import j2ee_project.model.loyalty.LoyaltyLevel;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import org.hibernate.Session;
 
 import java.util.List;
 

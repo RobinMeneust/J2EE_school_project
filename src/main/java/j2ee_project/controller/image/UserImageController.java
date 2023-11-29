@@ -1,12 +1,8 @@
 package j2ee_project.controller.image;
 
-import j2ee_project.dao.catalog.product.ProductDAO;
-import j2ee_project.dao.user.PermissionDAO;
 import j2ee_project.dao.user.UserDAO;
-import j2ee_project.model.catalog.Product;
-import j2ee_project.model.user.Moderator;
-import j2ee_project.model.user.TypePermission;
 import j2ee_project.model.user.User;
+import j2ee_project.service.FileService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -111,13 +107,13 @@ public class UserImageController extends HttpServlet {
 
         Part filePart = request.getPart("file");
 
-        if(!isImage(filePart)) {
+        if(!FileService.isImage(filePart)) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST,"An image was expected but another file format has been received");
             return;
         }
 
 
-        String extension = getFileExtension(filePart);
+        String extension = FileService.getFileExtension(filePart);
         extension = extension.replaceAll("[\\\\/]","");
 
         File root = new File(getServletContext().getRealPath("/")).getParentFile().getParentFile();
@@ -149,30 +145,5 @@ public class UserImageController extends HttpServlet {
                 fileContent.close();
             }
         }
-    }
-
-    private String getFileExtension(Part part) {
-        String fileName = null;
-        final String partHeader = part.getHeader("content-disposition");
-        for (String content : partHeader.split(";")) {
-            if (content.trim().startsWith("filename")) {
-                fileName = content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
-                break;
-            }
-        }
-
-        if(fileName == null) {
-            return "";
-        }
-
-        int dotIndex = fileName.lastIndexOf(".");
-        if (dotIndex > 0) {
-            return fileName.substring(dotIndex + 1);
-        }
-        return "";
-    }
-
-    private boolean isImage(Part part) {
-        return part.getContentType().startsWith("image/");
     }
 }

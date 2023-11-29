@@ -5,6 +5,7 @@ import j2ee_project.dao.user.PermissionDAO;
 import j2ee_project.model.catalog.Product;
 import j2ee_project.model.user.Moderator;
 import j2ee_project.model.user.TypePermission;
+import j2ee_project.service.FileService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -52,10 +53,13 @@ public class ProductImageController extends HttpServlet {
         File root = new File(getServletContext().getRealPath("/")).getParentFile().getParentFile();
         Path imagePath = Paths.get(root.getPath()+"/images/"+product.getImagePath());
 
-
-        try (InputStream in = Files.newInputStream(imagePath)) {
-            response.setContentType(getServletContext().getMimeType(imagePath.toString()));
-            Files.copy(imagePath, response.getOutputStream());
+        try {
+            try (InputStream in = Files.newInputStream(imagePath)) {
+                response.setContentType(getServletContext().getMimeType(imagePath.toString()));
+                Files.copy(imagePath, response.getOutputStream());
+            }
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Product's image not found");
         }
     }
 
@@ -101,13 +105,13 @@ public class ProductImageController extends HttpServlet {
 
         Part filePart = request.getPart("file");
 
-        if(!isImage(filePart)) {
+        if(!FileService.isImage(filePart)) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST,"An image was expected but another file format has been received");
             return;
         }
 
 
-        String extension = getFileExtension(filePart);
+        String extension = FileService.getFileExtension(filePart);
         String productName = ProductDAO.getProduct(productId).getName().replaceAll("s/[\\\\/]/g",""); // We remove backslashes and slashes to protect us from path traversal
         extension = extension.replaceAll("[\\\\/]","");
         ProductDAO.setProductImagePath(productId,"products/"+productName+"_"+productId+"."+extension);
@@ -143,30 +147,5 @@ public class ProductImageController extends HttpServlet {
                 fileContent.close();
             }
         }
-    }
-
-    private String getFileExtension(Part part) {
-        String fileName = null;
-        final String partHeader = part.getHeader("content-disposition");
-        for (String content : partHeader.split(";")) {
-            if (content.trim().startsWith("filename")) {
-                fileName = content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
-                break;
-            }
-        }
-
-        if(fileName == null) {
-            return "";
-        }
-
-        int dotIndex = fileName.lastIndexOf(".");
-        if (dotIndex > 0) {
-            return fileName.substring(dotIndex + 1);
-        }
-        return "";
-    }
-
-    private boolean isImage(Part part) {
-        return part.getContentType().startsWith("image/");
     }
 }

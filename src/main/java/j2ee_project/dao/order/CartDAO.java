@@ -2,6 +2,7 @@ package j2ee_project.dao.order;
 
 import j2ee_project.dao.JPAUtil;
 import j2ee_project.dao.user.CustomerDAO;
+import j2ee_project.model.Discount;
 import j2ee_project.model.order.Cart;
 import j2ee_project.model.order.CartItem;
 import j2ee_project.model.user.Customer;
@@ -110,5 +111,19 @@ public class CartDAO {
         transaction.commit();
         entityManager.close();
         return cart;
+    }
+
+    public static void setDiscount(int cartId, Discount discount) {
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        Cart cart = entityManager.find(Cart.class, cartId);
+        if(cart != null) {
+            cart.setDiscount(discount);
+        }
+
+        transaction.commit();
+        entityManager.close();
     }
 }

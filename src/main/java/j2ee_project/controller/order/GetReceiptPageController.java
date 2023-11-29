@@ -59,6 +59,8 @@ public class GetReceiptPageController extends HttpServlet
             // Refresh the user's cart
             customer.setCart(null);
             session.setAttribute("user", customer);
+
+            //TODO : Mark the discount as "used" in the loyalty account if a discount has been used
         }
 
         request.setAttribute("order",order);

@@ -33,6 +33,9 @@ public class Orders {
     @JoinColumn(name = "idAddress", referencedColumnName = "id", nullable = false)
     private Address address;
 
+    @Transient
+    private static final float shippingFees = 5.0f;
+
     public Orders() { }
 
     public Orders(Cart cart, Date date, Customer customer, Address address) {
@@ -58,7 +61,7 @@ public class Orders {
                 total += item.getTotal();
             }
         }
-        return total;
+        return total + shippingFees;
     }
 
     public Date getDate() {

@@ -94,9 +94,9 @@
                     </div>
                     <c:if test="${not empty customer}">
                         <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                            <div class="row g-4">
+                            <div class="row g-3">
                                     <%--TODO: Check the form content--%>
-                                <div class="col-5">
+                                <div class="col-xl-6 col-md-6 col-xs-6">
                                     <h6 class="display-6">Delivery Address</h6>
                                     <div class="bg-secondary-subtle shadow p-3 mb-4 rounded d-flex align-items-start flex-column" style="min-width:250px; max-width:450px">
                                         <c:set var="addressObject" value="${customer.getAddress()}"/>
@@ -119,14 +119,34 @@
                                     </div>
                                 </div>
 
-                                <div class="col-5">
-                                    <c:if test="${false}"> <%--TODO: Test if the customer is connected and if he is subscribed to a loyalty program and get his claimed loyalty rewards--%>
+                                <c:set var="loyaltyAccount" value="${customer.getLoyaltyAccount()}"/>
+                                <c:set var="loyaltyProgram" value="${null}"/>
+                                <c:if test="${not empty loyaltyAccount}">
+                                    <c:set var="loyaltyProgram" value="${loyaltyAccount.getLoyaltyProgram()}"/>
+                                </c:if>
+
+                                <div class="col-xl-6 col-md-6 col-xs-6">
+                                    <c:if test="${not empty loyaltyProgram}">
                                         <div class="bg-secondary-subtle shadow p-3 mb-4 rounded d-flex align-items-start flex-column" style="min-width:250px; max-width:450px">
-                                            <label class="mb-1" for="discount-id">Select a discount</label>
-                                            <select class="form-select" id="discount-id" name="discount-id">
-                                                <option selected value="">No Discount</option>
-                                                    <%--TODO: Add discounts--%>
-                                            </select>
+                                            <label class="mb-1" for="loyalty-level-id">Select a discount</label>
+                                            <div class="row g-2 w-100">
+                                                <div class="col-10">
+                                                    <select class="form-select" id="loyalty-level-id" name="loyalty-level-id">
+                                                        <option selected value="">No Discount</option>
+                                                        <c:forEach var="loyaltyLevel" items="${loyaltyProgram.getLoyaltyLevels()}">
+                                                            <c:if test="${!loyaltyAccount.isLevelUsed(loyaltyLevel)}">
+                                                                <c:set var="loyaltyDiscount" value="${loyaltyLevel.getDiscount()}"/>
+                                                                <option value="<c:out value="${loyaltyLevel.getId()}"/>">
+                                                                    <c:out value="${loyaltyDiscount.getName()} (- ${loyaltyDiscount.getDiscountPercentage()} %)"/>
+                                                                </option>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                    </select>
+                                                </div>
+                                                <div class="col-2">
+                                                    <button type="button" onclick="selectLoyaltyLevel()" class="btn" title="confirm"><span class="material-symbols-outlined">done</span></button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </c:if>
                                     <div class="bg-secondary-subtle shadow p-3 rounded d-flex align-items-start flex-column" style="min-width:250px; max-width:450px">
@@ -136,11 +156,11 @@
                                         </div>
                                         <hr class="w-100"/>
                                         <c:set var="totalWithLoyaltyDiscount" value="${total}"/>
-                                        <c:if test="${false}"> <%--TODO: Get the active discount--%>
+                                        <c:if test="${not empty cart.getDiscount()}">
                                             <div class="row py-2 w-100">
-                                                <c:set var="totalWithLoyaltyDiscount" value="${total - (total*(discount/100))}"/>
+                                                <c:set var="totalWithLoyaltyDiscount" value="${total - (total*(cart.getDiscount().getDiscountPercentage()/100))}"/>
                                                 <div class="col text-start"><span>Discount</span></div>
-                                                <div class="col text-end">- <fmt:formatNumber type = "number" maxFractionDigits  = "2" value = "${total*(discount/100)}"/> €</div>
+                                                <div class="col text-end">- <fmt:formatNumber type = "number" maxFractionDigits  = "2" value = "${total*(cart.getDiscount().getDiscountPercentage()/100)}"/> €</div>
                                             </div>
                                             <hr class="w-100"/>
                                         </c:if>
@@ -171,6 +191,27 @@
         </c:otherwise>
     </c:choose>
 </div>
+
+<script>
+    async function selectLoyaltyLevel() {
+        console.log("event");
+        let selectedLoyaltyLevelId = $("#loyalty-level-id").find(":selected").val();
+        if(selectedLoyaltyLevelId != null) {
+            await fetch("/cart/loyalty-level-discount", {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({"id":selectedLoyaltyLevelId}),
+                method: "POST",
+            }).catch((e) => {
+               console.error(e);
+            });
+            location.reload();
+        }
+    }
+</script>
+
+
 <jsp:include page="../../layout/footer.jsp" />
 </body>
 </html>

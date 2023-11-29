@@ -92,7 +92,7 @@ public class UserDAO {
         return  user;
     }
 
-	public static Object getUser(int id) {
+	public static User getUser(int id) {
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();

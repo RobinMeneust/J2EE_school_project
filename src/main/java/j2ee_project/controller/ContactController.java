@@ -19,7 +19,7 @@ import java.util.Map;
  *
  * @author Lucas VELAY
  */
-@WebServlet(name = "RegisterCustomerController", value = "/contact-controller")
+@WebServlet(name = "ContactController", value = "/contact-controller")
 public class ContactController extends HttpServlet {
 
     /**

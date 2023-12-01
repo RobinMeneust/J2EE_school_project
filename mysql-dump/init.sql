@@ -22,14 +22,12 @@ CREATE TABLE IF NOT EXISTS User (
 );
 
 CREATE TABLE IF NOT EXISTS Moderator (
-    -- id INT PRIMARY KEY AUTO_INCREMENT,
     idUser INT PRIMARY KEY ,
     FOREIGN KEY (idUser) REFERENCES User(id)
 );
 
 CREATE TABLE IF NOT EXISTS Administrator (
-    -- id INT PRIMARY KEY AUTO_INCREMENT,
-    idModerator INT PRIMARY KEY ,
+    idModerator INT PRIMARY KEY,
     FOREIGN KEY (idModerator) REFERENCES Moderator(idUser)
 );
 
@@ -75,6 +73,14 @@ CREATE TABLE IF NOT EXISTS LoyaltyLevel (
     CONSTRAINT valid_required_points_nb CHECK (requiredPoints >= 0)
 );
 
+CREATE TABLE IF NOT EXISTS LoyaltyAccountDiscounts (
+    idLoyaltyAccount INT NOT NULL,
+    idDiscount INT NOT NULL,
+    FOREIGN KEY (idLoyaltyAccount) REFERENCES LoyaltyAccount(id),
+    FOREIGN KEY (idDiscount) REFERENCES Discount(id),
+    PRIMARY KEY(idLoyaltyAccount, idDiscount)
+);
+
 CREATE TABLE IF NOT EXISTS LoyaltyAccountLevelUsed (
     idLoyaltyAccount INT NOT NULL,
     idLoyaltyLevel INT NOT NULL,
@@ -103,8 +109,7 @@ CREATE TABLE IF NOT EXISTS FeaturedProduct (
 );
 
 CREATE TABLE IF NOT EXISTS Customer (
-    -- id INT PRIMARY KEY AUTO_INCREMENT,
-    idUser INT PRIMARY KEY ,
+    idUser INT PRIMARY KEY,
     idAddress INT DEFAULT NULL,
     idLoyaltyAccount INT DEFAULT NULL UNIQUE,
     FOREIGN KEY (idUser) REFERENCES User(id),
@@ -115,14 +120,12 @@ CREATE TABLE IF NOT EXISTS Customer (
 
 CREATE TABLE IF NOT EXISTS Orders (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    total FLOAT NOT NULL,
     date DATE NOT NULL,
     orderStatus VARCHAR(30) NOT NULL,
     idCustomer INT NOT NULL,
     idAddress INT NOT NULL,
     FOREIGN KEY (idCustomer) REFERENCES Customer(idUser),
-    FOREIGN KEY (idAddress) REFERENCES Address(id),
-    CONSTRAINT valid_total_price CHECK(total >= 0)
+    FOREIGN KEY (idAddress) REFERENCES Address(id)
 );
 
 CREATE TABLE IF NOT EXISTS Cart (
@@ -138,11 +141,20 @@ CREATE TABLE IF NOT EXISTS CartItem (
     quantity INT NOT NULL,
     idCart INT,
     idProduct INT NOT NULL,
-    idOrder INT,
     FOREIGN KEY (idCart) REFERENCES Cart(id),
     FOREIGN KEY (idProduct) REFERENCES Product(id),
+    CONSTRAINT valid_quantity_cart_item CHECK(quantity >= 0)
+);
+
+CREATE TABLE IF NOT EXISTS OrderItem (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    quantity INT NOT NULL,
+    idOrder INT,
+    idProduct INT NOT NULL,
+    total FLOAT NOT NULL, -- Price with discounts and considering the quantity (exact payed price)
     FOREIGN KEY (idOrder) REFERENCES Orders(id),
-    CONSTRAINT valid_quantity CHECK(quantity >= 0)
+    FOREIGN KEY (idProduct) REFERENCES Product(id),
+    CONSTRAINT valid_quantity_order CHECK(quantity >= 0)
 );
 
 CREATE TABLE IF NOT EXISTS Mail (
@@ -156,7 +168,7 @@ CREATE TABLE IF NOT EXISTS Mail (
 
 CREATE TABLE IF NOT EXISTS Permission (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    permission VARCHAR(50) NOT NULL
+    permission VARCHAR(50) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS ModeratorPermission (
@@ -190,7 +202,6 @@ INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Loyal
 INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Loyalty level reward', STR_TO_DATE('28/10/2023', '%d/%m/%Y'), STR_TO_DATE('28/12/2023', '%d/%m/%Y'), 20);
 
 INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Halloween sales', STR_TO_DATE('31/10/2023', '%d/%m/%Y'), STR_TO_DATE('31/10/2023', '%d/%m/%Y'), 15);
-
 
 INSERT INTO LoyaltyLevel(requiredPoints, idLoyaltyProgram, idDiscount) VALUES(15,1,1);
 INSERT INTO LoyaltyLevel(requiredPoints, idLoyaltyProgram, idDiscount) VALUES(25,1,2);
@@ -230,15 +241,6 @@ INSERT INTO Permission(permission) VALUES('CAN_MANAGE_CUSTOMER');
 INSERT INTO Permission(permission) VALUES('CAN_MANAGE_LOYALTY');
 INSERT INTO Permission(permission) VALUES('CAN_MANAGE_ORDER');
 
--- Admin has every permissions
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,1);
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,2);
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,3);
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,4);
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,5);
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,6);
-INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(1,7);
-
 INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(6,5); -- Can manage customer
 
 INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(7,3); -- Can manage product
@@ -253,34 +255,42 @@ INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(3,2,2);
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(4,3,NULL);
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(5,NULL,NULL);
 
-INSERT INTO Cart(idCustomer) VALUES(2);
+INSERT INTO Cart(idCustomer) VALUES(3);
 
 INSERT INTO Category(name, description, idDiscount) VALUES('strategy', 'A strategy game or strategic game is a game (e.g. a board game) in which the players\' uncoerced, and often autonomous, decision-making skills have a high significance in determining the outcome.', 1);
 INSERT INTO Category(name, description) VALUES('card game', 'A card game is any game using playing cards as the primary device with which the game is played, be they traditional or game-specific.');
 
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Chess Board', 50, 15, 'A chessboard is a gameboard used to play chess. It consists of 64 squares, 8 rows by 8 columns, on which the chess pieces are placed. It is square in shape and uses two colours of squares, one light and one dark, in a chequered pattern. During play, the board is oriented such that each player\'s near-right corner square is a light square.', 1, 'img/products/chess.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards2', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards3', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards4', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards5', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards6', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards7', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards8', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards9', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards10', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards11', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards12', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards13', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards14', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards15', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards16', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards17', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards18', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards19', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards20', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards21', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards22', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'img/products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Chess Board', 0, 15, 'A chessboard is a gameboard used to play chess. It consists of 64 squares, 8 rows by 8 columns, on which the chess pieces are placed. It is square in shape and uses two colours of squares, one light and one dark, in a chequered pattern. During play, the board is oriented such that each player\'s near-right corner square is a light square.', 1, 'products/chess.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards2', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards3', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards4', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards5', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards6', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards7', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards8', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards9', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards10', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards11', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards12', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards13', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards14', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards15', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards16', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards17', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards18', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards19', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards20', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards21', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards22', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Werewolves', 20, 19, 'The Werewolves of Millers Hollow is a card game created by the french authors Philippe des Pallières and Hervé Marly in 2001.\n The game is based on the Russian game Mafia.', 2, 'products/werewolves.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Catan', 20, 34, 'Catan, previously known as The Settlers of Catan is a board game created by Klaus Teuber in 1995 in Germany.\n Players take on the roles of settlers attempting to build and develop holdings while trading and acquiring resources.', 1, 'products/catan.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Munchkin', 20, 23, 'Munchkin is a dedicated deck card game written by Steve Jackson and illustrated by John Kovalic.\n 3 to 6 players compete to kill monsters and grab magic items the first to reach level 10 wins.', 2, 'products/munchkin.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('7Wonders', 20, 45, '7wonders is a board game created by Antoine Bauza in 2010. Each player lead one of the 7 great cities of the Ancient World building their city to become the greatest.', 1, 'products/7wonders.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('9*9 Goban', 20, 55, 'A 9*9 Goban. A Goban in a gameboard used to pay Go', 1, 'products/goban.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Shogi', 20, 45, 'Shogi is a strategy board game. It is one the most popular board games in Japan and is in the same family of games as Western xhess, chanturanga, Indian chess and janggi.', 1, 'products/shogi.jpg');
+
+
 
 INSERT INTO CartItem(quantity, idCart, idProduct) VALUES(1,1,1);
 INSERT INTO CartItem(quantity, idCart, idProduct) VALUES(3,1,2);
@@ -290,8 +300,8 @@ INSERT INTO LoyaltyAccountLevelUsed(idLoyaltyAccount, idLoyaltyLevel) VALUES(1,1
 INSERT INTO Mail(fromAddress, toAddress, subject, body, date) VALUES('example@example.com', 'example@example.com', 'Test mail', 'This is the body of a mail used for testing purposes', STR_TO_DATE('30/10/2023', '%d/%m/%Y'));
 
 
-INSERT INTO Orders(total, date, orderStatus, idCustomer, idAddress) VALUES(30, STR_TO_DATE('30/10/2023', '%d/%m/%Y'), 'SHIPPED', 2, 1);
-INSERT INTO CartItem(quantity, idOrder, idProduct) VALUES(2,1,1);
+INSERT INTO Orders(date, orderStatus, idCustomer, idAddress) VALUES(STR_TO_DATE('30/10/2023', '%d/%m/%Y'), 'SHIPPED', 2, 1);
+INSERT INTO OrderItem(quantity, idOrder, idProduct,total) VALUES(2,1,1,2);
 
 INSERT INTO FeaturedProduct(idProduct) VALUES(1);
 INSERT INTO FeaturedProduct(idProduct) VALUES(2);

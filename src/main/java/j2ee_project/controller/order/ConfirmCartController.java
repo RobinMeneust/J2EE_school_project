@@ -2,14 +2,15 @@ package j2ee_project.controller.order;
 
 import j2ee_project.dao.AddressDAO;
 import j2ee_project.dao.discount.DiscountDAO;
+import j2ee_project.dao.order.CartItemDAO;
 import j2ee_project.dao.order.OrdersDAO;
 import j2ee_project.model.Address;
 import j2ee_project.model.Discount;
 import j2ee_project.model.order.Cart;
 import j2ee_project.model.order.CartItem;
+import j2ee_project.model.order.OrderItem;
 import j2ee_project.model.order.Orders;
 import j2ee_project.service.CartManager;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -49,20 +50,18 @@ public class ConfirmCartController extends HttpServlet {
             response.sendRedirect("login");
             return;
         }
-        Cart cart;
-
-        cart = CartManager.getCart(session, customer);
+        Cart cart = CartManager.getCart(session, customer);
 
         Set<CartItem> cartItems = cart.getCartItems();
 
-        if(cartItems == null) {
+        if(cartItems == null || cartItems.isEmpty()) {
             //TODO: Return to the cart page with an error message
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "the cart is empty");
             return;
         }
         for(CartItem item : cartItems) {
             if(item.getQuantity() > item.getProduct().getStockQuantity()) {
-                //TODO: Return to the cart page with the new product values
+                //TODO: Return to the cart page and give suggestions to change the ordered quantity to match with the stock quantity
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "the stock quantities has been updated and are lesser than the quantity you ordered");
                 return;
             }
@@ -86,13 +85,9 @@ public class ConfirmCartController extends HttpServlet {
 
         deliveryAddress = AddressDAO.addAddressIfNotExists(deliveryAddress);
 
-        Orders newOrder = new Orders(cart.getTotal(), new Date(Calendar.getInstance().getTimeInMillis()), cartItems, customer, deliveryAddress);
-//        request.removeAttribute("discount-id");
-//        request.removeAttribute("street-address");
-//        request.removeAttribute("city");
-//        request.removeAttribute("postal-code");
-//        request.removeAttribute("country");
+        Orders newOrder = new Orders(cart, new Date(Calendar.getInstance().getTimeInMillis()), customer, deliveryAddress);
         OrdersDAO.addOrder(newOrder);
+
         response.sendRedirect("pay?order-id="+newOrder.getId());
     }
 }

@@ -40,7 +40,7 @@
                         <c:when test="${not empty customer}">
                             <ul class="dropdown-menu">
                                 <li class="nav-item mx-2" title="ProfileInformation">
-                                    <a href="profile-informations" class="nav-link">
+                                    <a href="profile-informations?customerId=${customer.id}" class="nav-link">
                                         <span class="material-symbols-outlined">account_circle</span>
                                         Profile information
                                     </a>

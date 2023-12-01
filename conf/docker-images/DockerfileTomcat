@@ -1,6 +1,10 @@
 FROM tomcat
 
 RUN mv /usr/local/tomcat/webapps.dist/* /usr/local/tomcat/webapps/
+
 COPY ../tomcat/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
 COPY ../tomcat/context.xml /usr/local/tomcat/webapps/manager/META-INF/context.xml
+COPY ../tomcat/server.xml /usr/local/tomcat/conf/server.xml
+
+COPY ../images /usr/local/tomcat/images
 CMD ["catalina.sh","run"]

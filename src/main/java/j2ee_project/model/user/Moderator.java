@@ -12,7 +12,7 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Moderator extends User{
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "ModeratorPermission",
             joinColumns = @JoinColumn(name = "idModerator"),
             inverseJoinColumns = @JoinColumn(name = "idPermission")

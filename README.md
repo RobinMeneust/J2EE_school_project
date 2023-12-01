@@ -127,7 +127,7 @@ Open in a web browser: http://localhost:8082/J2EE_Project-1.0-SNAPSHOT/
 
 Go to http://localhost:8081/ and use the following account
 - username: root
-- password: root_password
+- password: root
 
 #### Using the terminal
 
@@ -135,7 +135,7 @@ Go to http://localhost:8081/ and use the following account
 2. Get the CONTAINER ID (1st column) of the mysql IMAGE
 3. Replace CONTAINER_ID with what you got in (2.), in `docker exec -ti CONTAINER_ID bash` and run it
 4. Enter `mysql -u root -p`
-5. Type the password defined in the docker compose file: root_password
+5. Type the password defined in the docker compose file: root
 6. Enter `use j2ee_project_db;`
 7. Run the queries you want to do (e.g. `select * from Customer`)
 

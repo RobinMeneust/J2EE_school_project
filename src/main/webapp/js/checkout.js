@@ -3,6 +3,7 @@ let globalClientSecret = null;
 let stripe = null;
 let amountToBePaid= null;
 let doAbort = false;
+let customerData = null;
 
 let publishableStripeKeyPromise = fetch("get-stripe-publishable-key").then((response) => {
     return response.json();
@@ -12,6 +13,22 @@ let publishableStripeKeyPromise = fetch("get-stripe-publishable-key").then((resp
     } else {
         return "";
     }
+});
+
+let customerDataPromise = fetch("session/customer").then((response) => {
+    return response.json();
+}).then((data) => {
+    let result = {"first-name":"","last-name":"","email":""}
+    if(!("user" in data)) {
+        return result;
+    }
+
+    for(let key in ["first-name","last-name","email"]) {
+        if(key in data["user"]) {
+            result[key] = data["user"][key].trim();
+        }
+    }
+    return result;
 });
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -45,8 +62,9 @@ async function initialize() {
     if(doAbort) return;
     stripe = Stripe(await publishableStripeKeyPromise);
     amountToBePaid = await amountToBePaidPromise;
+    customerData = await customerDataPromise;
 
-    $("#amount-to-be-paid").text(amountToBePaid);
+    $("#amount-to-be-paid").text(amountToBePaid.toFixed(2));
 
     const response = await fetch(`create-payment-intent?order-id=`+urlParams.get("order-id"));
     const { clientSecret } = await response.json();
@@ -72,9 +90,8 @@ async function handleSubmit(e) {
         payment_method: {
             card: elements.getElement('card'),
             billing_details: {
-                // TODO fetch from session variable (user)
-                name: 'John Doe',
-                email: 'john@example.com',
+                name: customerData["first-name"] + customerData["last-name"],
+                email: customerData.email,
             },
         },
     });
@@ -88,7 +105,7 @@ async function handleSubmit(e) {
             showMessage("An unexpected error occurred.");
         }
     } else if (paymentIntent.status === 'succeeded') {
-        window.location.href = `checkout`;
+        window.location.href = `receipt?order-id=`+urlParams.get("order-id");
     } else {
         console.log('Payment is not yet confirmed');
     }

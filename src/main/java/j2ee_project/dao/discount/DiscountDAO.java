@@ -1,9 +1,9 @@
 package j2ee_project.dao.discount;
 
-import j2ee_project.dao.HibernateUtil;
+import j2ee_project.dao.JPAUtil;
 import j2ee_project.model.Discount;
-import j2ee_project.model.catalog.Product;
-import jakarta.persistence.NoResultException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import org.hibernate.Session;
 
 import java.util.List;
@@ -11,37 +11,58 @@ import java.util.List;
 public class DiscountDAO {
 
     public static List<Discount> getDiscounts(){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        List<Discount> discounts = session.createQuery("FROM Discount ",Discount.class).getResultList();
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        List<Discount> discounts = null;
+
+        discounts= entityManager.createQuery("FROM Discount ",Discount.class).getResultList();
+
+        transaction.commit();
+        entityManager.close();
         return discounts;
     }
 
     public static Discount getDiscount(int discountId){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        Discount discount = session.createQuery("FROM Discount WHERE id=:discountId",Discount.class).setParameter("discountId",discountId).getSingleResult();
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        Discount discount = null;
+        try {
+            discount = entityManager.createQuery("FROM Discount WHERE id=:discountId",Discount.class).setParameter("discountId",discountId).getSingleResult();
+        } catch (Exception ignore) {}
+
+        transaction.commit();
+        entityManager.close();
         return discount;
     }
 
     public static void deleteDiscount(int discountId){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        Discount discount = session.createQuery("FROM Discount WHERE id=:discountId",Discount.class).setParameter("discountId",discountId).getSingleResult();
-        session.remove(discount);
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+            Discount discount = entityManager.createQuery("FROM Discount WHERE id=:discountId",Discount.class).setParameter("discountId",discountId).getSingleResult();
+            entityManager.remove(discount);
+            transaction.commit();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+        entityManager.close();
     }
 
     public static void addDiscount(Discount discount){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        session.save(discount);
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        entityManager.persist(discount);
+
+        transaction.commit();
+        entityManager.close();
     }
 }

@@ -14,7 +14,7 @@ public class GetDiscountsController extends HttpServlet {
         try {
             request.setAttribute("discounts", DiscountDAO.getDiscounts());
         }catch (Exception err){
-            System.out.println(err.getMessage());
+            System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }

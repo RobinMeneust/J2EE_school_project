@@ -4,7 +4,7 @@
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
              https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
 
-    <persistence-unit name="jpa-hibernate-mysql">
+    <persistence-unit name="j2ee_project">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>j2ee_project.model.Address</class>
         <class>j2ee_project.model.Discount</class>
@@ -23,6 +23,7 @@
         <class>j2ee_project.model.loyalty.LoyaltyProgram</class>
         <class>j2ee_project.model.catalog.FeaturedProduct</class>
         <class>j2ee_project.model.user.Permission</class>
+        <class>j2ee_project.model.order.OrderItem</class>
         <class>j2ee_project.model.user.ForgottenPassword</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
@@ -35,10 +36,6 @@
             <property name="jakarta.persistence.query.timeout" value="100"/>
 
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
-            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3307/j2ee_project_db"/>
-            <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="hibernate.connection.username" value="j2ee_user"/>
-            <property name="hibernate.connection.password" value="j2ee_password"/>
         </properties>
     </persistence-unit>
 </persistence>

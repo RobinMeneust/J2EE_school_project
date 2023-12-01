@@ -72,7 +72,7 @@ public class ForgottenPasswordController extends HttpServlet {
                     token = HashService.generateToken(20);
                 }while(ForgottenPasswordDAO.getForgottenPasswordFromToken(token) != null);
 
-                String link = request.getContextPath() + "/change-password?token=" + token;
+                String link = "http://localhost:8082" + request.getContextPath() + "/change-password?token=" + token;
                 sendForgottenPasswordEmail(email, link);
                 ForgottenPassword forgottenPassword = new ForgottenPassword(user, token);
                 ForgottenPasswordDAO.addForgottenPassword(forgottenPassword);

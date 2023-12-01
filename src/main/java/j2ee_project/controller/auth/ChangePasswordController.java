@@ -39,7 +39,7 @@ public class ChangePasswordController extends HttpServlet {
         Map<String, String> errorMessages = new HashMap<>();
 
         if(forgottenPassword != null){
-            request.setAttribute("forgottenPassword", forgottenPassword);
+            request.setAttribute("forgottenPasswordToken", forgottenPassword.getToken());
             dispatcher = request.getRequestDispatcher(noErrorDestination);
         }
         else{

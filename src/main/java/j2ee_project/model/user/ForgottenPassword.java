@@ -3,6 +3,8 @@ package j2ee_project.model.user;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Objects;
 
 @Entity
@@ -24,6 +26,7 @@ public class ForgottenPassword {
     public ForgottenPassword(User user, String token) {
         this.user = user;
         this.token = token;
+        this.expiryDate = new Date(Date.from(Instant.now().plus(Duration.ofDays(1))).getTime());
     }
 
     public ForgottenPassword() {
@@ -74,5 +77,14 @@ public class ForgottenPassword {
     @Override
     public int hashCode() {
         return Objects.hash(id, user, token, expiryDate);
+    }
+
+    @Override
+    public String toString() {
+        return "ForgottenPassword{" +
+                "id=" + id +
+                ", token='" + token + '\'' +
+                ", expiryDate=" + expiryDate +
+                '}';
     }
 }

@@ -1,3 +1,4 @@
+<%@ page import="j2ee_project.model.user.ForgottenPassword" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
@@ -15,17 +16,16 @@
 </head>
 <body>
     <jsp:include page="../../layout/header.jsp"/>
+    <%
+        String forgottenPasswordToken = request.getAttribute("forgottenPasswordToken").toString();
+        System.out.println(forgottenPasswordToken);
+    %>
     <main>
         <h1>Register</h1>
-        <form id="registerForm" name="registerForm" method="post" action="${pageContext.request.contextPath}/register-customer-controller">
-            <c:if test="${requestScope.emailOrPhoneNumberInDbError != null}">
+        <form id="registerForm" name="registerForm" method="post" action="${pageContext.request.contextPath}/change-password-controller">
+            <c:if test="${requestScope.errorMessage != null}">
                 <div class="alert alert-danger" role="alert">
-                    <c:out value="${requestScope.emailOrPhoneNumberInDbError}"/>
-                </div>
-            </c:if>
-            <c:if test="${requestScope.RegisterProcessError != null}">
-                <div class="alert alert-danger" role="alert">
-                    <c:out value="${requestScope.RegisterProcessError}"/>
+                    <c:out value="${requestScope.errorMessage}"/>
                 </div>
             </c:if>
             <div class="form-group">
@@ -42,6 +42,7 @@
                     <c:out value="${requestScope.InputError.confirmPassword}"/>
                 </div>
             </div>
+            <input type="hidden" name="forgottenPasswordToken" value="<%=forgottenPasswordToken%>">
             <button id="submitButton" type="submit" class="btn btn-primary">Submit</button>
         </form>
     </main>

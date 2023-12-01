@@ -23,7 +23,7 @@ import java.util.Map;
  *
  * @author Lucas VELAY
  */
-@WebServlet(name = "LogInController", value = "/change-password-controller")
+@WebServlet(name = "ChangePasswordController", value = "/change-password-controller")
 public class ChangePasswordProcessController extends HttpServlet {
     /**
      * Redirect to the sender of this request and set an error message since GET queries aren't accepted by this servlet
@@ -54,33 +54,50 @@ public class ChangePasswordProcessController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
-        ForgottenPassword forgottenPassword = (ForgottenPassword) request.getAttribute("forgottenPassword");
+        String token = request.getParameter("forgottenPasswordToken");
+        ForgottenPassword forgottenPassword = ForgottenPasswordDAO.getForgottenPasswordFromToken(token);
+        String errorDestinationFP = "WEB-INF/views/forgottenPassword.jsp";
         String errorDestination = "WEB-INF/views/changePassword.jsp";
         String noErrorDestination = "/index.jsp";
         RequestDispatcher dispatcher = null;
 
-        if(password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,24}$") && password.equals(confirmPassword)){
-            User user = forgottenPassword.getUser();
-            if(user != null){
-                try {
-                    user.setPassword(HashService.generatePasswordHash(password));
-                    UserDAO.updateUser(user);
-                    ForgottenPasswordDAO.removeForgottenPassword(forgottenPassword);
-                    response.sendRedirect(request.getContextPath() + noErrorDestination);
-                }catch (Exception e) {
+        System.out.println(forgottenPassword);
+
+        if(forgottenPassword != null){
+            if(password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,24}$") && password.equals(confirmPassword)){
+                System.out.println(forgottenPassword);
+                User user = ForgottenPasswordDAO.getUser(forgottenPassword);
+                System.out.println(user);
+                if(user != null){
+                    try {
+                        user.setPassword(HashService.generatePasswordHash(password));
+                        UserDAO.updateUser(user);
+                        ForgottenPasswordDAO.removeForgottenPassword(forgottenPassword);
+                        response.sendRedirect(request.getContextPath() + noErrorDestination);
+                    }catch (Exception e) {
+                        System.out.println(e);
+                        request.setAttribute("forgottenPasswordToken", forgottenPassword.getToken());
+                        request.setAttribute("errorMessage", "An error occur");
+                        dispatcher = request.getRequestDispatcher(errorDestination);
+                    }
+                }
+                else{
+                    request.setAttribute("forgottenPasswordToken", forgottenPassword.getToken());
                     request.setAttribute("errorMessage", "An error occur");
                     dispatcher = request.getRequestDispatcher(errorDestination);
                 }
             }
-            else{
-                request.setAttribute("errorMessage", "An error occur");
+            else {
+                request.setAttribute("forgottenPasswordToken", forgottenPassword.getToken());
+                request.setAttribute("errorMessage", "Password is not valid : it needs letters, numbers, special characters @$!%*#?& and length between 8 and 24.\nPassword and confirm password much match.");
                 dispatcher = request.getRequestDispatcher(errorDestination);
             }
+        }else{
+            request.setAttribute("errorMessage", "An error occur");
+            dispatcher = request.getRequestDispatcher(errorDestinationFP);
         }
-        else {
-            request.setAttribute("errorMessage", "Password is not valid : it needs letters, numbers, special characters @$!%*#?& and length between 8 and 24.\nPassword and confirm password much match.");
-            dispatcher = request.getRequestDispatcher(errorDestination);
-        }
+
+
 
         if (dispatcher != null) dispatcher.forward(request, response);
     }

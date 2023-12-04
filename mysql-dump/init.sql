@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS ForgottenPassword(
     id INT PRIMARY KEY AUTO_INCREMENT,
     idUser INT NOT NULL,
     token VARCHAR(50) NOT NULL,
-    expiryDate DATE NOT NULL,
+    expiryDate DATETIME NOT NULL,
     FOREIGN KEY (idUser) REFERENCES User(id)
 );
 
@@ -194,7 +194,7 @@ CREATE EVENT cleaningForgottenPassword
         EVERY 1 MINUTE ENABLE
     DO
         DELETE FROM ForgottenPassword f
-        WHERE f.expiryDate < CURRENT_DATE;
+        WHERE f.expiryDate < SYSDATE();
 
 INSERT INTO LoyaltyProgram(durationNbDays) VALUES(365);
 

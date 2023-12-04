@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.sql.Date;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -21,12 +22,13 @@ public class ForgottenPassword {
     private String token;
     @Basic
     @Column(name = "expiryDate", nullable = false)
-    private Date expiryDate;
+    private LocalDateTime expiryDate;
 
     public ForgottenPassword(User user, String token) {
         this.user = user;
         this.token = token;
-        this.expiryDate = new Date(Date.from(Instant.now().plus(Duration.ofDays(1))).getTime());
+        //this.expiryDate = new Date(Date.from(Instant.now().plus(Duration.ofDays(1))).getTime());
+        this.expiryDate = LocalDateTime.now().plusDays(1);
     }
 
     public ForgottenPassword() {
@@ -57,11 +59,11 @@ public class ForgottenPassword {
         this.token = token;
     }
 
-    public Date getExpiryDate() {
+    public LocalDateTime getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(Date expiryDate) {
+    public void setExpiryDate(LocalDateTime expiryDate) {
         this.expiryDate = expiryDate;
     }
 

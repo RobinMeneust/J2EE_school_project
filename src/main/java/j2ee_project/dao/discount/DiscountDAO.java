@@ -15,7 +15,9 @@ public class DiscountDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        List<Discount> discounts = entityManager.createQuery("FROM Discount ",Discount.class).getResultList();
+        List<Discount> discounts = null;
+
+        discounts= entityManager.createQuery("FROM Discount ",Discount.class).getResultList();
 
         transaction.commit();
         entityManager.close();
@@ -27,7 +29,10 @@ public class DiscountDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Discount discount = entityManager.createQuery("FROM Discount WHERE id=:discountId",Discount.class).setParameter("discountId",discountId).getSingleResult();
+        Discount discount = null;
+        try {
+            discount = entityManager.createQuery("FROM Discount WHERE id=:discountId",Discount.class).setParameter("discountId",discountId).getSingleResult();
+        } catch (Exception ignore) {}
 
         transaction.commit();
         entityManager.close();
@@ -39,10 +44,14 @@ public class DiscountDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Discount discount = entityManager.createQuery("FROM Discount WHERE id=:discountId",Discount.class).setParameter("discountId",discountId).getSingleResult();
-        entityManager.remove(discount);
+        try {
+            Discount discount = entityManager.createQuery("FROM Discount WHERE id=:discountId",Discount.class).setParameter("discountId",discountId).getSingleResult();
+            entityManager.remove(discount);
+            transaction.commit();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
-        transaction.commit();
         entityManager.close();
     }
 

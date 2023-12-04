@@ -6,6 +6,8 @@ import j2ee_project.model.user.Customer;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -14,10 +16,6 @@ public class Orders {
     @Id
     @Column(name = "id", nullable = false)
     private int id;
-
-    @Basic
-    @Column(name = "total", nullable = false)
-    private float total;
     @Basic
     @Column(name = "date", nullable = false)
     private Date date;
@@ -25,7 +23,7 @@ public class Orders {
     @Column(name = "orderStatus", nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
-    @OneToMany(mappedBy = "order", fetch=FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @OneToMany(mappedBy = "order", fetch=FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE})
     private Set<OrderItem> orderItems;
     @ManyToOne
     @JoinColumn(name = "idCustomer", referencedColumnName = "idUser", nullable = false)
@@ -35,21 +33,19 @@ public class Orders {
     @JoinColumn(name = "idAddress", referencedColumnName = "id", nullable = false)
     private Address address;
 
+    @Transient
+    private static final float shippingFees = 5.0f;
+
     public Orders() { }
 
-    public Orders(float total, Date date, Customer customer, Address address) {
-        this.total = total;
+    public Orders(Cart cart, Date date, Customer customer, Address address) {
         this.date = date;
         this.orderItems = null;
         this.customer = customer;
         this.address = address;
         this.orderStatus = OrderStatus.WAITING_PAYMENT;
+        loadItemsFromCart(cart);
     }
-
-    public void setTotal(float total) {
-        this.total = total;
-    }
-
     public int getId() {
         return id;
     }
@@ -59,7 +55,13 @@ public class Orders {
     }
 
     public float getTotal() {
-        return total;
+        float total = 0.0f;
+        if(orderItems != null) {
+            for(OrderItem item : orderItems) {
+                total += item.getTotal();
+            }
+        }
+        return total + shippingFees;
     }
 
     public Date getDate() {
@@ -86,7 +88,7 @@ public class Orders {
         Orders orders = (Orders) o;
 
         if (id != orders.id) return false;
-        if (total != orders.total) return false;
+        if (!orderItems.equals(orders.orderItems)) return false;
         if (date != null ? !date.equals(orders.date) : orders.date != null) return false;
         if (orderStatus != null ? !orderStatus.equals(orders.orderStatus) : orders.orderStatus != null) return false;
 
@@ -96,9 +98,10 @@ public class Orders {
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + Float.valueOf(total).hashCode();
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (orderStatus != null ? orderStatus.hashCode() : 0);
+        result = 31 * result + date.hashCode();
+        result = 31 * result + orderStatus.ordinal();
+        result = 31 * result + customer.getId();
+        result = 31 * result + address.getId();
         return result;
     }
 
@@ -133,5 +136,34 @@ public class Orders {
             str += "- "+item.getProduct().getName()+"   ("+item.getQuantity()+")  price: "+item.getTotal()+"\n";
         }
         return str;
+    }
+
+    private void loadItemsFromCart(Cart cart) {
+        this.setOrderItems(new HashSet<>());
+        if(cart == null || cart.getCartItems() == null) {
+            return;
+        }
+
+        float cartPricePercentage = 1;
+        if (cart.getDiscount() != null) {
+            cartPricePercentage = (1 - ((float) cart.getDiscount().getDiscountPercentage() / 100));
+        }
+
+        for (CartItem item : cart.getCartItems()) {
+            OrderItem newItem = new OrderItem();
+            newItem.setProduct(item.getProduct());
+            newItem.setQuantity(item.getQuantity());
+            newItem.setOrder(this);
+
+            float itemPrice = item.getQuantity() * item.getProduct().getUnitPrice();
+            Discount categoryDiscount = item.getProduct().getCategory().getDiscount();
+            if (categoryDiscount != null) {
+                itemPrice *= (1 - ((float) categoryDiscount.getDiscountPercentage() / 100));
+            }
+            itemPrice *= cartPricePercentage;
+
+            newItem.setTotal(itemPrice);
+            this.getOrderItems().add(newItem);
+        }
     }
 }

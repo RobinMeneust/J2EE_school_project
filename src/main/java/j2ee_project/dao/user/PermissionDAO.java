@@ -14,7 +14,11 @@ public class PermissionDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Permission permission = entityManager.createQuery("FROM Permission WHERE permission = :permissionType",Permission.class).setParameter("permissionType",type).getSingleResult();
+        Permission permission = null;
+        try {
+            permission = entityManager.createQuery("FROM Permission WHERE permission = :permissionType", Permission.class).setParameter("permissionType", type).getSingleResult();
+        } catch(Exception ignore) {}
+
 
         transaction.commit();
         entityManager.close();

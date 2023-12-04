@@ -132,7 +132,10 @@ public class ProductDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Product product = entityManager.createQuery("FROM Product WHERE id=:productId", Product.class).setParameter("productId", productId).getSingleResult();
+        Product product = null;
+        try {
+            product = entityManager.createQuery("FROM Product WHERE id=:productId", Product.class).setParameter("productId", productId).getSingleResult();
+        } catch (Exception ignore) {}
 
         transaction.commit();
         entityManager.close();
@@ -188,7 +191,11 @@ public class ProductDAO {
         for(int i=0; i<params.size(); i++) {
             query.setParameter(i+1,params.get(i));
         }
-        Long size = query.getSingleResult();
+
+        Long size = 0L;
+        try {
+            size = query.getSingleResult();
+        } catch (Exception ignore) {}
 
         transaction.commit();
         entityManager.close();
@@ -203,11 +210,14 @@ public class ProductDAO {
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
+        try {
+            Product product = entityManager.createQuery("FROM Product WHERE id=:productId", Product.class).setParameter("productId", productId).getSingleResult();
+            entityManager.remove(product);
 
-        Product product = entityManager.createQuery("FROM Product WHERE id=:productId",Product.class).setParameter("productId",productId).getSingleResult();
-        entityManager.remove(product);
-
-        transaction.commit();
+            transaction.commit();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         entityManager.close();
     }
 
@@ -232,10 +242,14 @@ public class ProductDAO {
             return;
         }
 
-        Product product = entityManager.createQuery("FROM Product WHERE id=:productId", Product.class).setParameter("productId", productId).getSingleResult();
-        product.setImagePath(path);
+        try {
+            Product product = entityManager.createQuery("FROM Product WHERE id=:productId", Product.class).setParameter("productId", productId).getSingleResult();
+            product.setImagePath(path);
+            transaction.commit();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
-        transaction.commit();
         entityManager.close();
     }
 }

@@ -1,10 +1,7 @@
 package j2ee_project.controller.image;
 
-import j2ee_project.dao.catalog.product.ProductDAO;
-import j2ee_project.dao.user.PermissionDAO;
-import j2ee_project.model.catalog.Product;
-import j2ee_project.model.user.Moderator;
-import j2ee_project.model.user.TypePermission;
+import j2ee_project.dao.user.UserDAO;
+import j2ee_project.model.user.User;
 import j2ee_project.service.FileService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -17,15 +14,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * This class is a servlet used to get a product image from the Tomcat server or upload it to this server (/images path). It's a controller in the MVC architecture of this project.
+ * This class is a servlet used to get a user image from the Tomcat server or upload it to this server (/images path). It's a controller in the MVC architecture of this project.
  *
  * @author Robin MENEUST
  */
-@WebServlet(value = "/product/image")
+@WebServlet(value = "/user/image")
 @MultipartConfig
-public class ProductImageController extends HttpServlet {
+public class UserImageController extends HttpServlet {
     /**
-     * Get a product image from its ID
+     * Get a user image from its ID
      * @param request Request object received by the servlet
      * @param response Response to be sent
      * @throws ServletException If the request for the GET could not be handled
@@ -34,24 +31,31 @@ public class ProductImageController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        String productIdStr = request.getParameter("id");
-        int productId = -1;
+        HttpSession session = request.getSession();
 
-        if(productIdStr != null && !productIdStr.trim().isEmpty()) {
+        String userIdStr = request.getParameter("id");
+        int userId = -1;
+
+        if(userIdStr != null && !userIdStr.trim().isEmpty()) {
             try {
-                productId = Integer.parseInt(productIdStr);
+                userId = Integer.parseInt(userIdStr);
             } catch(Exception ignore) {}
         }
 
-        if(productId<=0) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Product ID must be positive");
+        if(userId<=0) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User ID must be positive");
             return;
         }
 
-        Product product = ProductDAO.getProduct(productId);
+        User user = UserDAO.getUser(userId);
+
+        if(user == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found for this ID");
+            return;
+        }
 
         File root = new File(getServletContext().getRealPath("/")).getParentFile().getParentFile();
-        Path imagePath = Paths.get(root.getPath()+"/images/"+product.getImagePath());
+        Path imagePath = Paths.get(root.getPath()+"/images/users/u"+userId);
 
         try {
             try (InputStream in = Files.newInputStream(imagePath)) {
@@ -59,7 +63,7 @@ public class ProductImageController extends HttpServlet {
                 Files.copy(imagePath, response.getOutputStream());
             }
         } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Product's image not found");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User's image not found");
         }
     }
 
@@ -74,33 +78,31 @@ public class ProductImageController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         HttpSession session = request.getSession();
-        Object obj = session.getAttribute("user");
-        if(!(obj instanceof Moderator)) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        } else {
-            Moderator moderator = (Moderator) obj;
-            if(!moderator.isAllowed(PermissionDAO.getPermission(TypePermission.CAN_MANAGE_PRODUCT))) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
-        }
 
         Part productIdStrPart = request.getPart("id");
         BufferedReader reader = new BufferedReader(new InputStreamReader(productIdStrPart.getInputStream()));
-        String productIdStr = reader.readLine();
+        String userIdStr = reader.readLine();
+        int userId = -1;
 
-        int productId = -1;
-
-        if(productIdStr != null && !productIdStr.trim().isEmpty()) {
+        if(userIdStr != null && !userIdStr.trim().isEmpty()) {
             try {
-                productId = Integer.parseInt(productIdStr);
+                userId = Integer.parseInt(userIdStr);
             } catch(Exception ignore) {}
         }
 
-        if(productId<=0) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Product ID must be positive");
+        if(userId<=0) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User ID must be positive");
             return;
+        }
+
+        Object obj = session.getAttribute("user");
+        User user = null;
+        if(obj instanceof User) {
+            user = (User) obj;
+        }
+
+        if(user.getId() != userId) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You can't edit the image of the user associated to this ID. It's not your account");
         }
 
         Part filePart = request.getPart("file");
@@ -112,14 +114,10 @@ public class ProductImageController extends HttpServlet {
 
 
         String extension = FileService.getFileExtension(filePart);
-        String productName = ProductDAO.getProduct(productId).getName().replaceAll("s/[\\\\/]/g",""); // We remove backslashes and slashes to protect us from path traversal
         extension = extension.replaceAll("[\\\\/]","");
-        ProductDAO.setProductImagePath(productId,"products/"+productName+"_"+productId+"."+extension);
 
         File root = new File(getServletContext().getRealPath("/")).getParentFile().getParentFile();
-        Path uploadImagePath = Paths.get(root.getPath()+"/images/"+ProductDAO.getProduct(productId).getImagePath());
-
-
+        Path uploadImagePath = Paths.get(root.getPath()+"/images/users/u"+userId+"."+extension);
 
         OutputStream out = null;
         InputStream fileContent = null;

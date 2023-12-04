@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="j2ee_project.model.catalog.Product" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
@@ -148,7 +149,7 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <span class="font-weight-bold"><c:out value="${product.getName()}" /></span>
-                            <span class="font-weight-bold"><c:out value="${product.getUnitPrice()} €" /></span>
+                            <span class="font-weight-bold"><fmt:formatNumber type = "number" maxFractionDigits  = "2" value = "${product.getUnitPrice()}"/> €</span>
                         </div>
                         <p class="card-text text-success mb-1 mt-1">
                             <c:if test="${not empty product.getCategory().getDiscount() && product.getCategory().getDiscount().getDiscountPercentage() > 0}">
@@ -157,6 +158,9 @@
                         </p>
                         <p class="card-text text-success mb-1 mt-1">
                             <c:choose>
+                                <c:when test="${product.getStockQuantity()==0}">
+                                    <button class="btn btn-danger" disabled>Out of stock</button>
+                                </c:when>
                                 <c:when test="${cart != null && cart.getCartItems() != null && cart.containsProduct(product.getId())}">
                                     <button class="btn btn-success" disabled>Already in cart</button>
                                 </c:when>
@@ -182,7 +186,7 @@
                 </li>
             </c:if>
 
-            <c:forEach var="i" begin="${Math.max(1,pageIndex-3)}" end="${Math.min(pageIndex+3 + Math.abs(pageIndex-3 - 1), totalPages)}" step="1">
+            <c:forEach var="i" begin="${Math.max(1,pageIndex-3)}" end="${Math.min(pageIndex+3, totalPages)}" step="1">
                 <c:choose>
                     <c:when test="${i == pageIndex}">
                         <li class="page-item active"><a class="page-link" href="${currentURLWithoutPage}page=<c:out value="${i}"/>"><c:out value="${i}"/></a></li>

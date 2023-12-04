@@ -64,7 +64,7 @@ async function initialize() {
     amountToBePaid = await amountToBePaidPromise;
     customerData = await customerDataPromise;
 
-    $("#amount-to-be-paid").text(amountToBePaid);
+    $("#amount-to-be-paid").text(amountToBePaid.toFixed(2));
 
     const response = await fetch(`create-payment-intent?order-id=`+urlParams.get("order-id"));
     const { clientSecret } = await response.json();

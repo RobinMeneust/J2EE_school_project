@@ -1,6 +1,7 @@
 package j2ee_project.dao.order;
 
 import j2ee_project.dao.JPAUtil;
+import j2ee_project.model.order.OrderStatus;
 import j2ee_project.model.order.Orders;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -38,15 +39,24 @@ public class OrdersDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Orders order;
-        try {
-            order = entityManager.createQuery("FROM Orders WHERE id=:orderId", Orders.class).setParameter("orderId", orderId).getSingleResult();
-        } catch(Exception e) {
-            order = null;
-        }
+        Orders order = entityManager.find(Orders.class,orderId);
 
         transaction.commit();
         entityManager.close();
         return order;
+    }
+
+    public static void setStatus(Orders order, OrderStatus orderStatus) {
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        Orders orderDBObj = entityManager.find(Orders.class,order.getId());
+        if(orderDBObj != null) {
+            orderDBObj.setOrderStatus(orderStatus);
+            transaction.commit();
+        }
+
+        entityManager.close();
     }
 }

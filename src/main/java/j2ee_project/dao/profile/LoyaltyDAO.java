@@ -5,7 +5,6 @@ import j2ee_project.model.loyalty.LoyaltyAccount;
 import j2ee_project.model.loyalty.LoyaltyLevel;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import org.hibernate.Session;
 
 import java.util.List;
 
@@ -21,7 +20,10 @@ public class LoyaltyDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        LoyaltyAccount loyaltyAccount = entityManager.createQuery("FROM LoyaltyAccount WHERE id=:loyaltyAccountId", LoyaltyAccount.class).setParameter("loyaltyAccountId", loyaltyAccountId).getSingleResult();
+        LoyaltyAccount loyaltyAccount = null;
+        try {
+            loyaltyAccount = entityManager.createQuery("FROM LoyaltyAccount WHERE id=:loyaltyAccountId", LoyaltyAccount.class).setParameter("loyaltyAccountId", loyaltyAccountId).getSingleResult();
+        } catch (Exception ignore) {}
 
         transaction.commit();
         entityManager.close();
@@ -37,7 +39,7 @@ public class LoyaltyDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        List<LoyaltyLevel> loyaltyLevels = entityManager.createQuery("FROM LoyaltyLevel", LoyaltyLevel.class).getResultList();
+        List<LoyaltyLevel> loyaltyLevels = entityManager.createQuery("FROM LoyaltyLevel ORDER BY requiredPoints", LoyaltyLevel.class).getResultList();
 
         transaction.commit();
         entityManager.close();
@@ -50,7 +52,10 @@ public class LoyaltyDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        LoyaltyLevel loyaltyLevel = entityManager.createQuery("FROM LoyaltyLevel WHERE id=:idLoyaltyLevel", LoyaltyLevel.class).setParameter("idLoyaltyLevel",idLoyaltyLevel).getSingleResult();
+        LoyaltyLevel loyaltyLevel = null;
+        try {
+            loyaltyLevel = entityManager.createQuery("FROM LoyaltyLevel WHERE id=:idLoyaltyLevel", LoyaltyLevel.class).setParameter("idLoyaltyLevel",idLoyaltyLevel).getSingleResult();
+        } catch (Exception ignore) {}
 
         transaction.commit();
         entityManager.close();
@@ -62,8 +67,8 @@ public class LoyaltyDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        LoyaltyLevel loyaltyLevelUsed = getLoyaltyLevel(idLoyaltyLevel);
-        LoyaltyAccount loyaltyAccount = getLoyaltyAccount(idLoyaltyAccount);
+        LoyaltyLevel loyaltyLevelUsed = entityManager.find(LoyaltyLevel.class, idLoyaltyLevel);
+        LoyaltyAccount loyaltyAccount = entityManager.find(LoyaltyAccount.class, idLoyaltyAccount);
         loyaltyAccount.addLoyaltyLevelUsed(loyaltyLevelUsed);
 
         transaction.commit();

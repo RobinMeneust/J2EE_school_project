@@ -4,6 +4,7 @@ import j2ee_project.dao.JPAUtil;
 import j2ee_project.model.user.Moderator;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.NoResultException;
 import org.hibernate.Session;
 
 import java.util.List;
@@ -27,7 +28,10 @@ public class ModeratorDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Moderator moderator = entityManager.createQuery("FROM Moderator WHERE id=:moderatorId", Moderator.class).setParameter("moderatorId",moderatorId).getSingleResult();
+        Moderator moderator = null;
+        try {
+            moderator = entityManager.createQuery("FROM Moderator WHERE id=:moderatorId", Moderator.class).setParameter("moderatorId", moderatorId).getSingleResult();
+        } catch (Exception ignore) {}
 
         transaction.commit();
         entityManager.close();
@@ -39,10 +43,14 @@ public class ModeratorDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Moderator moderator = entityManager.createQuery("FROM Moderator WHERE id=:moderatorId",Moderator.class).setParameter("moderatorId",moderatorId).getSingleResult();
-        entityManager.remove(moderator);
+        try {
+            Moderator moderator = entityManager.createQuery("FROM Moderator WHERE id=:moderatorId", Moderator.class).setParameter("moderatorId", moderatorId).getSingleResult();
+            entityManager.remove(moderator);
+            transaction.commit();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
-        transaction.commit();
         entityManager.close();
     }
 

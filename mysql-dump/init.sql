@@ -73,6 +73,14 @@ CREATE TABLE IF NOT EXISTS LoyaltyLevel (
     CONSTRAINT valid_required_points_nb CHECK (requiredPoints >= 0)
 );
 
+CREATE TABLE IF NOT EXISTS LoyaltyAccountDiscounts (
+    idLoyaltyAccount INT NOT NULL,
+    idDiscount INT NOT NULL,
+    FOREIGN KEY (idLoyaltyAccount) REFERENCES LoyaltyAccount(id),
+    FOREIGN KEY (idDiscount) REFERENCES Discount(id),
+    PRIMARY KEY(idLoyaltyAccount, idDiscount)
+);
+
 CREATE TABLE IF NOT EXISTS LoyaltyAccountLevelUsed (
     idLoyaltyAccount INT NOT NULL,
     idLoyaltyLevel INT NOT NULL,
@@ -112,14 +120,12 @@ CREATE TABLE IF NOT EXISTS Customer (
 
 CREATE TABLE IF NOT EXISTS Orders (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    total FLOAT NOT NULL,
     date DATE NOT NULL,
     orderStatus VARCHAR(30) NOT NULL,
     idCustomer INT NOT NULL,
     idAddress INT NOT NULL,
     FOREIGN KEY (idCustomer) REFERENCES Customer(idUser),
-    FOREIGN KEY (idAddress) REFERENCES Address(id),
-    CONSTRAINT valid_total_price CHECK(total >= 0)
+    FOREIGN KEY (idAddress) REFERENCES Address(id)
 );
 
 CREATE TABLE IF NOT EXISTS Cart (
@@ -172,6 +178,23 @@ CREATE TABLE IF NOT EXISTS ModeratorPermission (
     FOREIGN KEY (idPermission) REFERENCES Permission(id),
     PRIMARY KEY(idModerator, idPermission)
 );
+
+SET GLOBAL event_scheduler = ON;
+
+CREATE TABLE IF NOT EXISTS ForgottenPassword(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    idUser INT NOT NULL,
+    token VARCHAR(50) NOT NULL,
+    expiryDate DATETIME NOT NULL,
+    FOREIGN KEY (idUser) REFERENCES User(id)
+);
+
+CREATE EVENT cleaningForgottenPassword
+    ON SCHEDULE
+        EVERY 1 MINUTE ENABLE
+    DO
+        DELETE FROM ForgottenPassword f
+        WHERE f.expiryDate < SYSDATE();
 
 INSERT INTO LoyaltyProgram(durationNbDays) VALUES(365);
 
@@ -237,7 +260,7 @@ INSERT INTO Cart(idCustomer) VALUES(3);
 INSERT INTO Category(name, description, idDiscount) VALUES('strategy', 'A strategy game or strategic game is a game (e.g. a board game) in which the players\' uncoerced, and often autonomous, decision-making skills have a high significance in determining the outcome.', 1);
 INSERT INTO Category(name, description) VALUES('card game', 'A card game is any game using playing cards as the primary device with which the game is played, be they traditional or game-specific.');
 
-INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Chess Board', 50, 15, 'A chessboard is a gameboard used to play chess. It consists of 64 squares, 8 rows by 8 columns, on which the chess pieces are placed. It is square in shape and uses two colours of squares, one light and one dark, in a chequered pattern. During play, the board is oriented such that each player\'s near-right corner square is a light square.', 1, 'products/chess.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Chess Board', 0, 15, 'A chessboard is a gameboard used to play chess. It consists of 64 squares, 8 rows by 8 columns, on which the chess pieces are placed. It is square in shape and uses two colours of squares, one light and one dark, in a chequered pattern. During play, the board is oriented such that each player\'s near-right corner square is a light square.', 1, 'products/chess.jpg');
 INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
 INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards2', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
 INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('UNO cards3', 10, 5, 'Uno, stylized as UNO, is a proprietary American shedding-type card game originally developed in 1971 by Merle Robbins in Reading, Ohio, a suburb of Cincinnati, that housed International Games Inc., a gaming company acquired by Mattel on January 23, 1992.\nPlayed with a specially printed deck, the game is derived from the crazy eights family of card games which, in turn, is based on the traditional German game of mau-mau.', 2, 'products/uno_cards.jpg');
@@ -277,7 +300,7 @@ INSERT INTO LoyaltyAccountLevelUsed(idLoyaltyAccount, idLoyaltyLevel) VALUES(1,1
 INSERT INTO Mail(fromAddress, toAddress, subject, body, date) VALUES('example@example.com', 'example@example.com', 'Test mail', 'This is the body of a mail used for testing purposes', STR_TO_DATE('30/10/2023', '%d/%m/%Y'));
 
 
-INSERT INTO Orders(total, date, orderStatus, idCustomer, idAddress) VALUES(30, STR_TO_DATE('30/10/2023', '%d/%m/%Y'), 'SHIPPED', 2, 1);
+INSERT INTO Orders(date, orderStatus, idCustomer, idAddress) VALUES(STR_TO_DATE('30/10/2023', '%d/%m/%Y'), 'SHIPPED', 2, 1);
 INSERT INTO OrderItem(quantity, idOrder, idProduct,total) VALUES(2,1,1,2);
 
 INSERT INTO FeaturedProduct(idProduct) VALUES(1);

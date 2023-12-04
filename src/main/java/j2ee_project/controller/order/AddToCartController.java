@@ -67,6 +67,14 @@ public class AddToCartController extends HttpServlet {
 
         cart = CartManager.getCart(session, customer);
 
+        if(cart == null) {
+            // We need to create a new cart
+            cart = new Cart();
+            cart.setCustomer(customer);
+
+            CartDAO.addCart(cart);
+        }
+
         Set<CartItem> cartItems = cart.getCartItems();
 
         if(cartItems == null) {
@@ -95,7 +103,7 @@ public class AddToCartController extends HttpServlet {
             session.setAttribute("sessionCart", cart);
         } else {
             CartDAO.addItem(cart, newItem); // Add to the cart of the customer (saved in the db)
-            // Refresh the user cart
+            // Refresh the user's cart
             customer.setCart(CartDAO.getCartFromCustomerId(customer.getId()));
             session.setAttribute("user", customer);
         }

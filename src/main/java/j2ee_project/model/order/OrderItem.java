@@ -75,6 +75,11 @@ public class OrderItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, quantity, order, product, total);
+        int result = id;
+        result = 31 * result + quantity;
+        result = 31 * result + order.getId();
+        result = 31 * result + Float.hashCode(total);
+        result = 31 * result +product.getId();
+        return result;
     }
 }

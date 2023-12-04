@@ -45,6 +45,23 @@ public class UserDAO {
     }
 
     /**
+     * Update a user in the database
+     *
+     * @param user the user to add
+     */
+    public static void updateUser(User user){
+
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        entityManager.merge(user);
+
+        transaction.commit();
+        entityManager.close();
+    }
+
+    /**
      * Check if an email and a phone number are in the database
      *
      * @param email the email to check
@@ -55,16 +72,43 @@ public class UserDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        int countEmail = entityManager.createQuery("SELECT COUNT(*) FROM User WHERE email=:email OR phoneNumber=:phoneNumber", Integer.class)
-                .setParameter("email", email)
-                .setParameter("phoneNumber", phoneNumber)
-                .getSingleResult();
+        int countEmail = 0;
+        try {
+            countEmail = entityManager.createQuery("SELECT COUNT(*) FROM User WHERE email=:email OR phoneNumber=:phoneNumber", Integer.class)
+                    .setParameter("email", email)
+                    .setParameter("phoneNumber", phoneNumber)
+                    .getSingleResult();
+        } catch (Exception ignore) {}
 
         transaction.commit();
         entityManager.close();
         return countEmail > 0;
     }
 
+    /*
+    /**
+     * Check if an email is in the database
+     *
+     * @param email the email to check
+     * @return the boolean indicating the presence of the email
+     */
+    /*
+    public static boolean emailIsInDb(String email){
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        int countEmail = 0;
+        try {
+            countEmail = entityManager.createQuery("SELECT COUNT(*) FROM User WHERE email=:email", Integer.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+        } catch (Exception ignore) {}
+
+        transaction.commit();
+        entityManager.close();
+        return countEmail > 0;
+    }*/
 
     /**
      * Get user from the database with his email
@@ -77,17 +121,19 @@ public class UserDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        User user;
-        user = entityManager.createQuery("FROM User WHERE email=:email", User.class)
-                .setParameter("email", email)
-                .getSingleResult();
+        User user = null;
+        try {
+            user = entityManager.createQuery("FROM User WHERE email=:email", User.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+        } catch (Exception ignore) {}
 
         transaction.commit();
         entityManager.close();
         return  user;
     }
 
-	public static Object getUser(int id) {
+	public static User getUser(int id) {
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();

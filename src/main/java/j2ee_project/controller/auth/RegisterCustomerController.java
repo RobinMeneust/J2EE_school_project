@@ -82,7 +82,7 @@ public class RegisterCustomerController extends HttpServlet {
                         Customer customer = (Customer) user;
                         copySessionCartToCustomer(request, customer);
 
-                        // Refresh the user cart
+                        // Refresh the user's cart
                         customer.setCart(CartDAO.getCartFromCustomerId(customer.getId()));
                         session.setAttribute("user", customer);
                     }

@@ -4,7 +4,7 @@ import j2ee_project.model.Discount;
 import jakarta.persistence.*;
 
 @Entity
-public class LoyaltyLevel {
+public class LoyaltyLevel implements Comparable<LoyaltyLevel> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
@@ -71,5 +71,10 @@ public class LoyaltyLevel {
                 ", discount=" + discount +
                 ", loyaltyProgram=" + loyaltyProgram +
                 '}';
+    }
+
+    @Override
+    public int compareTo(LoyaltyLevel o) {
+        return Integer.compare(getRequiredPoints(), o.getRequiredPoints());
     }
 }

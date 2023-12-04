@@ -79,13 +79,15 @@
 <jsp:include page="../../layout/header.jsp" />
 
 <%
-    Customer customer = AuthService.getCustomer((User) session.getAttribute("user"));
-    //Customer customer = (Customer) request.getAttribute("customer");
+    //Customer customer = AuthService.getCustomer((User) session.getAttribute("user"));
+    Customer customer = (Customer) request.getAttribute("customer");
+    if(customer == null) {
+        response.sendRedirect("login");
+    }
     LoyaltyAccount loyaltyAccount = customer.getLoyaltyAccount();
             //(LoyaltyAccount) request.getAttribute("loyaltyAccount");
     List<LoyaltyLevel> loyaltyLevels = (List<LoyaltyLevel>) request.getAttribute("loyaltyLevels");
     String activeTab = request.getParameter("active-tab");
-    int hasLoyaltyAccount = Integer.parseInt(request.getParameter("has-loyalty-account"));
     Address address;
     String customerFirstName = null;
     String customerLastName = null;
@@ -115,7 +117,6 @@
 <c:set var="customer" value="<%=customer%>"/>
 <c:set var="loyaltyLevels" value="<%=loyaltyLevels%>"/>
 <c:set var="activeTab" value="<%=activeTab%>"/>
-<c:set var="hasLoyaltyAccount" value="<%=hasLoyaltyAccount%>"/>
 <c:set var="loyaltyAccount" value="<%=loyaltyAccount%>"/>
 
 
@@ -175,7 +176,7 @@
                 </div>
                 <div class="tab-pane fade <c:if test="${activeTab == 2}">show active</c:if>" id="nav-loyalty-account" role="tabpanel" aria-labelledby="nav-loyalty-account-tab"> <h2>Loyalty account</h2>
                     <p></p>
-                    <c:if test="${hasLoyaltyAccount == 1}">
+                    <c:if test="${not empty loyaltyAccount}">
                         <p>You have : <c:out value="${loyaltyAccount.getLoyaltyPoints()}"  /> loyalty points. </p>
                         <div id="container" class="container mt-5">
                             <div class="container horizontal-scrollable">
@@ -219,6 +220,29 @@
                                 </div>
                             <%}}%>
                         </div>
+                        <c:if test="${not empty loyaltyAccount.getAvailableDiscounts()}">
+                            <div>
+                                <h6 class="display-6">Available discounts</h6>
+                                <table class="table table-striped">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                        <th>Start date</th>
+                                        <th>End date</th>
+                                    </tr>
+                                    <c:forEach var="discount" items="${loyaltyAccount.getAvailableDiscounts()}">
+                                        <c:if test="${!discount.hasExpired()}">
+                                            <tr>
+                                                <td><c:out value="${discount.getName()}"/></td>
+                                                <td>- <c:out value="${discount.getDiscountPercentage()}"/> %</td>
+                                                <td><c:out value="${discount.getStartDate()}"/></td>
+                                                <td><c:out value="${discount.getEndDate()}"/></td>
+                                            </tr>
+                                        </c:if>
+                                    </c:forEach>
+                                </table>
+                            </div>
+                        </c:if>
                         <script>
                             var currentStep = 1;
                             var updateProgressBar;
@@ -271,7 +295,7 @@
                             });
                         </script>
                     </c:if>
-                    <c:if test="${hasLoyaltyAccount == 0}">
+                    <c:if test="${empty loyaltyAccount}">
                         <p>You do not have a loyalty Account</p>
                     </c:if>
                 </div>

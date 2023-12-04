@@ -26,7 +26,10 @@ public class CustomerDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Customer customer = entityManager.createQuery("FROM Customer WHERE id=:customerId",Customer.class).setParameter("customerId",customerId).getSingleResult();
+        Customer customer = null;
+        try {
+            customer = entityManager.createQuery("FROM Customer WHERE id=:customerId",Customer.class).setParameter("customerId",customerId).getSingleResult();
+        } catch (Exception ignore) {}
 
         transaction.commit();
         entityManager.close();
@@ -71,64 +74,68 @@ public class CustomerDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Customer customerToBeEdited = entityManager.createQuery("FROM Customer WHERE id = :customerId", Customer.class).setParameter("customerId",customer.getId()).getSingleResult();
+        Customer customerToBeEdited = null;
+        try {
+            customerToBeEdited = entityManager.createQuery("FROM Customer WHERE id = :customerId", Customer.class).setParameter("customerId", customer.getId()).getSingleResult();
 
-        //TODO: WE SHOULD NOT EDIT THE ADDRESS BECAUSE IT MIGHT BE USED BY OTHER TABLES
-        if (!customer.getFirstName().isEmpty()){
-            customerToBeEdited.setFirstName(customer.getFirstName());
-        }
-        if (!customer.getLastName().isEmpty()){
-            customerToBeEdited.setLastName(customer.getLastName());
-        }
-        if (!customer.getPassword().isEmpty()){
-            customerToBeEdited.setPassword(customer.getPassword());
-        }
-        if (!customer.getEmail().isEmpty()){
-            customerToBeEdited.setEmail(customer.getEmail());
-        }
-        if (!customer.getPhoneNumber().isEmpty()){
-            customerToBeEdited.setPhoneNumber(customer.getPhoneNumber());
-        }
+            if (!customer.getFirstName().isEmpty()){
+                customerToBeEdited.setFirstName(customer.getFirstName());
+            }
+            if (!customer.getLastName().isEmpty()){
+                customerToBeEdited.setLastName(customer.getLastName());
+            }
+            if (!customer.getPassword().isEmpty()){
+                customerToBeEdited.setPassword(customer.getPassword());
+            }
+            if (!customer.getEmail().isEmpty()){
+                customerToBeEdited.setEmail(customer.getEmail());
+            }
+            if (!customer.getPhoneNumber().isEmpty()){
+                customerToBeEdited.setPhoneNumber(customer.getPhoneNumber());
+            }
 
-        Address oldAddress = customerToBeEdited.getAddress();
-        Address newAddress = oldAddress;
-        boolean isDetached = false;
+            Address oldAddress = customerToBeEdited.getAddress();
+            Address newAddress = oldAddress;
+            boolean isDetached = false;
 
-        long nbAddressRefsInCustomer = entityManager.createQuery("SELECT COUNT(*) FROM Customer WHERE address.id = :addressId", Long.class)
-                .setParameter("addressId", oldAddress.getId())
-                .getSingleResult();
+            long nbAddressRefsInCustomer = entityManager.createQuery("SELECT COUNT(*) FROM Customer WHERE address.id = :addressId", Long.class)
+                    .setParameter("addressId", oldAddress.getId())
+                    .getSingleResult();
 
-        long nbAddressRefsInOrders = entityManager.createQuery("SELECT COUNT(*) FROM Orders WHERE address.id = :addressId", Long.class)
-                .setParameter("addressId", oldAddress.getId())
-                .getSingleResult();
+            long nbAddressRefsInOrders = entityManager.createQuery("SELECT COUNT(*) FROM Orders WHERE address.id = :addressId", Long.class)
+                    .setParameter("addressId", oldAddress.getId())
+                    .getSingleResult();
 
-        // Check if any referencing entities exist
-        if (nbAddressRefsInCustomer+nbAddressRefsInOrders > 1) {
-            // Refs exist so we create a new Address entry
-            newAddress = oldAddress;
-            entityManager.detach(newAddress);
-            newAddress.setId(0); // Reset the ID to add a new Address with a new auto-generated ID
-            isDetached = true;
-        }
+            // Check if any referencing entities exist
+            if (nbAddressRefsInCustomer+nbAddressRefsInOrders > 1) {
+                // Refs exist so we create a new Address entry
+                newAddress = oldAddress;
+                entityManager.detach(newAddress);
+                newAddress.setId(0); // Reset the ID to add a new Address with a new auto-generated ID
+                isDetached = true;
+            }
 
-        if (!customer.getAddress().getStreetAddress().isEmpty()){
-            newAddress.setStreetAddress(customer.getAddress().getStreetAddress());
-        }
-        if (!customer.getAddress().getPostalCode().isEmpty()){
-            newAddress.setPostalCode(customer.getAddress().getPostalCode());
-        }
-        if (!customer.getAddress().getCity().isEmpty()){
-            newAddress.setCity(customer.getAddress().getCity());
-        }
-        if (!customer.getAddress().getCountry().isEmpty()){
-            newAddress.setCountry(customer.getAddress().getCountry());
-        }
+            if (!customer.getAddress().getStreetAddress().isEmpty()){
+                newAddress.setStreetAddress(customer.getAddress().getStreetAddress());
+            }
+            if (!customer.getAddress().getPostalCode().isEmpty()){
+                newAddress.setPostalCode(customer.getAddress().getPostalCode());
+            }
+            if (!customer.getAddress().getCity().isEmpty()){
+                newAddress.setCity(customer.getAddress().getCity());
+            }
+            if (!customer.getAddress().getCountry().isEmpty()){
+                newAddress.setCountry(customer.getAddress().getCountry());
+            }
 
-        if(isDetached) {
-            entityManager.persist(newAddress);
-        }
+            if(isDetached) {
+                entityManager.persist(newAddress);
+            }
 
-        transaction.commit();
+            transaction.commit();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         entityManager.close();
     }
 }

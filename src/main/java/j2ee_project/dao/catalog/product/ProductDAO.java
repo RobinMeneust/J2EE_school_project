@@ -238,7 +238,6 @@ public class ProductDAO {
         transaction.begin();
 
         if(path==null || path.trim().isEmpty()) {
-            //TODO return an error
             return;
         }
 

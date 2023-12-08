@@ -27,12 +27,10 @@ public class CartItemDAO {
         CartItem cartItemDBObj = entityManager.find(CartItem.class,cartItemId);
 
         if(cartItemDBObj == null || cartItemDBObj.getCart() == null || customer == null || !customer.equals(cartItemDBObj.getCart().getCustomer())) {
-            //TODO: throw an Exception
             return;
         }
 
         if(cartItemDBObj == null) {
-            //TODO: throw an Exception
             return;
         }
 

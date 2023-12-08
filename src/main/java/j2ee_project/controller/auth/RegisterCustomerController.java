@@ -8,6 +8,7 @@ import j2ee_project.model.Mail;
 import j2ee_project.model.user.Customer;
 import j2ee_project.model.user.User;
 import j2ee_project.service.AuthService;
+import j2ee_project.service.DTOService;
 import j2ee_project.service.MailManager;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -63,7 +64,7 @@ public class RegisterCustomerController extends HttpServlet {
                 request.getParameter("confirmPassword"),
                 request.getParameter("phoneNumber")
         );
-        Map<String, String> inputErrors = AuthService.userDataValidation(customerDTO);
+        Map<String, String> inputErrors = DTOService.userDataValidation(customerDTO);
         String errorDestination = "WEB-INF/views/register.jsp";
         String noErrorDestination = "/index.jsp";
         RequestDispatcher dispatcher = null;

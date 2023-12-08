@@ -4,6 +4,7 @@ import j2ee_project.dao.AddressDAO;
 import j2ee_project.dao.discount.DiscountDAO;
 import j2ee_project.dao.order.CartItemDAO;
 import j2ee_project.dao.order.OrdersDAO;
+import j2ee_project.dto.AddressDTO;
 import j2ee_project.model.Address;
 import j2ee_project.model.Discount;
 import j2ee_project.model.order.Cart;
@@ -11,6 +12,8 @@ import j2ee_project.model.order.CartItem;
 import j2ee_project.model.order.OrderItem;
 import j2ee_project.model.order.Orders;
 import j2ee_project.service.CartManager;
+import j2ee_project.service.DTOService;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,6 +25,7 @@ import j2ee_project.model.user.Customer;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -81,8 +85,16 @@ public class ConfirmCartController extends HttpServlet {
         String postalCode = request.getParameter("postal-code");
         String country = request.getParameter("country");
 
-        Address deliveryAddress = new Address(streetAddress, postalCode, city, country);
+        AddressDTO deliveryAddressDTO = new AddressDTO(streetAddress, postalCode, city, country);
+        Map<String, String> inputErrors = DTOService.addressDataValidation(deliveryAddressDTO);
+        if(!inputErrors.isEmpty()){
+            RequestDispatcher dispatcher = request.getRequestDispatcher("cart?tab=confirmation");
+            request.setAttribute("InputError", inputErrors);
+            dispatcher.forward(request,response);
+            return;
+        }
 
+        Address deliveryAddress = new Address(deliveryAddressDTO);
         deliveryAddress = AddressDAO.addAddressIfNotExists(deliveryAddress);
 
         Orders newOrder = new Orders(cart, new Date(Calendar.getInstance().getTimeInMillis()), customer, deliveryAddress);

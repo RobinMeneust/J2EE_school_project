@@ -13,6 +13,11 @@ import jakarta.persistence.EntityTransaction;
  */
 public class ForgottenPasswordDAO {
 
+    /**
+     * Add a forgotten password request
+     *
+     * @param forgottenPassword the forgotten password request
+     */
     public static void addForgottenPassword(ForgottenPassword forgottenPassword) {
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -24,6 +29,11 @@ public class ForgottenPasswordDAO {
         entityManager.close();
     }
 
+    /**
+     * Remove a forgotten password request
+     *
+     * @param forgottenPassword the forgotten password request
+     */
     public static void removeForgottenPassword(ForgottenPassword forgottenPassword) {
         if(forgottenPassword != null) {
             EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
@@ -37,6 +47,12 @@ public class ForgottenPasswordDAO {
         }
     }
 
+    /**
+     * Get forgotten password query from token
+     *
+     * @param token the token
+     * @return the forgotten password
+     */
     public static ForgottenPassword getForgottenPasswordFromToken(String token){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -54,6 +70,12 @@ public class ForgottenPasswordDAO {
         return  forgottenPassword;
     }
 
+    /**
+     * Get the user associated to the given forgotten password query
+     *
+     * @param forgottenPassword the forgotten password query
+     * @return the user
+     */
     public static User getUser(ForgottenPassword forgottenPassword){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();

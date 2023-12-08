@@ -36,14 +36,26 @@ public class UserDTO {
         this.phoneNumber = phoneNumber;
     }
 
+    /**
+     * Get first name
+     * @return First name
+     */
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     * Get last name
+     * @return Last name
+     */
     public String getLastName() {
         return lastName;
     }
 
+    /**
+     * Get email
+     * @return Email
+     */
     public String getEmail() {
         return email;
     }

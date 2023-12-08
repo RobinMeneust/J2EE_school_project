@@ -15,9 +15,18 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
+/**
+ * This class is a servlet used to get or edit the profile information page. It's a controller in the MVC architecture of this project.
+ */
 @WebServlet("/profile-informations")
 public class ProfileInformationsController extends HttpServlet {
-
+    /**
+     * Get the profile information page
+     * @param request Request object received by the servlet
+     * @param response Response to be sent
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String customerIdStr = request.getParameter("customerId");
@@ -41,6 +50,13 @@ public class ProfileInformationsController extends HttpServlet {
 
     }
 
+    /**
+     * Edit the user information
+     * @param request Request object received by the servlet
+     * @param response Response to be sent
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userIdStr = request.getParameter("id");

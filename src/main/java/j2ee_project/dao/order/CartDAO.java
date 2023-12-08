@@ -17,6 +17,12 @@ import org.hibernate.Session;
  */
 public class CartDAO {
 
+    /**
+     * Add an item to a cart
+     *
+     * @param cart the cart to which an item is added
+     * @param item the item added
+     */
     public static void addItem(Cart cart, CartItem item) {
         int itemId = CartItemDAO.newItem(item);
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
@@ -31,6 +37,11 @@ public class CartDAO {
         entityManager.close();
     }
 
+    /**
+     * Add a cart
+     *
+     * @param cart the cart added
+     */
     public static void addCart(Cart cart) {
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -42,6 +53,11 @@ public class CartDAO {
         entityManager.close();
     }
 
+    /**
+     * Remove cart
+     *
+     * @param cart the cart removed
+     */
     public static void removeCart(Cart cart) {
         if(cart == null) {
             return;
@@ -62,8 +78,9 @@ public class CartDAO {
 
     /**
      * Update the cart only if the customer's cart is empty
-     * @param customer
-     * @param cart
+     *
+     * @param customer the customer
+     * @param cart     the new cart
      */
     public static void updateCart(Customer customer, Cart cart) {
         Cart oldCart = customer.getCart();
@@ -98,6 +115,12 @@ public class CartDAO {
         }
     }
 
+    /**
+     * Get a customer's cart the customer's id
+     *
+     * @param id the id of the customer
+     * @return the cart of the customer
+     */
     public static Cart getCartFromCustomerId(int id) {
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -112,6 +135,12 @@ public class CartDAO {
         return cart;
     }
 
+    /**
+     * Set a cart discount
+     *
+     * @param cartId   the cart id whose discount is set
+     * @param discount the discount set
+     */
     public static void setDiscount(int cartId, Discount discount) {
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();

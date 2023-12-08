@@ -14,8 +14,18 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
+/**
+ * This class is a servlet used to add a moderator. It's a controller in the MVC architecture of this project.
+ */
 @WebServlet("/add-moderator")
 public class AddModeratorController extends HttpServlet {
+    /**
+     * Get the page to add a moderator
+     * @param request Request object received by the servlet
+     * @param response Response to be sent
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
@@ -27,6 +37,13 @@ public class AddModeratorController extends HttpServlet {
         }
     }
 
+    /**
+     * Add a moderator to the DB
+     * @param request Request object received by the servlet
+     * @param response Response to be sent
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Moderator moderator = new Moderator();

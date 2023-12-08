@@ -9,13 +9,14 @@ import jakarta.persistence.EntityTransaction;
 import java.util.List;
 
 /**
- * Class that interact with the database to edit the Category table in the database or get data from it
+ * Class that interacts with the database to edit the Category table in the database or get data from it
  *
  * @author Robin Meneust, Jérémy Saëlen
  */
 public class CategoryDAO {
     /**
      * Get the list of all the categories
+     *
      * @return List of categories
      */
     public static List<Category> getCategories(){
@@ -30,6 +31,12 @@ public class CategoryDAO {
         return categories;
     }
 
+    /**
+     * Get category from its id
+     *
+     * @param categoryId the category id
+     * @return the category
+     */
     public static Category getCategory(int categoryId){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -46,6 +53,11 @@ public class CategoryDAO {
         return category;
     }
 
+    /**
+     * Delete category.
+     *
+     * @param categoryId the category id
+     */
     public static void deleteCategory(int categoryId){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -62,6 +74,11 @@ public class CategoryDAO {
         entityManager.close();
     }
 
+    /**
+     * Add category.
+     *
+     * @param category the category
+     */
     public static void addCategory(Category category){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();

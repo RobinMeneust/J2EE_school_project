@@ -8,7 +8,17 @@ import jakarta.persistence.EntityTransaction;
 
 import java.util.List;
 
+/**
+ * Class that interact with the database to edit the Permission table in the database
+ *
+ * @author Robin Meneust
+ */
 public class PermissionDAO {
+    /**
+     * Get a permission from its type
+     * @param type Type of the permission searched
+     * @return Permission whose type matches with the one given
+     */
     public static Permission getPermission(TypePermission type) {
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();

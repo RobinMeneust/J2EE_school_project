@@ -16,6 +16,9 @@ import org.hibernate.Session;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * This class is a servlet used to redeem a loyalty level. It's a controller in the MVC architecture of this project.
+ */
 @WebServlet("/loyalty-redeem")
 public class LoyaltyRedeemController extends HttpServlet {
 
@@ -62,7 +65,7 @@ public class LoyaltyRedeemController extends HttpServlet {
     }
 
     /**
-     *
+     * Claim a loyalty level
      * @param request Request object received by the servlet
      * @param response Response to be sent
      * @throws ServletException If the request for the POST could not be handled

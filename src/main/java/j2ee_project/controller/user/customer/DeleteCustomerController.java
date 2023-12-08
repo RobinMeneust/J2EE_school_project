@@ -8,8 +8,18 @@ import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
+/**
+ * This class is a servlet used to delete a customer. It's a controller in the MVC architecture of this project.
+ */
 @WebServlet("/delete-customer")
 public class DeleteCustomerController extends HttpServlet {
+    /**
+     * Remove the customer whose id is given in the param "id"
+     * @param request Request object received by the servlet
+     * @param response Response to be sent
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String customerIdStr = request.getParameter("id");
@@ -33,8 +43,4 @@ public class DeleteCustomerController extends HttpServlet {
         }
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
 }

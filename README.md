@@ -177,6 +177,12 @@ The username for this project is "j2ee_user" and the password is "j2ee_password"
   1. `mvn clean package`
      <br><br>
 - If you have other errors, try to remove all the images, containers and volumes in Docker Desktop and run `docker-compose up -d` again.
+
+## Documentation
+
+1. Generate the documentation: `mvn javadoc:jar`
+2. Go to target/apidocs and open index.html in a web browser
+
 ## Authors
 
 - Theo Gandy

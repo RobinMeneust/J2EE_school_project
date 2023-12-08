@@ -44,7 +44,6 @@ public class CustomerDAO {
         Customer customer = entityManager.find(Customer.class,customerId);
         if(customer == null) {
             System.err.println("The customer to be deleted does not exist");
-            //TODO: it's better to throw a custom Exception in that case (end don't forget to close the entity manager before)
             entityManager.close();
             return;
         }

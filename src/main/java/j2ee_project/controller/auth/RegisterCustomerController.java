@@ -79,8 +79,7 @@ public class RegisterCustomerController extends HttpServlet {
                     session.setAttribute("user", user);
 
                     // Copy the session cart to the current user cart (and override it if it's not empty) if the user is a customer
-                    if(user instanceof Customer) {
-                        Customer customer = (Customer) user;
+                    if(user instanceof Customer customer) {
                         copySessionCartToCustomer(request, customer);
 
                         // Refresh the user's cart

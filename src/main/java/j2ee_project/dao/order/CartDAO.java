@@ -81,7 +81,6 @@ public class CartDAO {
 
             Customer customerDbObject = entityManager.find(Customer.class, customer.getId());
             if (customerDbObject == null) {
-                //TODO: return error
                 return;
             }
             cart.setCustomer(customerDbObject);

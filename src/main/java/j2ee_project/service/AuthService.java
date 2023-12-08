@@ -1,29 +1,17 @@
 package j2ee_project.service;
 
 import j2ee_project.dao.loyalty.LoyaltyProgramDAO;
-import j2ee_project.dao.user.CustomerDAO;
 import j2ee_project.dao.user.UserDAO;
-import j2ee_project.dto.ContactDTO;
 import j2ee_project.dto.CustomerDTO;
 import j2ee_project.dto.ModeratorDTO;
-import j2ee_project.dto.UserDTO;
 import j2ee_project.model.loyalty.LoyaltyAccount;
-import j2ee_project.model.loyalty.LoyaltyProgram;
 import j2ee_project.model.user.*;
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+
 
 /**
  * This is a service class which contains method for authentication
@@ -80,24 +68,6 @@ public class AuthService {
         return moderator;
     }
 
-    /**
-     * Validate a user data transfer object
-     * @param userDTO the dto to validate
-     * @return a map with error message
-     */
-    public static Map<String, String> userDataValidation(UserDTO userDTO){
-        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-        Validator validator = validatorFactory.getValidator();
-        Set<ConstraintViolation<UserDTO>> violations = validator.validate(userDTO);
-        Map<String, String> violationsMap = new HashMap<>();
-        for(ConstraintViolation<UserDTO> violation : violations){
-            violationsMap.put(violation.getPropertyPath().toString(), violation.getMessage());
-        }
-        if(!userDTO.getPassword().equals(userDTO.getConfirmPassword())){
-            violationsMap.put("confirmPassword", "Password and Confirm Password must match.");
-        }
-        return violationsMap;
-    }
 
     public static void openLoyaltyAccount(Customer customer){
         LoyaltyAccount loyaltyAccount = new LoyaltyAccount();
@@ -106,22 +76,6 @@ public class AuthService {
         loyaltyAccount.setLoyaltyProgram(LoyaltyProgramDAO.getLoyaltyProgram());
         customer.setLoyaltyAccount(loyaltyAccount);
         UserDAO.updateUser(customer);
-    }
-
-    /**
-     * Validate a contact data transfer object
-     * @param contactDTO the dto to validate
-     * @return a map with error message
-     */
-    public static Map<String, String> contactDataValidation(ContactDTO contactDTO){
-        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-        Validator validator = validatorFactory.getValidator();
-        Set<ConstraintViolation<ContactDTO>> violations = validator.validate(contactDTO);
-        Map<String, String> violationsMap = new HashMap<>();
-        for(ConstraintViolation<ContactDTO> violation : violations){
-            violationsMap.put(violation.getPropertyPath().toString(), violation.getMessage());
-        }
-        return violationsMap;
     }
 
     /**

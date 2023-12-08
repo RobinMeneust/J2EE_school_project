@@ -3,7 +3,7 @@ package j2ee_project.controller;
 import j2ee_project.dao.MailDAO;
 import j2ee_project.dto.ContactDTO;
 import j2ee_project.model.Mail;
-import j2ee_project.service.AuthService;
+import j2ee_project.service.DTOService;
 import j2ee_project.service.MailManager;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -38,7 +38,7 @@ public class ContactController extends HttpServlet {
                 request.getParameter("subject"),
                 request.getParameter("bodyMessage")
         );
-        Map<String, String> inputErrors = AuthService.contactDataValidation(contact);
+        Map<String, String> inputErrors = DTOService.contactDataValidation(contact);
         String errorDestination = "WEB-INF/views/contact.jsp";
         String noErrorDestination = "WEB-INF/views/contact.jsp";
         RequestDispatcher dispatcher = null;

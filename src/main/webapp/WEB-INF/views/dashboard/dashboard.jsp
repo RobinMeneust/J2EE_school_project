@@ -1,297 +1,488 @@
-<%@ page import="java.util.List" %>
-<%@ page import="j2ee_project.model.user.Customer" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="j2ee_project.model.catalog.Product" %>
-<%@ page import="j2ee_project.model.user.Moderator" %>
-<%@ page import="j2ee_project.model.catalog.Category" %>
-<%@ page import="j2ee_project.model.Discount" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="cf" uri="/WEB-INF/functions.tld"%>
+<%@ page import="j2ee_project.model.user.TypePermission" %>
 <html>
 <head>
     <title>Dashboard</title>
     <jsp:include page="../../../include.jsp"/>
     <script type="application/javascript">
-        function expandCatalogue(button){
-            if (button.getAttribute('id') === 'nav-catalogue-tab'){
-                const buttonProducts = document.getElementById("nav-products-tab");
-                const buttonCategories = document.getElementById("nav-categories-tab");
-                buttonProducts.classList.toggle("hidden");
-                buttonCategories.classList.toggle("hidden");
+        function changeURLParameter(tab){
+            let url = new URL(window.location.href);
+            url.searchParams.set("tab",tab);
+            window.history.replaceState(null, null, url.href);
+        }
+
+        $(document).ready(function () {
+            $('#customers-table').DataTable();
+            $('#moderators-table').DataTable();
+            $('#products-table').DataTable();
+            $('#categories-table').DataTable();
+            $('#discounts-table').DataTable();
+        });
+    </script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard/dashboard.css">
+    <script>
+        function confirmDelete(type, id) {
+            let confirmation = confirm("Are you sure you want to delete this one?");
+            if (confirmation) {
+                window.location.href = "delete-" + type + "?id=" + id;
             }
         }
     </script>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
 </head>
 <body>
     <jsp:include page="../../../layout/header.jsp" />
-    <div class="container-fluid">
-        <div class="d-flex ">
-            <nav class="col-lg-2">
-                <div class="nav nav-tabs flex-column" id="nav-tab" role="tablist">
-                    <button class="nav-link active" id="nav-customers-tab" data-bs-toggle="tab" data-bs-target="#nav-customers" type="button" role="tab" aria-controls="nav-customers" aria-selected="true">Customers</button>
-                    <button class="nav-link" id="nav-moderators-tab" data-bs-toggle="tab" data-bs-target="#nav-moderators" type="button" role="tab" aria-controls="nav-moderators" aria-selected="false">Moderators</button>
-                    <button onclick="expandCatalogue(this)" class="nav-link" id="nav-catalogue-tab" type="button" aria-controls="nav-catalogue" aria-selected="false">Catalogue</button>
-                    <button class="nav-link hidden" id="nav-products-tab" data-bs-toggle="tab" data-bs-target="#nav-products" type="button" role="tab" aria-controls="nav-products" aria-selected="false">Products</button>
-                    <button class="nav-link hidden" id="nav-categories-tab" data-bs-toggle="tab" data-bs-target="#nav-categories" type="button" role="tab" aria-controls="nav-categories" aria-selected="false">Categories</button>
-                    <button class="nav-link" id="nav-discounts-tab" data-bs-toggle="tab" data-bs-target="#nav-discounts" type="button" role="tab" aria-controls="nav-discounts" aria-selected="false">Discounts</button>
+    <c:set var="tab" value="${param.tab}"/>
+    <c:set var="user" value="${cf:getModerator(sessionScope.user)}"/>
+    <div class="container p-3 mt-5" style="min-height:100vh">
+        <div class="d-flex">
+            <div class="div-tabs mt-4">
+                <div class="nav nav-pills d-flex flex-column align-items-stretch" id="pills-tab" role="tablist" aria-orientation="vertical">
+                    <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CUSTOMER)) || user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_MODERATOR))}">
+                        <div>
+                            <span class="field-title">Users</span>
+                            <hr>
+                            <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CUSTOMER))}">
+                                <span class="d-flex justify-content-between flex-row">
+                                    <button onclick="changeURLParameter('customers')"
+                                        class="nav-link
+                                        <c:if test="${tab=='customers'}">
+                                            <c:out value="active"/>
+                                        </c:if>"
+                                        id="pills-customers-tab"
+                                        data-bs-toggle="pill"
+                                        data-bs-target="#pills-customers"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="pills-customers"
+                                        aria-selected="true">
+                                        <span class="d-flex justify-content-between flex-row">
+                                            <span>Customers</span>
+                                            <span class="material-symbols-outlined" id="span-chevron-customers">
+                                                chevron_right
+                                            </span>
+                                        </span>
+                                </button>
+                            </span>
+                            </c:if>
+                            <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_MODERATOR))}">
+                                <span class="d-flex justify-content-between flex-row">
+                                    <button onclick="changeURLParameter('moderators')"
+                                        class="nav-link
+                                        <c:if test="${tab=='moderators'}">
+                                            <c:out value="active"/>
+                                        </c:if>"
+                                        id="pills-moderators-tab"
+                                        data-bs-toggle="pill"
+                                        data-bs-target="#pills-moderators"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="pills-moderators"
+                                        aria-selected="false">
+                                        <span class="d-flex justify-content-between flex-row">
+                                            <span>Moderators</span>
+                                            <span class="material-symbols-outlined" id="span-chevron-moderators">
+                                                chevron_right
+                                            </span>
+                                        </span>
+                                    </button>
+                                </span>
+                            </c:if>
+                        </div>
+                    </c:if>
+                    <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_PRODUCT)) || user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CATEGORY))}">
+                        <div class="mt-5">
+                            <span class="field-title">Catalogue</span>
+                            <hr>
+                            <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_PRODUCT))}">
+                                <span class="d-flex justify-content-between flex-row">
+                                    <button onclick="changeURLParameter('products')"
+                                        class="nav-link
+                                        <c:if test="${tab=='products'}">
+                                            <c:out value="active"/>
+                                        </c:if>"
+                                        id="pills-products-tab"
+                                        data-bs-toggle="pill"
+                                        data-bs-target="#pills-products"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="pills-products"
+                                        aria-selected="false">
+                                        <span class="d-flex justify-content-between flex-row">
+                                            <span>Products</span>
+                                            <span class="material-symbols-outlined" id="span-chevron-products">
+                                                chevron_right
+                                            </span>
+                                        </span>
+                                    </button>
+                                </span>
+                            </c:if>
+                            <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CATEGORY))}">
+                                <span class="d-flex justify-content-between flex-row">
+                                    <button onclick="changeURLParameter('categories')"
+                                        class="nav-link
+                                        <c:if test="${tab=='categories'}">
+                                            <c:out value="active"/>
+                                        </c:if>"
+                                        id="pills-categories-tab"
+                                        data-bs-toggle="pill"
+                                        data-bs-target="#pills-categories"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="pills-categories"
+                                        aria-selected="false">
+                                        <span class="d-flex justify-content-between flex-row">
+                                            <span>
+                                                Categories
+                                            </span>
+                                            <span class="material-symbols-outlined" id="span-chevron-categories">
+                                                chevron_right
+                                            </span>
+                                        </span>
+                                    </button>
+                                </span>
+                            </c:if>
+                        </div>
+                    </c:if>
+                    <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_DISCOUNT)) || user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_LOYALTY))}">
+                        <div class="mt-5">
+                            <span class="field-title">Offers</span>
+                            <hr>
+                            <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_DISCOUNT))}">
+                                <span class="d-flex justify-content-between flex-row">
+                                    <button onclick="changeURLParameter('discounts')"
+                                        class="nav-link
+                                        <c:if test="${tab=='discounts'}">
+                                            <c:out value="active"/>
+                                        </c:if>"
+                                        id="pills-discounts-tab"
+                                        data-bs-toggle="pill"
+                                        data-bs-target="#pills-discounts"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="pills-discounts"
+                                        aria-selected="false">
+                                        <span class="d-flex justify-content-between flex-row">
+                                            <span>
+                                                Discounts
+                                            </span>
+                                            <span class="material-symbols-outlined" id="span-chevron-discounts">
+                                                chevron_right
+                                            </span>
+                                        </span>
+                                    </button>
+                                </span>
+                            </c:if>
+                            <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_LOYALTY))}">
+                                <span class="d-flex justify-content-between flex-row">
+                                    <button onclick="changeURLParameter('loyalty-program')"
+                                        class="nav-link
+                                        <c:if test="${tab=='loyalty-program'}">
+                                            <c:out value="active"/>
+                                        </c:if>"
+                                        id="pills-loyalty-program-tab"
+                                        data-bs-toggle="pill"
+                                        data-bs-target="#pills-loyalty-program"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="pills-loyalty-program"
+                                        aria-selected="false">
+                                        <span class="d-flex justify-content-between flex-row">
+                                            <span>
+                                                Loyalty Program
+                                            </span>
+                                            <span class="material-symbols-outlined" id="span-chevron-loyalty-program">
+                                                chevron_right
+                                            </span>
+                                        </span>
+                                    </button>
+                                </span>
+                            </c:if>
+                        </div>
+                    </c:if>
                 </div>
-            </nav>
-            <div class="tab-content col-lg-10" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-customers" role="tabpanel" aria-labelledby="nav-customers-tab">
-                    <a href="add-customer" class="add-data" id="add-customer">Add Customer</a>
-                    <%
-                        List<Customer> customers = (List<Customer>) request.getAttribute("customers");
-                        if(customers == null){
-                            customers = new ArrayList<>();
-                        }
-                    %>
-                    <table class="table table-striped table-hover" id="customers-table" data-filter-control-visible="false">
-                        <thead>
-                            <tr>
-                                <th>Last Name</th>
-                                <th>First Name</th>
-                                <th>Street</th>
-                                <th>Postal Code</th>
-                                <th>City</th>
-                                <th>Country</th>
-                                <th>Email</th>
-                                <th>Phone Number</th>
-                                <th data-sortable="false"></th>
-                                <th data-sortable="false"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var = "customer" items = "${customers}">
+            </div>
+            <div class="tab-content me-3 ms-3" id="pills-tabContent">
+                <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CUSTOMER))}">
+                    <div class="tab-pane fade
+                                <c:if test="${tab=='customers'}">
+                                    <c:out value="show"/>
+                                    <c:out value="active"/>
+                                </c:if>"
+                         id="pills-customers"
+                         role="tabpanel"
+                         aria-labelledby="pills-customers-tab">
+                        <div class="div-add-data d-flex align-items-end flex-column mb-lg-2">
+                            <a href="add-customer" class="add-data btn btn-primary" id="add-customer">Add Customer</a>
+                        </div>
+                        <c:set var="customers" value="${requestScope.customers}"/>
+                        <table class="table table-striped table-hover" id="customers-table" data-filter-control-visible="false">
+                            <thead class="align-middle">
                                 <tr>
-                                    <td><c:out value = "${customer.getLastName()}"/></td>
-                                    <td><c:out value = "${customer.getFirstName()}"/></td>
-                                    <td><c:out value = "${customer.getAddress().getStreetAddress()}"/></td>
-                                    <td><c:out value = "${customer.getAddress().getPostalCode()}"/></td>
-                                    <td><c:out value = "${customer.getAddress().getCity()}"/></td>
-                                    <td><c:out value = "${customer.getAddress().getCountry()}"/></td>
-                                    <td><c:out value = "${customer.getEmail()}"/></td>
-                                    <td><c:out value = "${customer.getPhoneNumber()}"/></td>
-                                    <td class="border-bottom-0">
-                                        <a href="" class="pencil">
-                                            <img src="${pageContext.request.contextPath}/img/pencil.svg" alt="Pencil">
+                                    <th class="text-center">Last Name</th>
+                                    <th class="text-center">First Name</th>
+                                    <th class="text-center">Street</th>
+                                    <th class="text-center">Postal Code</th>
+                                    <th class="text-center">City</th>
+                                    <th class="text-center">Country</th>
+                                    <th class="text-center">Email</th>
+                                    <th class="text-center">Phone Number</th>
+                                    <th class="text-center" data-sortable="false"></th>
+                                    <th class="text-center" data-sortable="false"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var = "customer" items = "${customers}">
+                                    <tr>
+                                        <td class="text-center"><c:out value = "${customer.lastName}"/></td>
+                                        <td class="text-center"><c:out value = "${customer.firstName}"/></td>
+                                        <td class="text-center"><c:out value = "${customer.address.streetAddress}"/></td>
+                                        <td class="text-center"><c:out value = "${customer.address.postalCode}"/></td>
+                                        <td class="text-center"><c:out value = "${customer.address.city}"/></td>
+                                        <td class="text-center"><c:out value = "${customer.address.country}"/></td>
+                                        <td class="text-center"><c:out value = "${customer.email}"/></td>
+                                        <td class="text-center"><c:out value = "${customer.phoneNumber}"/></td>
+                                        <td class="text-center col-1">
+                                            <a href="">
+                                                <button class="btn rounded"><span class="material-symbols-outlined">edit</span></button>
+                                            </a>
+                                        </td>
+                                        <td class="text-center col-1">
+                                            <button onclick="confirmDelete('customer', ${customer.id})" class="btn rounded">
+                                                <span class="material-symbols-outlined">delete</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                    </table>
+                    </div>
+                </c:if>
+                <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_MODERATOR))}">
+                    <div class="tab-pane fade
+                                    <c:if test="${tab=='moderators'}">
+                                        <c:out value="show"/>
+                                        <c:out value="active"/>
+                                    </c:if>"
+                         id="pills-moderators"
+                         role="tabpanel"
+                         aria-labelledby="pills-moderators-tab">
+                        <div class="div-add-data d-flex align-items-end flex-column mb-lg-2">
+                            <a href="add-moderator" class="add-data btn btn-primary" id="add-moderator">Add Moderator</a>
+                        </div>
+                        <c:set var="moderators" value="${requestScope.moderators}"/>
+                        <table class="table table-striped table-hover" id="moderators-table" data-filter-control-visible="false">
+                            <thead class="align-middle">
+                            <tr>
+                                <th class="text-center">Last Name</th>
+                                <th class="text-center">First Name</th>
+                                <th class="text-center">Permissions</th>
+                                <th class="text-center">Email</th>
+                                <th class="text-center">Phone Number</th>
+                                <th class="text-center" data-sortable="false"></th>
+                                <th class="text-center" data-sortable="false"></th>
+                            </tr>
+                            </thead>
+                            <tbody class="align-middle">
+                            <c:forEach var = "moderator" items = "${moderators}">
+                                <tr>
+                                    <td class="text-center"><c:out value = "${moderator.lastName}"/></td>
+                                    <td class="text-center"><c:out value = "${moderator.firstName}"/></td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <ul class="mb-0">
+                                                <c:forEach var="permission" items="${moderator.permissions}">
+                                                    <li>
+                                                        <c:out value="${permission.permission}"/>
+                                                    </li>
+                                                </c:forEach>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td class="text-center"><c:out value = "${moderator.email}"/></td>
+                                    <td class="text-center"><c:out value = "${moderator.phoneNumber}"/></td>
+                                    <td class="text-center col-1">
+                                        <a href="">
+                                            <button class="btn rounded"><span class="material-symbols-outlined">edit</span></button>
                                         </a>
                                     </td>
-                                    <td class="border-bottom-0">
-                                        <a href="delete-customer?id=${customer.getId()}" class="trash-can">
-                                            <img src="${pageContext.request.contextPath}/img/trash.svg" alt="Trash can">
-                                        </a>
+                                    <td class="text-center col-1">
+                                        <button onclick="confirmDelete('moderator', ${moderator.id})" class="btn rounded">
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </button>
                                     </td>
                                 </tr>
                             </c:forEach>
-                        </tbody>
-                    </table>
-                    <script>
-                        new DataTable('#customers-table');
-                    </script>
-                </div>
-                <div class="tab-pane fade" id="nav-moderators" role="tabpanel" aria-labelledby="nav-moderators-tab">
-                    <a href="add-moderator" class="add-data" id="add-moderator">Add Moderator</a>
-                    <%
-                        List<Moderator> moderators = (List<Moderator>) request.getAttribute("moderators");
-                        if(moderators == null) {
-                            moderators = new ArrayList<>();
-                        }
-                    %>
-                    <c:set var="moderators" value="<%=moderators%>"/>
-                    <table class="table table-striped table-hover" id="moderators-table" data-filter-control-visible="false">
-                        <thead>
-                        <tr>
-                            <th>Last Name</th>
-                            <th>First Name</th>
-                            <%--<th>Permissions</th>--%>
-                            <th>Email</th>
-                            <th>Phone Number</th>
-                            <th data-sortable="false"></th>
-                            <th data-sortable="false"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach var = "moderator" items = "${moderators}">
+                            </tbody>
+                        </table>
+                    </div>
+                </c:if>
+                <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_PRODUCT))}">
+                    <div class="tab-pane fade
+                                    <c:if test="${tab=='products'}">
+                                        <c:out value="show"/>
+                                        <c:out value="active"/>
+                                    </c:if>"
+                         id="pills-products"
+                         role="tabpanel"
+                         aria-labelledby="pills-products-tab">
+                        <div class="div-add-data d-flex align-items-end flex-column mb-lg-2">
+                            <a href="add-product" class="add-data btn btn-primary" id="add-product">Add Product</a>
+                        </div>
+                        <c:set var="products" value="${requestScope.products}"/>
+                        <table class="table table-striped table-hover" id="products-table" data-filter-control-visible="false">
+                            <thead class="align-middle">
                             <tr>
-                                <td><c:out value = "${moderator.getLastName()}"/></td>
-                                <td><c:out value = "${moderator.getFirstName()}"/></td>
-                                <%--<td>
-                                    <ul>
-                                        <c:if test="${not empty moderator.permissions}">
-                                            <c:forEach var="permission" items="${moderator.permissions}">
-                                                <li>
-                                                    <c:out value="${permission.getPermission()}"/>
-                                                </li>
-                                            </c:forEach>
+                                <th class="text-center">Image</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Description</th>
+                                <th class="text-center">Stock Quantity</th>
+                                <th class="text-center">Price</th>
+                                <th class="text-center">Weight</th>
+                                <th class="text-center">Category</th>
+                                <th class="text-center" data-sortable="false"></th>
+                                <th class="text-center" data-sortable="false"></th>
+                            </tr>
+                            </thead>
+                            <tbody class="align-middle">
+                                <c:forEach var = "product" items = "${products}">
+                                    <tr>
+                                        <td>
+                                            <img style="width: 78px; height: 50px; object-fit: contain;"
+                                                 alt="product_img"
+                                                 src="<c:out value="product/image?id=${product.getId()}" />"
+                                                 class="card-img-top">
+                                        </td>
+                                        <td class="text-center"><c:out value="${product.name}"/></td>
+                                        <td class="td-description"><c:out value="${product.description}"/></td>
+                                        <td class="text-center"><c:out value="${product.stockQuantity}"/></td>
+                                        <td class="text-center"><c:out value="${product.unitPrice}"/></td>
+                                        <td class="text-center"><c:out value="${product.weight}"/></td>
+                                        <td class="text-center"><c:out value="${product.category.name}"/></td>
+                                        <td class="text-center col-1">
+                                            <a href="">
+                                                <button class="btn rounded"><span class="material-symbols-outlined">edit</span></button>
+                                            </a>
+                                        </td>
+                                        <td class="text-center col-1">
+                                            <button onclick="confirmDelete('product', ${product.id})" class="btn rounded">
+                                                <span class="material-symbols-outlined">delete</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </c:if>
+                <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_CATEGORY))}">
+                    <div class="tab-pane fade
+                                    <c:if test="${tab=='categories'}">
+                                        <c:out value="show"/>
+                                        <c:out value="active"/>
+                                    </c:if>"
+                         id="pills-categories"
+                         role="tabpanel"
+                         aria-labelledby="pills-discounts-tab">
+                        <div class="div-add-data d-flex align-items-end flex-column mb-lg-2">
+                            <a href="add-category" class="add-data btn btn-primary" id="add-category">Add Category</a>
+                        </div>
+                        <c:set var="categories" value="${requestScope.categories}"/>
+                        <table class="table table-striped table-hover" id="categories-table" data-filter-control-visible="false">
+                            <thead class="align-middle">
+                            <tr>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Description</th>
+                                <th class="text-center">Discount</th>
+                                <th class="text-center" data-sortable="false"></th>
+                                <th class="text-center" data-sortable="false"></th>
+                            </tr>
+                            </thead>
+                            <tbody class="align-middle">
+                            <c:forEach var = "category" items = "${categories}">
+                                <tr>
+                                    <td class="text-center"><c:out value = "${category.name}"/></td>
+                                    <td class="td-description"><c:out value = "${category.description}"/></td>
+                                    <td class="text-center">
+                                        <c:if test="${category.discount!=null}">
+                                            <c:out value = "${category.discount.name}"/>
                                         </c:if>
-                                    </ul>
-                                </td>--%>
-                                <td><c:out value = "${moderator.getEmail()}"/></td>
-                                <td><c:out value = "${moderator.getPhoneNumber()}"/></td>
-                                <td class="border-bottom-0">
-                                    <a href="" class="pencil">
-                                        <img src="${pageContext.request.contextPath}/img/pencil.svg" alt="Pencil">
-                                    </a>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <a href="delete-moderator?id=${moderator.getId()}" class="trash-can">
-                                        <img src="${pageContext.request.contextPath}/img/trash.svg" alt="Trash can">
-                                    </a>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                    <script>
-                        new DataTable('#moderators-table');
-                    </script>
-                </div>
-                <div class="tab-pane fade" id="nav-products" role="tabpanel" aria-labelledby="nav-products-tab">
-                    <a href="add-product" class="add-data" id="add-product">Add Product</a>
-                    <%
-                        List<Product> products = (List<Product>) request.getAttribute("products");
-                        if(products == null){
-                            products = new ArrayList<>();
-                        }
-                    %>
-                    <table class="table table-striped table-hover" id="products-table" data-filter-control-visible="false">
-                        <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Stock Quantity</th>
-                            <th>Price</th>
-                            <th>Weight</th>
-                            <th>Category</th>
-                            <th data-sortable="false"></th>
-                            <th data-sortable="false"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach var = "product" items = "${products}">
+                                    </td>
+                                    <td class="text-center col-1">
+                                        <a href="">
+                                            <button class="btn rounded"><span class="material-symbols-outlined">edit</span></button>
+                                        </a>
+                                    </td>
+                                    <td class="text-center col-1">
+                                        <button onclick="confirmDelete('category', ${category.id})" class="btn rounded">
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </c:if>
+                <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_DISCOUNT))}">
+                    <div class="tab-pane fade
+                                    <c:if test="${tab=='discounts'}">
+                                        <c:out value="show"/>
+                                        <c:out value="active"/>
+                                    </c:if>"
+                         id="pills-discounts"
+                         role="tabpanel"
+                         aria-labelledby="pills-discounts-tab">
+                        <div class="div-add-data d-flex align-items-end flex-column mb-lg-2">
+                            <a href="add-discount" class="add-data btn btn-primary" id="add-discount">Add Discount</a>
+                        </div>
+                        <c:set var="discounts" value="${requestScope.discounts}"/>
+                        <table class="table table-striped table-hover" id="discounts-table" data-filter-control-visible="false">
+                            <thead class="align-middle">
                             <tr>
-                                <td>
-                                    <img style="width: 78px; height: 50px; object-fit: contain;"
-                                         alt="product_img"
-                                         src="<c:out value="product/image?id=${product.getId()}" />"
-                                         class="card-img-top">
-                                </td>
-                                <td><c:out value="${product.getName()}"/></td>
-                                <td><c:out value="${product.getDescription()}"/></td>
-                                <td><c:out value="${product.getStockQuantity()}"/></td>
-                                <td><c:out value="${product.getUnitPrice()}"/></td>
-                                <td><c:out value="${product.getWeight()}"/></td>
-                                <td><c:out value="${product.getCategory().getName()}"/></td>
-                                <td class="border-bottom-0">
-                                    <a href="" class="pencil">
-                                        <img src="${pageContext.request.contextPath}/img/pencil.svg" alt="Pencil">
-                                    </a>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <a href="delete-product?id=${product.getId()}" class="trash-can">
-                                        <img src="${pageContext.request.contextPath}/img/trash.svg" alt="Trash can">
-                                    </a>
-                                </td>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Start Date</th>
+                                <th class="text-center">End Date</th>
+                                <th class="text-center">Discount Percentage</th>
+                                <th class="text-center" data-sortable="false"></th>
+                                <th class="text-center" data-sortable="false"></th>
                             </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                    <script>
-                        new DataTable('#products-table');
-                    </script>
-                </div>
-                <div class="tab-pane fade" id="nav-categories" role="tabpanel" aria-labelledby="nav-discounts-tab">
-                    <a href="add-category" class="add-data" id="add-category">Add Category</a>
-                    <%
-                        List<Category> categories = (List<Category>) request.getAttribute("categories");
-                        if(categories == null){
-                            categories = new ArrayList<>();
-                        }
-                    %>
-                    <table class="table table-striped table-hover" id="categories-table" data-filter-control-visible="false">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Discount</th>
-                            <th data-sortable="false"></th>
-                            <th data-sortable="false"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach var = "category" items = "${categories}">
-                            <tr>
-                                <td><c:out value = "${category.getName()}"/></td>
-                                <td><c:out value = "${category.getDescription()}"/></td>
-
-                                <td>
-                                    <c:if test="${category.getDiscount()!=null}">
-                                        <c:out value = "${category.getDiscount().getName()}"/>
-                                    </c:if>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <a href="" class="pencil">
-                                        <img src="${pageContext.request.contextPath}/img/pencil.svg" alt="Pencil">
-                                    </a>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <a href="delete-category?id=${category.getId()}" class="trash-can">
-                                        <img src="${pageContext.request.contextPath}/img/trash.svg" alt="Trash can">
-                                    </a>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                    <script>
-                        new DataTable('#categories-table');
-                    </script>
-                </div>
-                <div class="tab-pane fade" id="nav-discounts" role="tabpanel" aria-labelledby="nav-discounts-tab">
-                    <a href="add-discount" class="add-data" id="add-discount">Add Discount</a>
-                    <%
-                        List<Discount> discounts = (List<Discount>) request.getAttribute("discounts");
-                        if(discounts == null){
-                            discounts = new ArrayList<>();
-                        }
-                    %>
-                    <table class="table table-striped table-hover" id="categories-table" data-filter-control-visible="false">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Discount Percentage</th>
-                            <th data-sortable="false"></th>
-                            <th data-sortable="false"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach var = "discount" items = "${discounts}">
-                            <tr>
-                                <td><c:out value = "${discount.getName()}"/></td>
-                                <td><c:out value = "${discount.getStartDate()}"/></td>
-                                <td><c:out value = "${discount.getEndDate()}"/></td>
-                                <td><c:out value = "${discount.getDiscountPercentage()}"/></td>
-                                <td class="border-bottom-0">
-                                    <a href="" class="pencil">
-                                        <img src="${pageContext.request.contextPath}/img/pencil.svg" alt="Pencil">
-                                    </a>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <a href="delete-discount?id=${discount.getId()}" class="trash-can">
-                                        <img src="${pageContext.request.contextPath}/img/trash.svg" alt="Trash can">
-                                    </a>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                    <script>
-                        new DataTable('#discount-table');
-                    </script>
-                </div>
+                            </thead>
+                            <tbody class="align-middle">
+                            <c:forEach var = "discount" items = "${discounts}">
+                                <tr>
+                                    <td class="text-center"><c:out value = "${discount.name}"/></td>
+                                    <td class="text-center"><c:out value = "${discount.startDate}"/></td>
+                                    <td class="text-center"><c:out value = "${discount.endDate}"/></td>
+                                    <td class="text-center"><c:out value = "${discount.discountPercentage}"/></td>
+                                    <td class="text-center col-1">
+                                        <a href="">
+                                            <button class="btn rounded"><span class="material-symbols-outlined">edit</span></button>
+                                        </a>
+                                    </td>
+                                    <td class="text-center col-1">
+                                        <button onclick="confirmDelete('discount', ${discount.id})" class="btn rounded">
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </c:if>
+                <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_LOYALTY))}">
+                    <div class="tab-pane fade
+                                    <c:if test="${tab=='loyalty-program'}">
+                                        <c:out value="show"/>
+                                        <c:out value="active"/>
+                                    </c:if>"
+                         id="pills-loyalty-program"
+                         role="tabpanel"
+                         aria-labelledby="pills-loyalty-program-tab">
+                        <span>test</span>
+                    </div>
+                </c:if>
             </div>
         </div>
     </div>

@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-public class Orders {
+public class Orders implements Comparable<Orders> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
@@ -23,7 +23,7 @@ public class Orders {
     @Column(name = "orderStatus", nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
-    @OneToMany(mappedBy = "order", fetch=FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Set<OrderItem> orderItems;
     @ManyToOne
     @JoinColumn(name = "idCustomer", referencedColumnName = "idUser", nullable = false)
@@ -36,9 +36,15 @@ public class Orders {
     @Transient
     private static final float shippingFees = 5.0f;
 
-    public Orders() { }
+    @ManyToOne
+    @JoinColumn(name = "idDiscount", referencedColumnName = "id")
+    private Discount discount;
 
-    public Orders(Cart cart, Date date, Customer customer, Address address) {
+    public Orders() {
+    }
+
+    public Orders(Cart cart, Discount discount, Date date, Customer customer, Address address) {
+        this.discount = discount;
         this.date = date;
         this.orderItems = null;
         this.customer = customer;
@@ -46,6 +52,15 @@ public class Orders {
         this.orderStatus = OrderStatus.WAITING_PAYMENT;
         loadItemsFromCart(cart);
     }
+
+    public Discount getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Discount discount) {
+        this.discount = discount;
+    }
+
     public int getId() {
         return id;
     }
@@ -56,8 +71,8 @@ public class Orders {
 
     public float getTotal() {
         float total = 0.0f;
-        if(orderItems != null) {
-            for(OrderItem item : orderItems) {
+        if (orderItems != null) {
+            for (OrderItem item : orderItems) {
                 total += item.getTotal();
             }
         }
@@ -131,16 +146,17 @@ public class Orders {
 
     @Override
     public String toString() {
-        String str = "ORDER n°"+id+"\n";
-        for(OrderItem item : getOrderItems()) {
-            str += "- "+item.getProduct().getName()+"   ("+item.getQuantity()+")  price: "+item.getTotal()+"\n";
+        String str = "ORDER n°" + id + "\n";
+        for (OrderItem item : getOrderItems()) {
+            str += "- " + item.getProduct().getName() + "   (" + item.getQuantity() + ")  price: " + item.getTotal() + "\n";
         }
+        str += "\n+ Shipment fees: 5.0 €\n\nTotal: "+getTotal();
         return str;
     }
 
     private void loadItemsFromCart(Cart cart) {
         this.setOrderItems(new HashSet<>());
-        if(cart == null || cart.getCartItems() == null) {
+        if (cart == null || cart.getCartItems() == null) {
             return;
         }
 
@@ -165,5 +181,10 @@ public class Orders {
             newItem.setTotal(itemPrice);
             this.getOrderItems().add(newItem);
         }
+    }
+
+    @Override
+    public int compareTo(Orders o) {
+        return Integer.compare(getId(), o.getId());
     }
 }

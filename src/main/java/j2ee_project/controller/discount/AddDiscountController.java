@@ -14,7 +14,7 @@ public class AddDiscountController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/addDiscount.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/add/addDiscount.jsp");
             view.forward(request,response);
         }catch (Exception err){
             System.err.println(err.getMessage());
@@ -37,7 +37,7 @@ public class AddDiscountController extends HttpServlet {
         DiscountDAO.addDiscount(discount);
 
         try {
-            response.sendRedirect("dashboard");
+            response.sendRedirect("dashboard?tab=discounts");
         }catch (Exception err){
             System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

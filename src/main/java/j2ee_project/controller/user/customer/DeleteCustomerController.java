@@ -26,7 +26,7 @@ public class DeleteCustomerController extends HttpServlet {
         }
         CustomerDAO.deleteCustomer(customerId);
         try {
-            response.sendRedirect("dashboard");
+            response.sendRedirect("dashboard?tab=customers");
         }catch (Exception err){
             System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

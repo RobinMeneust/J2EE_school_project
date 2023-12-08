@@ -21,7 +21,7 @@
 </head>
 <body>
 <jsp:include page="../../layout/header.jsp" />
-<div class="container">
+<div class="container p-3 mt-5" style="min-height:100vh">
     <%
         String orderIdStr = request.getParameter("order-id");
         try {
@@ -35,38 +35,43 @@
             response.sendError(HttpServletResponse.SC_BAD_REQUEST,"The order associated to order-id is invalid or empty");
         }
     %>
-    <c:set var="order" value="<%=order%>"/>
-    <%--For testing purposes use the card number: 4242424242424242--%>
-    <p>
-        You need to pay <span id="amount-to-be-paid"></span> €<br>
-        A receipt will be sent to you to your email address
-    </p>
-
-    <div>
-        <h5>Order:</h5>
-        <ul class="list-group">
-            <c:forEach items="${order.getOrderItems()}" var="item">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    ${item.getProduct().getName()}
-                    <span class="badge bg-primary rounded-pill">${item.getQuantity()}</span>
-                </li>
-            </c:forEach>
-        </ul>
+    <div id="error-alert-box" class="my-5 alert alert-warning fade d-none" role="alert">
+        <span>An issue occurred. Please check your internet connection or contact us</span>
     </div>
+    <div id="main-content" class="d-none">
+        <c:set var="order" value="<%=order%>"/>
+        <%--For testing purposes use the card number: 4242424242424242--%>
+        <p>
+            You need to pay <span id="amount-to-be-paid"></span> €<br>
+            A receipt will be sent to you to your email address
+        </p>
 
-    <form id="payment-form">
-        <div id="payment-element" class="me-5 my-4 p-4 w-50" style="background-color: lightgray">
-            <!--Stripe.js injects the Payment Element-->
+        <div>
+            <h5>Order:</h5>
+            <ul class="list-group">
+                <c:forEach items="${order.getOrderItems()}" var="item">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        ${item.getProduct().getName()}
+                        <span class="badge bg-primary rounded-pill">${item.getQuantity()}</span>
+                    </li>
+                </c:forEach>
+            </ul>
         </div>
 
-        <button id="submit" class="pay-btn btn btn-primary" type="button">
-            <span class="spinner-pay-btn spinner-border spinner-border-sm visually-hidden" aria-hidden="true"></span>
-            <span class="spinner-pay-btn visually-hidden" role="status">Loading...</span>
-            <span id="pay-btn-text">Pay now</span>
-        </button>
+        <form id="payment-form">
+            <div id="payment-element" class="me-5 my-4 p-4 w-50" style="background-color: lightgray">
+                <!--Stripe.js injects the Payment Element-->
+            </div>
 
-        <div id="payment-message" class="visually-hidden"></div>
-    </form>
+            <button id="submit" class="pay-btn btn btn-primary" type="submit">
+                <span class="spinner-pay-btn spinner-border spinner-border-sm visually-hidden" aria-hidden="true"></span>
+                <span class="spinner-pay-btn visually-hidden" role="status">Loading...</span>
+                <span id="pay-btn-text">Pay now</span>
+            </button>
+
+            <div id="payment-message" class="visually-hidden"></div>
+        </form>
+    </div>
 </div>
 <jsp:include page="../../layout/footer.jsp" />
 </body>

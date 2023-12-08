@@ -16,7 +16,7 @@
 </head>
 <body>
 <jsp:include page="../../layout/header.jsp"/>
-<main>
+<main class="container">
     <h1>Contact us</h1>
     <form id="contactForm" name="contactForm" method="post" action="${pageContext.request.contextPath}/contact-controller">
         <c:if test="${requestScope.SuccessSending != null}">

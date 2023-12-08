@@ -25,7 +25,7 @@ public class DeleteCategoryController extends HttpServlet {
         }
         CategoryDAO.deleteCategory(categoryId);
         try {
-            response.sendRedirect("dashboard");
+            response.sendRedirect("dashboard?tab=categories");
         }catch (Exception err){
             System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

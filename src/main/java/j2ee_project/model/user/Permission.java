@@ -29,9 +29,7 @@ public class Permission {
         this.permission = permission;
     }
 
-    public Permission(){
-
-    }
+    public Permission(){}
 
     public Permission(TypePermission permission){
         this.permission = permission;
@@ -44,7 +42,6 @@ public class Permission {
 
         Permission that = (Permission) o;
 
-        if (id != that.id) return false;
         if (permission != null ? !permission.equals(that.permission) : that.permission != null) return false;
 
         return true;

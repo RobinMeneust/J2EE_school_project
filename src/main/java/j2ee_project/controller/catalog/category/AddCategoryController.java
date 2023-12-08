@@ -16,7 +16,7 @@ public class AddCategoryController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             request.setAttribute("discounts", DiscountDAO.getDiscounts());
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/addCategory.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/add/addCategory.jsp");
             view.forward(request,response);
         }catch (Exception err){
             System.err.println(err.getMessage());
@@ -31,14 +31,16 @@ public class AddCategoryController extends HttpServlet {
         category.setName(request.getParameter("name"));
         category.setDescription(request.getParameter("description"));
 
-        int discountId = Integer.parseInt(request.getParameter("discount"));
-        Discount discount = DiscountDAO.getDiscount(discountId);
-        category.setDiscount(discount);
-
+        String discountStr = (request.getParameter("discount").isEmpty()) ? null : request.getParameter(("discount"));
+        if (discountStr != null) {
+            int discountId = Integer.parseInt(discountStr);
+            Discount discount = DiscountDAO.getDiscount(discountId);
+            category.setDiscount(discount);
+        }
         CategoryDAO.addCategory(category);
 
         try {
-            response.sendRedirect("dashboard");
+            response.sendRedirect("dashboard?tab=categories");
         }catch (Exception err){
             System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

@@ -25,7 +25,7 @@ public class DeleteDiscountController extends HttpServlet {
         }
         DiscountDAO.deleteDiscount(discountId);
         try {
-            response.sendRedirect("dashboard");
+            response.sendRedirect("dashboard?tab=discounts");
         }catch (Exception err){
             System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

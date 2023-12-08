@@ -20,7 +20,7 @@
         String forgottenPasswordToken = request.getAttribute("forgottenPasswordToken").toString();
         System.out.println(forgottenPasswordToken);
     %>
-    <main>
+    <main  class="container">
         <h1>Register</h1>
         <form id="registerForm" name="registerForm" method="post" action="${pageContext.request.contextPath}/change-password-controller">
             <c:if test="${requestScope.errorMessage != null}">

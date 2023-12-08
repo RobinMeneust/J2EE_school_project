@@ -16,7 +16,7 @@
 </head>
 <body>
     <jsp:include page="../../layout/header.jsp"/>
-<main>
+<main class="container">
     <h1>Login</h1>
     <form id="loginForm" method="post" action="${pageContext.request.contextPath}/login-controller">
         <c:if test="${requestScope.LoggingProcessError != null}">

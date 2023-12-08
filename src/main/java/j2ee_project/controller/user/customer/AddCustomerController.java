@@ -14,7 +14,7 @@ public class AddCustomerController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/addCustomer.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/add/addCustomer.jsp");
             view.forward(request,response);
         }catch (Exception err){
             System.err.println(err.getMessage());
@@ -38,12 +38,12 @@ public class AddCustomerController extends HttpServlet {
         customer.setAddress(address);
 
         customer.setEmail(request.getParameter("email"));
-        customer.setPhoneNumber(request.getParameter("phone-number"));
+        customer.setPhoneNumber((request.getParameter("phone-number").isEmpty()) ? null : request.getParameter("phone-number"));
 
         CustomerDAO.addCustomer(customer);
 
         try {
-            response.sendRedirect("dashboard");
+            response.sendRedirect("dashboard?tab=customers");
         }catch (Exception err){
             System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

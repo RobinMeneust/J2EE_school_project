@@ -49,39 +49,45 @@ let amountToBePaidPromise = fetch("get-order-total?order-id="+urlParams.get("ord
 });
 
 
-
 initialize();
-checkStatus();
 
-document
-    .querySelector("#payment-form")
-    .addEventListener("submit", handleSubmit);
 
 // Fetches a payment intent and captures the client secret
 async function initialize() {
-    if(doAbort) return;
-    stripe = Stripe(await publishableStripeKeyPromise);
-    amountToBePaid = await amountToBePaidPromise;
-    customerData = await customerDataPromise;
+    try {
+        if (doAbort) return;
+        stripe = Stripe(await publishableStripeKeyPromise);
+        amountToBePaid = await amountToBePaidPromise;
+        customerData = await customerDataPromise;
 
-    $("#amount-to-be-paid").text(amountToBePaid.toFixed(2));
+        $("#amount-to-be-paid").text(amountToBePaid.toFixed(2));
 
-    const response = await fetch(`create-payment-intent?order-id=`+urlParams.get("order-id"));
-    const { clientSecret } = await response.json();
-    globalClientSecret = clientSecret;
+        const response = await fetch(`create-payment-intent?order-id=` + urlParams.get("order-id"));
+        const {clientSecret} = await response.json();
+        globalClientSecret = clientSecret;
 
-    const appearance = {
-        theme: 'stripe',
-    };
-    elements = stripe.elements({ appearance, clientSecret });
+        const appearance = {
+            theme: 'stripe',
+        };
+        elements = stripe.elements({appearance, clientSecret});
 
-    const paymentElement = elements.create("card", {
-        hidePostalCode: true
-    });
-    paymentElement.mount("#payment-element");
+        const paymentElement = elements.create("card", {
+            hidePostalCode: true
+        });
+        paymentElement.mount("#payment-element");
+        checkStatus();
+        document.querySelector("#payment-form").addEventListener("submit", handleSubmit);
+
+        $('#main-content').removeClass('d-none');
+    } catch (e) {
+        console.error("Can't connect to Stripe");
+        $('#error-alert-box').addClass('show').addClass('d-none');
+
+    }
 }
 
 async function handleSubmit(e) {
+    console.log("event")
     e.preventDefault();
     if(doAbort) return;
     setLoading(true);
@@ -105,7 +111,7 @@ async function handleSubmit(e) {
             showMessage("An unexpected error occurred.");
         }
     } else if (paymentIntent.status === 'succeeded') {
-        window.location.href = `receipt?order-id=`+urlParams.get("order-id");
+        window.location.href = `confirm-payment?order-id=`+urlParams.get("order-id");
     } else {
         console.log('Payment is not yet confirmed');
     }

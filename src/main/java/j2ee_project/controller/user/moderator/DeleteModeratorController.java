@@ -25,7 +25,7 @@ public class DeleteModeratorController extends HttpServlet {
         }
         ModeratorDAO.deleteModerator(moderatorId);
         try {
-            response.sendRedirect("dashboard");
+            response.sendRedirect("dashboard?tab=moderators");
         }catch (Exception err){
             System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

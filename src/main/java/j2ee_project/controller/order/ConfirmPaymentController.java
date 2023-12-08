@@ -1,16 +1,13 @@
 package j2ee_project.controller.order;
 
 import j2ee_project.dao.MailDAO;
-import j2ee_project.dao.discount.DiscountDAO;
 import j2ee_project.dao.loyalty.LoyaltyAccountDAO;
-import j2ee_project.dao.order.CartDAO;
 import j2ee_project.dao.order.OrdersDAO;
 import j2ee_project.model.Discount;
 import j2ee_project.model.Mail;
-import j2ee_project.model.loyalty.LoyaltyAccount;
-import j2ee_project.model.order.*;
+import j2ee_project.model.order.OrderStatus;
+import j2ee_project.model.order.Orders;
 import j2ee_project.model.user.Customer;
-import j2ee_project.service.AuthService;
 import j2ee_project.service.MailManager;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -25,12 +22,12 @@ import java.sql.Date;
 import java.util.Calendar;
 
 /**
- * This class is a servlet used to get the receipt page. It's a controller in the MVC architecture of this project.
+ * This class is a servlet use to confirm a payment. It's a controller in the MVC architecture of this project.
  *
  * @author Robin MENEUST
  */
-@WebServlet("/receipt")
-public class GetReceiptPageController extends HttpServlet
+@WebServlet("/confirm-payment")
+public class ConfirmPaymentController extends HttpServlet
 {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
@@ -53,26 +50,36 @@ public class GetReceiptPageController extends HttpServlet
         }
 
         if(order.getOrderStatus() == OrderStatus.WAITING_PAYMENT) {
-            Cart cart = CartDAO.getCartFromCustomerId(customer.getId());
-            Discount discount = cart.getDiscount();
-            if(discount != null && customer.getLoyaltyAccount() != null && customer.getLoyaltyAccount().getAvailableDiscounts() != null && customer.getLoyaltyAccount().getAvailableDiscounts().contains(discount)) {
-                LoyaltyAccountDAO.removeDiscount(customer.getLoyaltyAccount(), discount);
+
+            // Check if there is a discount associated to the whole order
+            Discount discount = order.getDiscount();
+            if (discount != null) {
+                if(discount.hasExpired()) {
+                    System.err.println("Error: The discount has expired. This order is invalid");
+                    OrdersDAO.setStatus(order, OrderStatus.CANCELLED); //The customer will be refunded.
+                    order.setOrderStatus(OrderStatus.CANCELLED);
+                    request.setAttribute("order",order);
+                    dispatch("cart?tab=confirmation",request, response);
+                    return;
+                }
+                if (customer.getLoyaltyAccount() != null && customer.getLoyaltyAccount().getAvailableDiscounts() != null && customer.getLoyaltyAccount().getAvailableDiscounts().contains(discount)) {
+                    // Use the discount (remove it from the user discounts list)
+                    LoyaltyAccountDAO.removeDiscount(customer.getLoyaltyAccount(), discount);
+                }
             }
-
             OrdersDAO.setStatus(order, OrderStatus.PREPARING);
-            CartDAO.removeCart(customer.getCart());
-            sendReceiptMail(customer, order);
+            order.setOrderStatus(OrderStatus.PREPARING);
+            request.setAttribute("order",order);
 
-            // Refresh the user's cart
-            customer.setCart(null);
-            session.setAttribute("user", customer);
+            sendReceiptMail(customer, order);
         }
 
-        request.setAttribute("order",order);
+        dispatch("order", request, response);
+    }
 
-
+    private void dispatch(String route, HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/receipt.jsp");
+            RequestDispatcher view = request.getRequestDispatcher(route);
             view.forward(request, response);
         } catch(Exception err) {
             // The forward didn't work

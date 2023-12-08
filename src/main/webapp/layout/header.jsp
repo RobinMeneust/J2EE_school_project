@@ -1,5 +1,3 @@
-<%@ page import="j2ee_project.model.user.User" %>
-<%@ page import="j2ee_project.model.user.Customer" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="cf" uri="/WEB-INF/functions.tld"%>
 <%--
@@ -71,6 +69,12 @@
                                     <a href="profile-informations" class="nav-link">
                                         <span class="material-symbols-outlined">account_circle</span>
                                         Profile information
+                                    </a>
+                                </li>
+                                <li class="nav-item mx-2" title="Dashboard">
+                                    <a href="dashboard" class="nav-link">
+                                        <span class="material-symbols-outlined">dashboard</span>
+                                        Dashboard
                                     </a>
                                 </li>
                                 <li class="nav-item mx-2" title="Logout">

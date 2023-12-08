@@ -19,7 +19,7 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.Map;
 
-import static j2ee_project.service.CartManager.copySessionCartToCustomer;
+import static j2ee_project.service.CartManager.copySessionCartToCustomerEmptyCart;
 
 /**
  * This class is a servlet used register customer. It's a controller in the MVC architecture of this project.
@@ -81,7 +81,7 @@ public class RegisterCustomerController extends HttpServlet {
                     // Copy the session cart to the current user cart (and override it if it's not empty) if the user is a customer
                     if(user instanceof Customer) {
                         Customer customer = (Customer) user;
-                        copySessionCartToCustomer(request, customer);
+                        copySessionCartToCustomerEmptyCart(request, customer);
 
                         // Refresh the user's cart
                         customer.setCart(CartDAO.getCartFromCustomerId(customer.getId()));

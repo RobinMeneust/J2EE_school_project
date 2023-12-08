@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
+/**
+ * Item of an order
+ */
 @Entity
 public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,42 +28,92 @@ public class OrderItem {
     @Column(name = "total", nullable = false)
     private float total;
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets quantity.
+     *
+     * @return the quantity
+     */
     public int getQuantity() {
         return quantity;
     }
 
+    /**
+     * Sets quantity.
+     *
+     * @param quantity the quantity
+     */
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
+    /**
+     * Gets order.
+     *
+     * @return the order
+     */
     public Orders getOrder() {
         return order;
     }
 
+    /**
+     * Sets order.
+     *
+     * @param order the order
+     */
     public void setOrder(Orders order) {
         this.order = order;
     }
 
+    /**
+     * Gets product.
+     *
+     * @return the product
+     */
     public Product getProduct() {
         return product;
     }
 
+    /**
+     * Sets product.
+     *
+     * @param product the product
+     */
     public void setProduct(Product product) {
         this.product = product;
     }
 
+    /**
+     * Gets total.
+     *
+     * @return the total
+     */
     public float getTotal() {
         return total;
     }
 
+    /**
+     * Sets total.
+     *
+     * @param total the total
+     */
     public void setTotal(float total) {
         this.total = total;
     }

@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 import java.util.Set;
 
+/**
+ * Loyalty program that contains a list of loyalty levels
+ */
 @Entity
 public class LoyaltyProgram {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,18 +19,38 @@ public class LoyaltyProgram {
     @OneToMany(fetch = FetchType.EAGER, targetEntity = LoyaltyLevel.class, mappedBy = "loyaltyProgram")
     private Set<LoyaltyLevel> loyaltyLevels;
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets programs duration (number of days)
+     *
+     * @return the duration nb days
+     */
     public int getDurationNbDays() {
         return durationNbDays;
     }
 
+    /**
+     * Set programs duration (number of days)
+     *
+     * @param durationNbDays the duration nb days
+     */
     public void setDurationNbDays(int durationNbDays) {
         this.durationNbDays = durationNbDays;
     }
@@ -52,10 +75,20 @@ public class LoyaltyProgram {
         return result;
     }
 
+    /**
+     * Gets all the loyalty levels.
+     *
+     * @return the loyalty levels
+     */
     public Set<LoyaltyLevel> getLoyaltyLevels() {
         return loyaltyLevels;
     }
 
+    /**
+     * Sets all the loyalty levels.
+     *
+     * @param loyaltyLevels the loyalty levels
+     */
     public void setLoyaltyLevels(Set<LoyaltyLevel> loyaltyLevels) {
         this.loyaltyLevels = loyaltyLevels;
     }

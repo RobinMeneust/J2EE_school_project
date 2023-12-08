@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
+/**
+ * Product
+ */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Product {
@@ -33,9 +36,23 @@ public class Product {
     @JoinColumn(name = "idCategory", referencedColumnName = "id", nullable = false)
     private Category category;
 
+    /**
+     * Instantiates a new Product.
+     */
     public Product() {
     }
 
+    /**
+     * Instantiates a new Product.
+     *
+     * @param name          the name
+     * @param stockQuantity the stock quantity
+     * @param unitPrice     the unit price
+     * @param description   the description
+     * @param imagePath     the image path
+     * @param weight        the weight
+     * @param category      the category
+     */
     public Product(String name, int stockQuantity, float unitPrice, String description, String imagePath, Float weight, Category category) {
         this.name = name;
         this.stockQuantity = stockQuantity;
@@ -46,66 +63,146 @@ public class Product {
         this.category = category;
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets name.
+     *
+     * @param name the name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Gets stock quantity.
+     *
+     * @return the stock quantity
+     */
     public Integer getStockQuantity() {
         return stockQuantity;
     }
 
+    /**
+     * Sets stock quantity.
+     *
+     * @param stockQuantity the stock quantity
+     */
     public void setStockQuantity(Integer stockQuantity) {
         this.stockQuantity = stockQuantity;
     }
 
+    /**
+     * Gets unit price.
+     *
+     * @return the unit price
+     */
     public float getUnitPrice() {
         return unitPrice;
     }
 
+    /**
+     * Sets unit price.
+     *
+     * @param unitPrice the unit price
+     */
     public void setUnitPrice(float unitPrice) {
         this.unitPrice = unitPrice;
     }
 
+    /**
+     * Gets description.
+     *
+     * @return the description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets description.
+     *
+     * @param description the description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Gets image path.
+     *
+     * @return the image path
+     */
     public String getImagePath() {
         return imagePath;
     }
 
+    /**
+     * Sets image path.
+     *
+     * @param imagePath the image path
+     */
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
 
+    /**
+     * Gets weight.
+     *
+     * @return the weight
+     */
     public Float getWeight() {
         return weight;
     }
 
+    /**
+     * Sets weight.
+     *
+     * @param weight the weight
+     */
     public void setWeight(Float weight) {
         this.weight = weight;
     }
 
+    /**
+     * Gets category.
+     *
+     * @return the category
+     */
     public Category getCategory() {
         return category;
     }
 
+    /**
+     * Sets category.
+     *
+     * @param category the category
+     */
     public void setCategory(Category category) {
         this.category = category;
     }

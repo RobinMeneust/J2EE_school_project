@@ -27,6 +27,16 @@ public class UserDTO {
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be composed by 10 numbers with this format : 0000000000")
     private String phoneNumber;
 
+    /**
+     * Instantiates a new User dto.
+     *
+     * @param firstName       the first name
+     * @param lastName        the last name
+     * @param email           the email
+     * @param password        the password
+     * @param confirmPassword the confirm password
+     * @param phoneNumber     the phone number
+     */
     public UserDTO(String firstName, String lastName, String email, String password, String confirmPassword, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -38,6 +48,7 @@ public class UserDTO {
 
     /**
      * Get first name
+     *
      * @return First name
      */
     public String getFirstName() {
@@ -46,6 +57,7 @@ public class UserDTO {
 
     /**
      * Get last name
+     *
      * @return Last name
      */
     public String getLastName() {
@@ -54,23 +66,45 @@ public class UserDTO {
 
     /**
      * Get email
-     * @return Email
+     *
+     * @return Email email
      */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Gets password.
+     *
+     * @return the password
+     */
     public String getPassword() {
         return password;
     }
+
+    /**
+     * Gets confirm password.
+     *
+     * @return the confirm password
+     */
     public String getConfirmPassword() {
         return confirmPassword;
     }
 
+    /**
+     * Gets phone number.
+     *
+     * @return the phone number
+     */
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
+    /**
+     * Set password.
+     *
+     * @param hashPassword the hash password
+     */
     public void setPassword(String hashPassword){
         this.password = hashPassword;
     }

@@ -8,6 +8,9 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
+/**
+ * Manage hashing functions
+ */
 public class HashService {
 
     /**
@@ -16,7 +19,7 @@ public class HashService {
      * @param password the origin password
      * @return the hashed password
      * @throws NoSuchAlgorithmException if no Provider supports a SecureRandomSpi implementation for the specified algorithm
-     * @throws InvalidKeySpecException the exception for invalid key specifications.
+     * @throws InvalidKeySpecException  the exception for invalid key specifications.
      */
     public static String generatePasswordHash(String password)
             throws NoSuchAlgorithmException, InvalidKeySpecException
@@ -70,10 +73,10 @@ public class HashService {
      * Check if a password corresponds with a hashed password
      *
      * @param originalPassword the password to check
-     * @param storedPassword the hashed password
+     * @param storedPassword   the hashed password
      * @return true or false according to the passwords correspond
      * @throws NoSuchAlgorithmException if no Provider supports a SecureRandomSpi implementation for the specified algorithm
-     * @throws InvalidKeySpecException the exception for invalid key specifications.
+     * @throws InvalidKeySpecException  the exception for invalid key specifications.
      */
     public static boolean validatePassword(String originalPassword, String storedPassword)
             throws NoSuchAlgorithmException, InvalidKeySpecException
@@ -96,12 +99,7 @@ public class HashService {
         }
         return diff == 0;
     }
-    /**
-     * Convert byte to hexadecimal format
-     *
-     * @param array array of byte
-     * @return the converted hexadecimal
-     */
+
     /**
      * Convert hexadecimal format to byte array
      *
@@ -118,6 +116,12 @@ public class HashService {
         return bytes;
     }
 
+    /**
+     * Generate a token for a forgotten password query
+     *
+     * @param length the length of the token to be generated
+     * @return the token
+     */
     public static String generateToken(int length) {
         SecureRandom secureRandom;
         byte[] tokenBytes = new byte[length];

@@ -7,6 +7,9 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Loyalty account associated to a loyalty program with different loyalty levels with rewards
+ */
 @Entity
 public class LoyaltyAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,42 +40,93 @@ public class LoyaltyAccount {
     )
     private Set<Discount> availableDiscounts = new HashSet<>();
 
+    /**
+     * Gets available discounts.
+     *
+     * @return the available discounts
+     */
     public Set<Discount> getAvailableDiscounts() {
         return availableDiscounts;
     }
 
+    /**
+     * Sets available discounts.
+     *
+     * @param availableDiscounts the available discounts
+     */
     public void setAvailableDiscounts(Set<Discount> availableDiscounts) {
         this.availableDiscounts = availableDiscounts;
     }
 
+    /**
+     * Gets loyalty levels used.
+     *
+     * @return the loyalty levels used
+     */
     public Set<LoyaltyLevel> getLoyaltyLevelsUsed() {
         return loyaltyLevelsUsed;
     }
 
+    /**
+     * Check if a loyalty level is already used
+     *
+     * @param level the level checked
+     * @return True if it's used and false otherwise
+     */
     public boolean isLevelUsed(LoyaltyLevel level){
         return this.loyaltyLevelsUsed.contains(level);
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets loyalty points.
+     *
+     * @return the loyalty points
+     */
     public int getLoyaltyPoints() {
         return loyaltyPoints;
     }
 
+    /**
+     * Sets loyalty points.
+     *
+     * @param loyaltyPoints the loyalty points
+     */
     public void setLoyaltyPoints(int loyaltyPoints) {
         this.loyaltyPoints = loyaltyPoints;
     }
 
+    /**
+     * Gets start date.
+     *
+     * @return the start date
+     */
     public Date getStartDate() {
         return startDate;
     }
 
+    /**
+     * Sets start date.
+     *
+     * @param startDate the start date
+     */
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
@@ -99,19 +153,37 @@ public class LoyaltyAccount {
         return result;
     }
 
+    /**
+     * Gets loyalty program.
+     *
+     * @return the loyalty program
+     */
     public LoyaltyProgram getLoyaltyProgram() {
         return loyaltyProgram;
     }
 
+    /**
+     * Sets loyalty program.
+     *
+     * @param loyaltyProgram the loyalty program
+     */
     public void setLoyaltyProgram(LoyaltyProgram loyaltyProgram) {
         this.loyaltyProgram = loyaltyProgram;
     }
 
+    /**
+     * Add a level to the list of level used
+     *
+     * @param level the level added
+     */
     public void addLoyaltyLevelUsed(LoyaltyLevel level){
         this.loyaltyLevelsUsed.add(level);
         this.getAvailableDiscounts().add(level.getDiscount());
     }
 
+    /**
+     * Reset the list of loyalty levels used
+     */
     public void resetLoyaltyLevelUsed(){
         this.loyaltyLevelsUsed = new HashSet<>();
     }

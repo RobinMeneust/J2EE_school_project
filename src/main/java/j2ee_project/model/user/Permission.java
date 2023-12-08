@@ -2,6 +2,9 @@ package j2ee_project.model.user;
 
 import jakarta.persistence.*;
 
+/**
+ * Permission (e.g. edit products...)
+ */
 @Entity
 public class Permission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,24 +16,52 @@ public class Permission {
     @Enumerated(EnumType.STRING)
     private TypePermission permission;
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets permission.
+     *
+     * @return the permission
+     */
     public TypePermission getPermission() {
         return permission;
     }
 
+    /**
+     * Sets permission.
+     *
+     * @param permission the permission
+     */
     public void setPermission(TypePermission permission) {
         this.permission = permission;
     }
 
+    /**
+     * Instantiates a new Permission.
+     */
     public Permission(){}
 
+    /**
+     * Instantiates a new Permission.
+     *
+     * @param permission the permission
+     */
     public Permission(TypePermission permission){
         this.permission = permission;
     }

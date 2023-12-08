@@ -7,7 +7,6 @@
 <head>
     <title>Receipt</title>
     <jsp:include page="../../include.jsp" />
-    <script src="${pageContext.request.contextPath}/js/print_element.js"></script>
 </head>
 <body>
 <jsp:include page="../../layout/header.jsp" />

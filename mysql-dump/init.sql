@@ -210,6 +210,10 @@ INSERT INTO LoyaltyLevel(requiredPoints, idLoyaltyProgram, idDiscount) VALUES(25
 
 INSERT INTO LoyaltyAccount(loyaltyPoints, startDate, idLoyaltyProgram) VALUES(55, STR_TO_DATE('28/10/2023', '%d/%m/%Y'), 1);
 INSERT INTO LoyaltyAccount(loyaltyPoints, startDate, idLoyaltyProgram) VALUES(60, STR_TO_DATE('30/10/2023', '%d/%m/%Y'), 1);
+INSERT INTO LoyaltyAccount(loyaltyPoints, startDate, idLoyaltyProgram) VALUES(10, STR_TO_DATE('04/12/2023', '%d/%m/%Y'), 1);
+INSERT INTO LoyaltyAccount(loyaltyPoints, startDate, idLoyaltyProgram) VALUES(30, STR_TO_DATE('02/12/2023', '%d/%m/%Y'), 1);
+
+
 
 INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ('26 rue de la Mare', '34080', 'Montpellier', 'France');
 INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ('33 rue Sadi Carnot', '32000', 'Auch', 'France');
@@ -254,8 +258,8 @@ INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(8,6); -- Can m
 
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(2,1,1);
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(3,2,2);
-INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(4,3,NULL);
-INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(5,NULL,NULL);
+INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(4,3,4);
+INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(5,NULL,3);
 
 INSERT INTO Cart(idCustomer) VALUES(3);
 

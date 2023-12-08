@@ -59,8 +59,8 @@
 					<span class="visually-hidden">Next</span>
 				</button>
 			</div>
-		</c:if>
 		</div>
+		</c:if>
 		<div class="mb-5">
 			<h2 class="display-2 p-3">Categories</h2>
 			<ul>

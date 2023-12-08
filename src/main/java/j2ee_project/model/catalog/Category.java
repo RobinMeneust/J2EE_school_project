@@ -59,8 +59,6 @@ public class Category {
 
         if (id != category.id) return false;
         if (name != null ? !name.equals(category.name) : category.name != null) return false;
-        if (description != null ? !description.equals(category.description) : category.description != null)
-            return false;
 
         return true;
     }

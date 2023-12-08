@@ -1,5 +1,6 @@
 package j2ee_project.model.user;
 
+import j2ee_project.dto.UserDTO;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -21,11 +22,26 @@ public abstract class User {
     @Column(name = "email", nullable = false, length = 50)
     private String email;
     @Basic
-    @Column(name = "password", nullable = false, length = 30)
+    @Column(name = "password", nullable = false, length = 128)
     private String password;
     @Basic
     @Column(name = "phoneNumber", nullable = true, length = 15)
     private String phoneNumber;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private ForgottenPassword forgottenPassword;
+
+    public User(UserDTO userDTO){
+        this.firstName = userDTO.getFirstName();
+        this.lastName = userDTO.getLastName();
+        this.email = userDTO.getEmail();
+        this.password = userDTO.getPassword();
+        this.phoneNumber = userDTO.getPhoneNumber();
+    }
+
+    public User(){
+
+    }
 
     public int getId() {
         return id;
@@ -75,6 +91,10 @@ public abstract class User {
         this.password = password;
     }
 
+    public ForgottenPassword getForgottenPassword(){
+        return forgottenPassword;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -103,4 +123,15 @@ public abstract class User {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName=" + firstName +
+                ", lastName=" + lastName +
+                ", email=" + email +
+                ", password=" + password +
+                ", phoneNumber=" + phoneNumber +
+                '}';
+    }
 }

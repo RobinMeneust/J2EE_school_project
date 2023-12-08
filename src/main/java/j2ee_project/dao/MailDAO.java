@@ -1,6 +1,8 @@
 package j2ee_project.dao;
 
 import j2ee_project.model.Mail;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import org.hibernate.Session;
 
 /**
@@ -14,12 +16,14 @@ public class MailDAO {
      * @param mail Mail object containing the mail data (addresses, body...)
      */
     public static void addMail(Mail mail) {
-        System.out.println(mail.getBody());
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        session.save(mail);
-        session.getTransaction().commit();
-        session.close();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        entityManager.persist(mail);
+
+        transaction.commit();
+        entityManager.close();
     }
 
     /**
@@ -27,15 +31,21 @@ public class MailDAO {
      * @param mailId ID of the mail to be deleted
      */
     public static void removeMail(int mailId) {
-        Session session= HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
 
-        Mail mail = session.createQuery("FROM Mail WHERE id = :mailId", j2ee_project.model.Mail.class).getSingleResult();
+        Mail mail = null;
+
+        try {
+            mail = entityManager.createQuery("FROM Mail WHERE id = :mailId", j2ee_project.model.Mail.class).getSingleResult();
+        } catch (Exception ignore) {}
 
         if(mail != null) {
-            session.remove(mail);
-            session.getTransaction().commit();
+            entityManager.remove(mail);
+            entityManager.getTransaction().commit();
         }
-        session.close();
+
+        entityManager.close();
     }
 }

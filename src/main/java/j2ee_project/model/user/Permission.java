@@ -9,7 +9,7 @@ public class Permission {
     @Column(name = "id", nullable = false)
     private int id;
     @Basic
-    @Column(name = "permission", nullable = false, length = 50)
+    @Column(name = "permission", nullable = false, length = 50, unique = true)
     @Enumerated(EnumType.STRING)
     private TypePermission permission;
 
@@ -29,6 +29,12 @@ public class Permission {
         this.permission = permission;
     }
 
+    public Permission(){}
+
+    public Permission(TypePermission permission){
+        this.permission = permission;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -36,7 +42,6 @@ public class Permission {
 
         Permission that = (Permission) o;
 
-        if (id != that.id) return false;
         if (permission != null ? !permission.equals(that.permission) : that.permission != null) return false;
 
         return true;

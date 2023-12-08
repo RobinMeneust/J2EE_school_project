@@ -4,7 +4,7 @@
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
              https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
 
-    <persistence-unit name="jpa-hibernate-mysql">
+    <persistence-unit name="j2ee_project">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>j2ee_project.model.Address</class>
         <class>j2ee_project.model.Discount</class>
@@ -16,12 +16,15 @@
         <class>j2ee_project.model.order.Cart</class>
         <class>j2ee_project.model.order.CartItem</class>
         <class>j2ee_project.model.order.Orders</class>
-        <class>j2ee_project.model.order.ShippingMethod</class>
         <class>j2ee_project.model.catalog.Category</class>
         <class>j2ee_project.model.catalog.Product</class>
         <class>j2ee_project.model.loyalty.LoyaltyAccount</class>
         <class>j2ee_project.model.loyalty.LoyaltyLevel</class>
         <class>j2ee_project.model.loyalty.LoyaltyProgram</class>
+        <class>j2ee_project.model.catalog.FeaturedProduct</class>
+        <class>j2ee_project.model.user.Permission</class>
+        <class>j2ee_project.model.order.OrderItem</class>
+        <class>j2ee_project.model.user.ForgottenPassword</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
             <property name="jakarta.persistence.jdbc.url"    value="jdbc:mysql://db:3306/j2ee_project_db" />

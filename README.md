@@ -68,12 +68,43 @@ Create a file named "credentials.json" with the following content in src/main/re
 
 ```JSON
 {
-  "username": "PLACEHOLDER_EMAIL_ADDRESS",
-  "password": "PLACEHOLDER_PASSWORDS"
+  "gmail": {
+    "username": "PLACEHOLDER_EMAIL_ADDRESS",
+    "password": "PLACEHOLDER_PASSWORD"
+  }
+}
+```
+Replace `PLACEHOLDER_EMAIL_ADDRESS` with the email address used and `PLACEHOLDER_PASSWORD` with the password we generated in the previous step.
+
+### Stripe (payment system)
+
+Use this mock credit card number for testing purposes: 4242424242424242, and use a date that isn't in the past and a random CVC (3 numbers)
+
+#### Configure your account
+
+1. Go to https://stripe.com/
+2. Sign up
+3. When you are logged in, go to https://dashboard.stripe.com/test/apikeys
+4. Then copy the secret key and the publishable key, they will be added in credentials.json as mentioned below
+
+#### Add your credentials to this project
+
+Add to "credentials.json" your secret API key
+
+```JSON
+{
+  "gmail": {
+    "username": "PLACEHOLDER_EMAIL_ADDRESS",
+    "password": "PLACEHOLDER_PASSWORD"
+  },
+  "stripe": {
+    "publishable-key": "PLACEHOLDER_STRIPE_PUBLISHABLE_KEY",
+    "secret-key": "PLACEHOLDER_STRIPE_SECRET_KEY"
+  }
 }
 ```
 
-Replace `PLACEHOLDER_EMAIL_ADDRESS` with the email address used and `PLACEHOLDER_PASSWORD` with the password we generated in the previous step.
+
 
 ## Compile
 
@@ -96,7 +127,7 @@ Open in a web browser: http://localhost:8082/J2EE_Project-1.0-SNAPSHOT/
 
 Go to http://localhost:8081/ and use the following account
 - username: root
-- password: root_password
+- password: root
 
 #### Using the terminal
 
@@ -104,7 +135,7 @@ Go to http://localhost:8081/ and use the following account
 2. Get the CONTAINER ID (1st column) of the mysql IMAGE
 3. Replace CONTAINER_ID with what you got in (2.), in `docker exec -ti CONTAINER_ID bash` and run it
 4. Enter `mysql -u root -p`
-5. Type the password defined in the docker compose file: root_password
+5. Type the password defined in the docker compose file: root
 6. Enter `use j2ee_project_db;`
 7. Run the queries you want to do (e.g. `select * from Customer`)
 

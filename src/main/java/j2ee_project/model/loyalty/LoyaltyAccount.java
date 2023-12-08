@@ -1,5 +1,6 @@
 package j2ee_project.model.loyalty;
 
+import j2ee_project.model.Discount;
 import jakarta.persistence.*;
 
 import java.sql.Date;
@@ -22,12 +23,35 @@ public class LoyaltyAccount {
     @JoinColumn(name = "idLoyaltyProgram", referencedColumnName = "id", nullable = false)
     private LoyaltyProgram loyaltyProgram;
 
-    @ManyToMany
+    @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(name = "LoyaltyAccountLevelUsed",
             joinColumns = @JoinColumn(name = "idLoyaltyAccount"),
             inverseJoinColumns = @JoinColumn(name = "idLoyaltyLevel")
     )
     private Set<LoyaltyLevel> loyaltyLevelsUsed = new HashSet<>();
+
+    @ManyToMany (fetch = FetchType.EAGER)
+    @JoinTable(name = "LoyaltyAccountDiscounts",
+            joinColumns = @JoinColumn(name = "idLoyaltyAccount"),
+            inverseJoinColumns = @JoinColumn(name = "idDiscount")
+    )
+    private Set<Discount> availableDiscounts = new HashSet<>();
+
+    public Set<Discount> getAvailableDiscounts() {
+        return availableDiscounts;
+    }
+
+    public void setAvailableDiscounts(Set<Discount> availableDiscounts) {
+        this.availableDiscounts = availableDiscounts;
+    }
+
+    public Set<LoyaltyLevel> getLoyaltyLevelsUsed() {
+        return loyaltyLevelsUsed;
+    }
+
+    public boolean isLevelUsed(LoyaltyLevel level){
+        return this.loyaltyLevelsUsed.contains(level);
+    }
 
     public int getId() {
         return id;
@@ -85,6 +109,7 @@ public class LoyaltyAccount {
 
     public void addLoyaltyLevelUsed(LoyaltyLevel level){
         this.loyaltyLevelsUsed.add(level);
+        this.getAvailableDiscounts().add(level.getDiscount());
     }
 
     public void resetLoyaltyLevelUsed(){

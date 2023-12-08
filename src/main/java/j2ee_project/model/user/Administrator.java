@@ -1,10 +1,23 @@
 package j2ee_project.model.user;
 
+import j2ee_project.dto.ModeratorDTO;
 import jakarta.persistence.*;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "idModerator")
 public class Administrator extends Moderator{
+    public Administrator(ModeratorDTO moderatorDTO) {
+        super(moderatorDTO);
+    }
+
+    public Administrator() {
+        super();
+    }
+
+    @Override
+    public boolean isAllowed(Permission permission) {
+        return true;
+    }
 
     @Override
     public boolean equals(Object o) {

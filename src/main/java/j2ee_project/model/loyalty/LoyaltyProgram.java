@@ -13,7 +13,7 @@ public class LoyaltyProgram {
     @Basic
     @Column(name = "durationNbDays", nullable = false)
     private int durationNbDays;
-    @OneToMany(targetEntity = LoyaltyLevel.class, mappedBy = "loyaltyProgram")
+    @OneToMany(fetch = FetchType.EAGER, targetEntity = LoyaltyLevel.class, mappedBy = "loyaltyProgram")
     private Set<LoyaltyLevel> loyaltyLevels;
 
     public int getId() {

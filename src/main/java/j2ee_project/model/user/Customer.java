@@ -1,5 +1,7 @@
 package j2ee_project.model.user;
 
+import j2ee_project.dto.CustomerDTO;
+import j2ee_project.dto.UserDTO;
 import j2ee_project.model.Address;
 import j2ee_project.model.order.Cart;
 import j2ee_project.model.loyalty.LoyaltyAccount;
@@ -12,16 +14,24 @@ import java.util.Set;
 @PrimaryKeyJoinColumn(name = "idUser")
 public class Customer extends User{
 
-    @OneToOne(mappedBy = "customer")
+    @OneToOne(mappedBy = "customer",cascade = CascadeType.ALL, orphanRemoval = true)
     private Cart cart;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idAddress", referencedColumnName = "id")
     private Address address;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idLoyaltyAccount", referencedColumnName = "id")
     private LoyaltyAccount loyaltyAccount;
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Orders> orders;
+
+    public Customer(CustomerDTO customerDTO){
+        super(customerDTO);
+    }
+
+    public Customer() {
+        super();
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -42,8 +42,7 @@ public class ConfirmCartController extends HttpServlet {
      * @throws ServletException If the request for the GET could not be handled
      * @throws IOException If an input or output error is detected when the servlet handles the GET request
      */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Object obj = session.getAttribute("user");
         Customer customer = null;
@@ -97,7 +96,7 @@ public class ConfirmCartController extends HttpServlet {
         Address deliveryAddress = new Address(deliveryAddressDTO);
         deliveryAddress = AddressDAO.addAddressIfNotExists(deliveryAddress);
 
-        Orders newOrder = new Orders(cart, new Date(Calendar.getInstance().getTimeInMillis()), customer, deliveryAddress);
+        Orders newOrder = new Orders(cart, cart.getDiscount(), new Date(Calendar.getInstance().getTimeInMillis()), customer, deliveryAddress);
         OrdersDAO.addOrder(newOrder);
 
         response.sendRedirect("pay?order-id="+newOrder.getId());

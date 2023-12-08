@@ -34,7 +34,7 @@
     <jsp:include page="../../../layout/header.jsp" />
     <c:set var="tab" value="${param.tab}"/>
     <c:set var="user" value="${cf:getModerator(sessionScope.user)}"/>
-    <div class="container-fluid p-0">
+    <div class="container p-3 mt-5" style="min-height:100vh">
         <div class="d-flex">
             <div class="div-tabs mt-4">
                 <div class="nav nav-pills d-flex flex-column align-items-stretch" id="pills-tab" role="tablist" aria-orientation="vertical">

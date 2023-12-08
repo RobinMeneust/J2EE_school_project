@@ -14,6 +14,7 @@
 <%@ page import="java.util.Set" %>
         <%@ page import="j2ee_project.service.AuthService" %>
         <%@ page import="j2ee_project.model.user.User" %>
+        <%@ page import="java.util.TreeSet" %>
         <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -26,7 +27,7 @@
             text-align: center;
         }
 
-        div.container-fluid{
+        div.container{
             width: 100%;
             max-width: 100%;
         }
@@ -79,13 +80,11 @@
 <jsp:include page="../../layout/header.jsp" />
 
 <%
-    //Customer customer = AuthService.getCustomer((User) session.getAttribute("user"));
     Customer customer = (Customer) request.getAttribute("customer");
     if(customer == null) {
         response.sendRedirect("login");
     }
     LoyaltyAccount loyaltyAccount = customer.getLoyaltyAccount();
-            //(LoyaltyAccount) request.getAttribute("loyaltyAccount");
     List<LoyaltyLevel> loyaltyLevels = (List<LoyaltyLevel>) request.getAttribute("loyaltyLevels");
     String activeTab = request.getParameter("active-tab");
     Address address;
@@ -97,7 +96,7 @@
     String customerPostalCode =null;
     String customerCountry =null;
     String customerCity =null;
-    Set<Orders> orders = null;
+    TreeSet<Orders> orders = null;
 
     if (request.getAttribute("customer") != null) {
         address = customer.getAddress();
@@ -111,7 +110,7 @@
             customerCountry = address.getCountry();
             customerCity = address.getCity();
         }
-        orders = customer.getOrders();
+        orders = new TreeSet<>(customer.getOrders());
     }%>
 <c:set var="orders" value="<%=orders%>"/>
 <c:set var="customer" value="<%=customer%>"/>
@@ -121,7 +120,7 @@
 
 
 
-    <div class="container-fluid" style="width: 100%;max-width: 100%;">
+    <div class="container p-3 mt-5" style="min-height:100vh">
         <div class="d-flex align-items-start">
             <nav>
                 <div class="nav nav-tabs flex-column" id="nav-tab" role="tablist">
@@ -303,6 +302,7 @@
                     <table class="table table-striped table-hover" id="customers-table" style="width: 100%" data-filter-control-visible="false">
                         <thead>
                             <tr>
+                                <th>N°</th>
                                 <th>Date</th>
                                 <th>number of items purchased</th>
                                 <th>Status</th>
@@ -311,6 +311,7 @@
                         <%if(orders!=null){
                             for (Orders order: orders){%>
                                 <tr>
+                                    <td><a href="order?order-id=<%=order.getId()%>"><%=order.getId()%></a></td>
                                     <td><%=order.getDate()%></td>
                                     <td><%=order.getTotal()%></td>
                                     <td><%=order.getOrderStatus()%></td>

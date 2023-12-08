@@ -17,7 +17,7 @@
 	<c:set var="featuredProducts" value="${cf:getFeaturedProducts()}"/>
 	<c:set var="categories" value="${cf:getCategories()}"/>
 
-	<div class="container">
+	<div class="container p-3 mt-5" style="min-height:100vh">
 		<c:if test="${featuredProducts != null && featuredProducts.size() != 0}">
 		<div class="mb-5">
 			<h2 class="display-2 p-3">Featured products</h2>

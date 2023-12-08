@@ -124,6 +124,8 @@ CREATE TABLE IF NOT EXISTS Orders (
     orderStatus VARCHAR(30) NOT NULL,
     idCustomer INT NOT NULL,
     idAddress INT NOT NULL,
+    idDiscount INT DEFAULT NULL,
+    FOREIGN KEY (idDiscount) REFERENCES Discount(id),
     FOREIGN KEY (idCustomer) REFERENCES Customer(idUser),
     FOREIGN KEY (idAddress) REFERENCES Address(id)
 );

@@ -35,7 +35,7 @@
 <c:set var="cart" value="${cf:getCart(sessionCart,customer)}"/>
 
 
-<div class="container mt-1 px-2 pb-5 mb-5">
+<div class="container p-3 mt-5" style="min-height:100vh">
     <div id="error-alert-box" class="alert invisible alert-warning alert-dismissible fade" role="alert">
         <strong>Failure</strong> The product could not be added to the cart.
         <button type="button" class="close btn" data-bs-dismiss="alert" aria-label="Close">

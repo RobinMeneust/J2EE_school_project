@@ -80,7 +80,7 @@
 
 
 
-<div class="container mt-1 px-4">
+<div class="container p-3 mt-5" style="min-height:100vh">
     <h1 class="display-1">Browse products</h1>
     <button class="btn btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
         <span class="material-symbols-outlined">filter_alt</span>

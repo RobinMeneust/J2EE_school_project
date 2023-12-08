@@ -16,7 +16,7 @@
 </head>
 <body>
     <jsp:include page="../../layout/header.jsp"/>
-    <main>
+    <main class="container">
         <h1>Register</h1>
         <form id="registerForm" name="registerForm" method="post" action="${pageContext.request.contextPath}/register-customer-controller">
             <c:if test="${requestScope.emailOrPhoneNumberInDbError != null}">

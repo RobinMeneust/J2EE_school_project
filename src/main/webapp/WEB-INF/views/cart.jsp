@@ -18,7 +18,7 @@
 </head>
 <body>
 <jsp:include page="../../layout/header.jsp" />
-<div class="container mt-1 px-4">
+<div class="container p-3 mt-5" style="min-height:100vh">
     <h1 class="display-1 mb-3">Your Cart</h1>
     <c:set var="customer" value="${cf:getCustomer(user)}"/>
     <c:set var="cart" value="${cf:getCart(sessionCart,customer)}"/>
@@ -90,6 +90,17 @@
                                     </td>
                                 </tr>
                             </c:forEach>
+                            <tr>
+                                <td class="align-middle col"></td>
+                                <td class="align-middle col"></td>
+                                <td class="align-middle col"></td>
+                                <td class="align-middle col"></td>
+                                <td colspan="3" class="align-middle p-0">
+                                    <a href="remove-cart">
+                                        <button type="button" title="Delete cart" class="text-danger btn rounded p-0"><span class="material-symbols-outlined">delete</span></button>
+                                    </a>
+                                </td>
+                            </tr>
                         </table>
                         <c:if test="${empty customer}">
                             <div class="row py-2 w-100">
@@ -100,7 +111,6 @@
                     <c:if test="${not empty customer}">
                         <div class="tab-pane fade <c:if test="${tab == 'confirmation'}">show active</c:if>" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                             <div class="row g-3">
-                                    <%--TODO: Check the form content--%>
                                 <div class="col-xl-6 col-md-6 col-xs-6">
                                     <h6 class="display-6">Delivery Address</h6>
                                     <div class="bg-secondary-subtle shadow p-3 mb-4 rounded d-flex align-items-start flex-column" style="min-width:250px; max-width:450px">
@@ -108,18 +118,30 @@
                                         <div class="form-group">
                                             <label for="street-address">Address</label>
                                             <input type="text" class="form-control" id="street-address" name="street-address" required value="<c:out value="${not empty addressObject && not empty addressObject.getStreetAddress() ? addressObject.getStreetAddress() : ''}"/>">
+                                            <c:if test="${not empty requestScope.InputError and not empty requestScope.InputError.streetAddress}">
+                                                <div class="p-2 bold text-danger">${requestScope.InputError.streetAddress}</div>
+                                            </c:if>
                                         </div>
                                         <div class="form-group">
                                             <label for="postal-code">Postal code</label>
                                             <input type="text" class="form-control" id="postal-code" name="postal-code" required value="<c:out value="${addressObject.getPostalCode()}"/>">
+                                            <c:if test="${not empty requestScope.InputError and not empty requestScope.InputError.postalCode}">
+                                                <div class="p-2 bold text-danger">${requestScope.InputError.postalCode}</div>
+                                            </c:if>
                                         </div>
                                         <div class="form-group">
                                             <label for="city">City</label>
                                             <input type="text" class="form-control" id="city" name="city" required value="<c:out value="${addressObject.getCity()}"/>">
+                                            <c:if test="${not empty requestScope.InputError and not empty requestScope.InputError.city}">
+                                                <div class="p-2 bold text-danger">${requestScope.InputError.city}</div>
+                                            </c:if>
                                         </div>
                                         <div class="form-group">
                                             <label for="country">Country</label>
                                             <input type="text" class="form-control" id="country" name="country" required value="<c:out value="${addressObject.getCountry()}"/>">
+                                            <c:if test="${not empty requestScope.InputError and not empty requestScope.InputError.country}">
+                                                <div class="p-2 bold text-danger">${requestScope.InputError.country}</div>
+                                            </c:if>
                                         </div>
                                     </div>
                                 </div>

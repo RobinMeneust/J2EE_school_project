@@ -39,7 +39,13 @@ public class GetPayPageController extends HttpServlet
         }
 
         if(order.getOrderStatus() != OrderStatus.WAITING_PAYMENT) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You have already paid for this order");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You have already paid for this order"); //TODO create a custom error page or redirect to the orders page
+            return;
+        }
+
+        if(order.getDiscount() != null && order.getDiscount().hasExpired()) {
+            OrdersDAO.setStatus(order, OrderStatus.CANCELLED);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "This order is no longer valid (discount expired"); //TODO create a custom error page or redirect to the orders page
             return;
         }
 

@@ -1,12 +1,18 @@
 package j2ee_project.service;
 
+import j2ee_project.dao.loyalty.LoyaltyProgramDAO;
 import j2ee_project.dao.user.UserDAO;
 import j2ee_project.dto.CustomerDTO;
 import j2ee_project.dto.ModeratorDTO;
+import j2ee_project.model.loyalty.LoyaltyAccount;
+import j2ee_project.model.loyalty.LoyaltyProgram;
 import j2ee_project.model.user.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.sql.Date;
+import java.time.LocalDate;
+
 
 /**
  * This is a service class which contains method for authentication
@@ -44,7 +50,13 @@ public class AuthService {
      */
     public static User registerCustomer(CustomerDTO customerDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
         customerDTO.setPassword(HashService.generatePasswordHash(customerDTO.getPassword()));
-        User customer = new Customer(customerDTO);
+        Customer customer = new Customer(customerDTO);
+        LoyaltyAccount loyaltyAccount = new LoyaltyAccount();
+        loyaltyAccount.setLoyaltyPoints(0);
+        LoyaltyProgram loyaltyProgram = LoyaltyProgramDAO.getLoyaltyProgram();
+        loyaltyAccount.setEndDate(Date.valueOf(LocalDate.now().plusDays(loyaltyProgram.getDurationNbDays())));
+        loyaltyAccount.setLoyaltyProgram(loyaltyProgram);
+        customer.setLoyaltyAccount(loyaltyAccount);
         UserDAO.addUser(customer);
         return customer;
     }
@@ -62,6 +74,7 @@ public class AuthService {
         UserDAO.addUser(moderator);
         return moderator;
     }
+
 
     /**
      * Check if a moderator has a precise permission

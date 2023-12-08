@@ -88,7 +88,7 @@ classDiagram
     class LoyaltyAccount{
         -id : int
         -loyaltyPoints : int
-        -startDate : Date
+        -endDate : Date
         -levelsUsed : Set~LoyaltyLevel~
         +getDuration() int
         +isLevelUsed(LoyaltyLevel level) boolean

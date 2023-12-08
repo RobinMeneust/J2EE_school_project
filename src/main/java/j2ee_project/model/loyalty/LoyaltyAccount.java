@@ -20,8 +20,8 @@ public class LoyaltyAccount {
     @Column(name = "loyaltyPoints", nullable = false)
     private int loyaltyPoints;
     @Basic
-    @Column(name = "startDate", nullable = false)
-    private Date startDate;
+    @Column(name = "endDate", nullable = false)
+    private Date endDate;
     @ManyToOne
     @JoinColumn(name = "idLoyaltyProgram", referencedColumnName = "id", nullable = false)
     private LoyaltyProgram loyaltyProgram;
@@ -118,17 +118,17 @@ public class LoyaltyAccount {
      *
      * @return the start date
      */
-    public Date getStartDate() {
-        return startDate;
+    public Date getEndDate() {
+        return endDate;
     }
 
     /**
      * Sets start date.
      *
-     * @param startDate the start date
+     * @param endDate the start date
      */
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     @Override
@@ -140,7 +140,7 @@ public class LoyaltyAccount {
 
         if (id != that.id) return false;
         if (loyaltyPoints != that.loyaltyPoints) return false;
-        if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null) return false;
+        if (endDate != null ? !endDate.equals(that.endDate) : that.endDate != null) return false;
 
         return true;
     }
@@ -149,7 +149,7 @@ public class LoyaltyAccount {
     public int hashCode() {
         int result = id;
         result = 31 * result + loyaltyPoints;
-        result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
+        result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         return result;
     }
 

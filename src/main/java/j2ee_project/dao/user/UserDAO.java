@@ -64,7 +64,8 @@ public class UserDAO {
     /**
      * Check if an email and a phone number are in the database
      *
-     * @param email the email to check
+     * @param email       the email to check
+     * @param phoneNumber the phone number
      * @return the boolean indicating the presence of the email
      */
     public static boolean emailOrPhoneNumberIsInDb(String email, String phoneNumber){
@@ -111,10 +112,11 @@ public class UserDAO {
 
     /**
      * Get user by id
+     *
      * @param id ID of the user
      * @return User fetched
      */
-	public static User getUser(int id) {
+    public static User getUser(int id) {
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();

@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS LoyaltyProgram (
 CREATE TABLE IF NOT EXISTS LoyaltyAccount (
     id INT PRIMARY KEY AUTO_INCREMENT,
     loyaltyPoints INT NOT NULL,
-    startDate DATE NOT NULL,
+    endDate DATE NOT NULL,
     idLoyaltyProgram INT NOT NULL,
     FOREIGN KEY (idLoyaltyProgram) REFERENCES LoyaltyProgram(id)
 );
@@ -196,7 +196,30 @@ CREATE EVENT cleaningForgottenPassword
         EVERY 1 MINUTE ENABLE
     DO
         DELETE FROM ForgottenPassword f
-        WHERE f.expiryDate < SYSDATE();
+        WHERE f.expiryDate > SYSDATE();
+
+delimiter |
+
+CREATE EVENT cleaningLoyaltyAccount
+    ON SCHEDULE
+        EVERY 1 DAY ENABLE
+    DO
+        BEGIN
+            DELETE
+                FROM LoyaltyAccountLevelUsed lalu
+                WHERE lalu.idLoyaltyAccount IN (
+                    SELECT id
+                    FROM LoyaltyAccount la
+                    WHERE la.endDate > CURRENT_DATE
+                );
+            UPDATE LoyaltyAccount la
+                SET la.loyaltyPoints = 0, la.endDate = ADDDATE(CURRENT_DATE, INTERVAL (SELECT lp.durationNbDays
+                                                                                       FROM LoyaltyProgram lp
+                                                                                       WHERE lp.id = la.idLoyaltyProgram) DAY)
+                WHERE la.endDate > CURRENT_DATE;
+        END|
+
+delimiter ;
 
 INSERT INTO LoyaltyProgram(durationNbDays) VALUES(365);
 
@@ -208,8 +231,8 @@ INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Hallo
 INSERT INTO LoyaltyLevel(requiredPoints, idLoyaltyProgram, idDiscount) VALUES(15,1,1);
 INSERT INTO LoyaltyLevel(requiredPoints, idLoyaltyProgram, idDiscount) VALUES(25,1,2);
 
-INSERT INTO LoyaltyAccount(loyaltyPoints, startDate, idLoyaltyProgram) VALUES(55, STR_TO_DATE('28/10/2023', '%d/%m/%Y'), 1);
-INSERT INTO LoyaltyAccount(loyaltyPoints, startDate, idLoyaltyProgram) VALUES(60, STR_TO_DATE('30/10/2023', '%d/%m/%Y'), 1);
+INSERT INTO LoyaltyAccount(loyaltyPoints, endDate, idLoyaltyProgram) VALUES(55, STR_TO_DATE('28/10/2024', '%d/%m/%Y'), 1);
+INSERT INTO LoyaltyAccount(loyaltyPoints, endDate, idLoyaltyProgram) VALUES(60, STR_TO_DATE('30/10/2024', '%d/%m/%Y'), 1);
 
 INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ('26 rue de la Mare', '34080', 'Montpellier', 'France');
 INSERT INTO Address(streetAddress, postalCode, city, country) VALUES ('33 rue Sadi Carnot', '32000', 'Auch', 'France');

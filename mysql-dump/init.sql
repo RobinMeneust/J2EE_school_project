@@ -196,6 +196,27 @@ CREATE EVENT cleaningForgottenPassword
         DELETE FROM ForgottenPassword f
         WHERE f.expiryDate < SYSDATE();
 
+delimiter |
+
+CREATE EVENT cleaningLoyaltyAccount
+    ON SCHEDULE
+        EVERY 1 MINUTE ENABLE
+    DO
+        BEGIN
+            DELETE
+                FROM LoyaltyAccountLevelUsed lalu
+                WHERE lalu.idLoyaltyAccount IN (SELECT id
+                                                   FROM LoyaltyAccount la
+                                                   WHERE DATE_ADD(la.startDate, INTERVAL 1 YEAR) > CURRENT_DATE);
+            UPDATE LoyaltyAccount la
+                SET la.loyaltyPoints = 0, la.startDate = CURRENT_DATE
+                WHERE la.id IN (SELECT id
+                                   FROM LoyaltyAccount la
+                                   WHERE DATE_ADD(la.startDate, INTERVAL 1 YEAR) > CURRENT_DATE);
+        END|
+
+delimiter ;
+
 INSERT INTO LoyaltyProgram(durationNbDays) VALUES(365);
 
 INSERT INTO Discount(name, startDate, endDate, discountPercentage) VALUES('Loyalty level reward', STR_TO_DATE('28/10/2023', '%d/%m/%Y'), STR_TO_DATE('28/12/2023', '%d/%m/%Y'), 10); -- This type of discount will be created only when it's claimed and will be filled with the current date to the current date + N days

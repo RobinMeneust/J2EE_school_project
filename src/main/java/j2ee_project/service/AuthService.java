@@ -1,10 +1,14 @@
 package j2ee_project.service;
 
+import j2ee_project.dao.loyalty.LoyaltyProgramDAO;
+import j2ee_project.dao.user.CustomerDAO;
 import j2ee_project.dao.user.UserDAO;
 import j2ee_project.dto.ContactDTO;
 import j2ee_project.dto.CustomerDTO;
 import j2ee_project.dto.ModeratorDTO;
 import j2ee_project.dto.UserDTO;
+import j2ee_project.model.loyalty.LoyaltyAccount;
+import j2ee_project.model.loyalty.LoyaltyProgram;
 import j2ee_project.model.user.*;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.ConstraintViolation;
@@ -14,6 +18,9 @@ import jakarta.validation.ValidatorFactory;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -90,6 +97,15 @@ public class AuthService {
             violationsMap.put("confirmPassword", "Password and Confirm Password must match.");
         }
         return violationsMap;
+    }
+
+    public static void openLoyaltyAccount(Customer customer){
+        LoyaltyAccount loyaltyAccount = new LoyaltyAccount();
+        loyaltyAccount.setLoyaltyPoints(0);
+        loyaltyAccount.setStartDate(Date.valueOf(LocalDate.now()));
+        loyaltyAccount.setLoyaltyProgram(LoyaltyProgramDAO.getLoyaltyProgram());
+        customer.setLoyaltyAccount(loyaltyAccount);
+        UserDAO.updateUser(customer);
     }
 
     /**

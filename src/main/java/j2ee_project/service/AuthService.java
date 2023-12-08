@@ -49,7 +49,12 @@ public class AuthService {
      */
     public static User registerCustomer(CustomerDTO customerDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
         customerDTO.setPassword(HashService.generatePasswordHash(customerDTO.getPassword()));
-        User customer = new Customer(customerDTO);
+        Customer customer = new Customer(customerDTO);
+        LoyaltyAccount loyaltyAccount = new LoyaltyAccount();
+        loyaltyAccount.setLoyaltyPoints(0);
+        loyaltyAccount.setStartDate(Date.valueOf(LocalDate.now()));
+        loyaltyAccount.setLoyaltyProgram(LoyaltyProgramDAO.getLoyaltyProgram());
+        customer.setLoyaltyAccount(loyaltyAccount);
         UserDAO.addUser(customer);
         return customer;
     }
@@ -69,14 +74,14 @@ public class AuthService {
     }
 
 
-    public static void openLoyaltyAccount(Customer customer){
+/*    public static void openLoyaltyAccount(Customer customer){
         LoyaltyAccount loyaltyAccount = new LoyaltyAccount();
         loyaltyAccount.setLoyaltyPoints(0);
         loyaltyAccount.setStartDate(Date.valueOf(LocalDate.now()));
         loyaltyAccount.setLoyaltyProgram(LoyaltyProgramDAO.getLoyaltyProgram());
         customer.setLoyaltyAccount(loyaltyAccount);
         UserDAO.updateUser(customer);
-    }
+    }*/
 
     /**
      * Check if a moderator has a precise permission

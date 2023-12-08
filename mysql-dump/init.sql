@@ -196,25 +196,29 @@ CREATE EVENT cleaningForgottenPassword
         EVERY 1 MINUTE ENABLE
     DO
         DELETE FROM ForgottenPassword f
-        WHERE f.expiryDate < SYSDATE();
+        WHERE f.expiryDate > SYSDATE();
 
 delimiter |
 
 CREATE EVENT cleaningLoyaltyAccount
     ON SCHEDULE
-        EVERY 1 MINUTE ENABLE
+        EVERY 1 DAY ENABLE
     DO
         BEGIN
             DELETE
                 FROM LoyaltyAccountLevelUsed lalu
-                WHERE lalu.idLoyaltyAccount IN (SELECT id
-                                                   FROM LoyaltyAccount la
-                                                   WHERE DATE_ADD(la.startDate, INTERVAL 1 YEAR) > CURRENT_DATE);
+                WHERE lalu.idLoyaltyAccount IN (
+                    SELECT id
+                    FROM LoyaltyAccount la
+                    WHERE DATE_ADD(la.startDate, INTERVAL (SELECT durationNbDays FROM LoyaltyProgram lp WHERE lp.id = la.idLoyaltyProgram) DAY ) > CURRENT_DATE
+                );
             UPDATE LoyaltyAccount la
                 SET la.loyaltyPoints = 0, la.startDate = CURRENT_DATE
-                WHERE la.id IN (SELECT id
-                                   FROM LoyaltyAccount la
-                                   WHERE DATE_ADD(la.startDate, INTERVAL 1 YEAR) > CURRENT_DATE);
+                WHERE la.id IN (
+                    SELECT id
+                    FROM LoyaltyAccount lac
+                    WHERE DATE_ADD(lac.startDate, INTERVAL (SELECT durationNbDays FROM LoyaltyProgram lp WHERE lp.id = lac.idLoyaltyProgram) DAY ) > CURRENT_DATE
+                );
         END|
 
 delimiter ;

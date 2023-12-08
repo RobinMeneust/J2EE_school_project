@@ -84,7 +84,6 @@ public class RegisterCustomerController extends HttpServlet {
 
                         // Refresh the user's cart
                         customer.setCart(CartDAO.getCartFromCustomerId(customer.getId()));
-                        AuthService.openLoyaltyAccount(customer);
                         session.setAttribute("user", customer);
                     }
 

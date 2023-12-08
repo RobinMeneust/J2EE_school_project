@@ -1,5 +1,6 @@
 package j2ee_project.model;
 
+import j2ee_project.dto.AddressDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -28,6 +29,13 @@ public class Address {
         this.postalCode = postalCode;
         this.city = city;
         this.country = country;
+    }
+
+    public Address(AddressDTO addressDTO){
+        this.streetAddress = addressDTO.getStreetAddress();
+        this.postalCode = addressDTO.getPostalCode();
+        this.city = addressDTO.getCity();
+        this.country = addressDTO.getCountry();
     }
 
     public int getId() {

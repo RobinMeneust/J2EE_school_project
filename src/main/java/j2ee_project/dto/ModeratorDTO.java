@@ -14,12 +14,28 @@ public class ModeratorDTO extends UserDTO{
 
     private Set<Permission> permissions;
 
-    public ModeratorDTO(String firstName, String lastName, String email, String password, String confirmPassword, String phoneNumber, Set<Permission> permissions) {
+    public ModeratorDTO(String firstName, String lastName, String email, String password, String confirmPassword, String phoneNumber) {
         super(firstName, lastName, email, password, confirmPassword,phoneNumber);
-        this.permissions = permissions;
     }
 
     public Set<Permission> getPermissions(){
         return this.permissions;
+    }
+
+    public void addPermission(Permission permission) {
+        this.permissions.add(permission);
+    }
+
+    @Override
+    public String toString() {
+        return "ModeratorDTO{" +
+                "firstName=" + this.getFirstName() +
+                ", lastName=" + this.getLastName() +
+                ", email=" + this.getEmail() +
+                ", password=" + this.getPassword() +
+                ", confirmPassword=" + this.getConfirmPassword() +
+                ", phoneNumber=" + this.getPhoneNumber() +
+                "permissions=" + this.getPermissions() +
+                '}';
     }
 }

@@ -85,7 +85,7 @@ public class ForgottenPassword {
     public String toString() {
         return "ForgottenPassword{" +
                 "id=" + id +
-                ", token='" + token + '\'' +
+                ", token=" + token +
                 ", expiryDate=" + expiryDate +
                 '}';
     }

@@ -17,12 +17,12 @@ public class ContactDTO {
     private String firstName;
     @NotBlank(message = "Last name can not be blank.")
     @Size(max = 30, message = "Last name can not exceed 30 characters.")
-    @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿ-]*$", message = "First name is not valid : only letters and -' are authorized.")
+    @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿ-]*$", message = "Last name is not valid : only letters and -' are authorized.")
     private String lastName;
-    @Pattern(regexp = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$",message = "Email is not valid.")
+    @Pattern(regexp = "^[\\w\\-.]+@([\\w-]+\\.)+[\\w-]{2,4}$",message = "Email is not valid.")
     private String email;
     @NotBlank(message = "Subject can not be blank.")
-    @Size(max = 50, message = "First name can not exceed 50 characters.")
+    @Size(max = 50, message = "Subject can not exceed 50 characters.")
     private String subject;
     @NotBlank(message = "Message can not be blank.")
     @Size(max = 256, message = "Message can not exceed 256 characters.")
@@ -59,11 +59,11 @@ public class ContactDTO {
     @Override
     public String toString() {
         return "ContactDTO{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", subject='" + subject + '\'' +
-                ", bodyMessage='" + bodyMessage + '\'' +
+                "firstName=" + firstName +
+                ", lastName=" + lastName +
+                ", email=" + email +
+                ", subject=" + subject +
+                ", bodyMessage=" + bodyMessage +
                 '}';
     }
 }

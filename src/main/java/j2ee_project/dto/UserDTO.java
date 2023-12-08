@@ -17,7 +17,7 @@ public class UserDTO {
     private String firstName;
     @NotBlank(message = "Last name can not be blank.")
     @Size(max = 30, message = "Last name can not exceed 30 characters.")
-    @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿ-]*$", message = "First name is not valid : only letters and -' are authorized.")
+    @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿ-]*$", message = "Last name is not valid : only letters and -' are authorized.")
     private String lastName;
     @Pattern(regexp = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$",message = "Email is not valid.")
     private String email;
@@ -66,12 +66,12 @@ public class UserDTO {
     @Override
     public String toString() {
         return "UserDTO{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", confirmPassword='" + confirmPassword + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
+                "firstName=" + firstName +
+                ", lastName=" + lastName +
+                ", email=" + email +
+                ", password=" + password +
+                ", confirmPassword=" + confirmPassword +
+                ", phoneNumber=" + phoneNumber +
                 '}';
     }
 }

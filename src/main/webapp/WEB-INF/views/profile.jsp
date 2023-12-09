@@ -12,9 +12,10 @@
 <%@ page import="j2ee_project.model.user.Customer" %>
 <%@ page import="j2ee_project.model.Address" %>
 <%@ page import="java.util.Set" %>
-        <%@ page import="j2ee_project.service.AuthService" %>
-        <%@ page import="j2ee_project.model.user.User" %>
-        <%@ page import="java.util.TreeSet" %>
+<%@ page import="j2ee_project.service.AuthService" %>
+<%@ page import="j2ee_project.model.user.User" %>
+<%@ page import="java.util.TreeSet" %>
+        <%@ page import="java.util.stream.Stream" %>
         <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -82,10 +83,12 @@
 <%
     Customer customer = (Customer) request.getAttribute("customer");
     if(customer == null) {
-        response.sendRedirect("login");
+        response.sendRedirect("/login-controller");
     }
     LoyaltyAccount loyaltyAccount = customer.getLoyaltyAccount();
-    List<LoyaltyLevel> loyaltyLevels = (List<LoyaltyLevel>) request.getAttribute("loyaltyLevels");
+    Set<LoyaltyLevel> loyaltyLevelsSet = customer.getLoyaltyAccount().getLoyaltyProgram().getLoyaltyLevels();
+    Stream<LoyaltyLevel> loyaltyLevelStream = loyaltyLevelsSet.stream().sorted();
+    List<LoyaltyLevel> loyaltyLevels = loyaltyLevelStream.toList();
     String activeTab = request.getParameter("active-tab");
     Address address;
     String customerFirstName = null;

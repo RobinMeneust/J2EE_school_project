@@ -10,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -30,6 +31,12 @@ public class ProfileInformationsController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String customerIdStr = request.getParameter("customerId");
+        HttpSession session = request.getSession();
+        Object obj = session.getAttribute("user");
+        if(!(obj instanceof Customer)) {
+            response.sendRedirect("login");
+            return;
+        }
         int customerId = 1;
         if(customerIdStr != null && !customerIdStr.trim().isEmpty()) {
             try {

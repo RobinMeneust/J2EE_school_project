@@ -1,8 +1,10 @@
 package j2ee_project.controller.profile;
 
 import j2ee_project.dao.user.CustomerDAO;
+import j2ee_project.dao.user.UserDAO;
 import j2ee_project.model.Address;
 import j2ee_project.model.user.Customer;
+import j2ee_project.model.user.User;
 import j2ee_project.service.HashService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -33,7 +35,7 @@ public class ProfileInformationsController extends HttpServlet {
         String customerIdStr = request.getParameter("customerId");
         HttpSession session = request.getSession();
         Object obj = session.getAttribute("user");
-        if(!(obj instanceof Customer)) {
+        if(!(obj instanceof User)) {
             response.sendRedirect("login");
             return;
         }
@@ -45,6 +47,10 @@ public class ProfileInformationsController extends HttpServlet {
         }
 
         try {
+            if (!(obj instanceof Customer)) {
+                User user = UserDAO.getUser(((User) obj).getId());
+                request.setAttribute("user", user);
+            }
             Customer customer = CustomerDAO.getCustomer(customerId);
             request.setAttribute("customer", customer);
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/profile.jsp?active-tab=1&has-loyalty-account=1");

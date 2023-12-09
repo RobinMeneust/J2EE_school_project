@@ -82,13 +82,22 @@
 
 <%
     Customer customer = (Customer) request.getAttribute("customer");
-    if(customer == null) {
-        response.sendRedirect("/login-controller");
+    User user = (User) request.getAttribute("user");
+    LoyaltyAccount loyaltyAccount;
+    List<LoyaltyLevel> loyaltyLevels;
+    Stream<LoyaltyLevel> loyaltyLevelStream;
+    Set<LoyaltyLevel> loyaltyLevelsSet;
+    if (customer == null){
+        loyaltyAccount = null;
+        loyaltyLevelsSet = null;
+        loyaltyLevelStream = null;
+        loyaltyLevels = null;
+    }else {
+        loyaltyAccount = customer.getLoyaltyAccount();
+        loyaltyLevelsSet = customer.getLoyaltyAccount().getLoyaltyProgram().getLoyaltyLevels();
+        loyaltyLevelStream = loyaltyLevelsSet.stream().sorted();
+        loyaltyLevels = loyaltyLevelStream.toList();
     }
-    LoyaltyAccount loyaltyAccount = customer.getLoyaltyAccount();
-    Set<LoyaltyLevel> loyaltyLevelsSet = customer.getLoyaltyAccount().getLoyaltyProgram().getLoyaltyLevels();
-    Stream<LoyaltyLevel> loyaltyLevelStream = loyaltyLevelsSet.stream().sorted();
-    List<LoyaltyLevel> loyaltyLevels = loyaltyLevelStream.toList();
     String activeTab = request.getParameter("active-tab");
     Address address;
     String customerFirstName = null;
@@ -114,7 +123,12 @@
             customerCity = address.getCity();
         }
         orders = new TreeSet<>(customer.getOrders());
-    }%>
+    } else if (request.getAttribute("user") !=null) {
+        customerFirstName = user.getFirstName();
+        customerLastName = user.getLastName();
+        customerPhoneNumber = user.getPhoneNumber();
+        customerEmail = user.getEmail();
+    } %>
 <c:set var="orders" value="<%=orders%>"/>
 <c:set var="customer" value="<%=customer%>"/>
 <c:set var="loyaltyLevels" value="<%=loyaltyLevels%>"/>

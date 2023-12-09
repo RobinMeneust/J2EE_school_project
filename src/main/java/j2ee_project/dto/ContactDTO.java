@@ -28,6 +28,15 @@ public class ContactDTO {
     @Size(max = 256, message = "Message can not exceed 256 characters.")
     private String bodyMessage;
 
+    /**
+     * Instantiates a new Contact dto.
+     *
+     * @param firstName   the first name
+     * @param lastName    the last name
+     * @param email       the email
+     * @param subject     the subject
+     * @param bodyMessage the body message
+     */
     public ContactDTO(String firstName, String lastName, String email, String subject, String bodyMessage) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -36,22 +45,47 @@ public class ContactDTO {
         this.bodyMessage = bodyMessage;
     }
 
+    /**
+     * Gets first name.
+     *
+     * @return the first name
+     */
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     * Gets last name.
+     *
+     * @return the last name
+     */
     public String getLastName() {
         return lastName;
     }
 
+    /**
+     * Gets email.
+     *
+     * @return the email
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Gets subject.
+     *
+     * @return the subject
+     */
     public String getSubject() {
         return subject;
     }
 
+    /**
+     * Gets body message.
+     *
+     * @return the body message
+     */
     public String getBodyMessage() {
         return bodyMessage;
     }

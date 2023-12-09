@@ -14,13 +14,22 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * This class is a servlet used to get the receipt page. It's a controller in the MVC architecture of this project.
+ * This class is a servlet used to get an order page. It's a controller in the MVC architecture of this project.
  *
  * @author Robin MENEUST
  */
 @WebServlet("/order")
 public class GetOrderPageController extends HttpServlet
 {
+    /**
+     * Get a page with information about the order whose ID is given in the param "order-id"
+     * The current logged-in user must be the one who created this order
+     *
+     * @param request Request object received by the servlet
+     * @param response Response to be sent
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         HttpSession session = request.getSession();

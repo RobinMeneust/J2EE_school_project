@@ -9,8 +9,18 @@ import org.hibernate.Session;
 
 import java.util.List;
 
+/**
+ * Class that interact with the database to edit the Moderator table in the database
+ *
+ * @author Robin Meneust
+ */
 public class ModeratorDAO {
 
+    /**
+     * Get the list of all moderators
+     *
+     * @return the list of all moderators
+     */
     public static List<Moderator> getModerators(){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -23,6 +33,12 @@ public class ModeratorDAO {
         return moderators;
     }
 
+    /**
+     * Get moderator by id
+     *
+     * @param moderatorId the moderator's id
+     * @return the moderator
+     */
     public static Moderator getModerator(int moderatorId){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -38,6 +54,11 @@ public class ModeratorDAO {
         return moderator;
     }
 
+    /**
+     * Delete moderator by id
+     *
+     * @param moderatorId the moderator's id
+     */
     public static void deleteModerator(int moderatorId){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -54,6 +75,11 @@ public class ModeratorDAO {
         entityManager.close();
     }
 
+    /**
+     * Add moderator
+     *
+     * @param moderator the moderator to be added
+     */
     public static void addModerator(Moderator moderator){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();

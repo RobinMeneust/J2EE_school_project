@@ -10,6 +10,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Order that a user can confirm (pay), it can also be cancelled, shipped... The cart is used before the payment and the order is what we use after to keep a track of what has been ordered
+ */
 @Entity
 public class Orders implements Comparable<Orders> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,9 +43,21 @@ public class Orders implements Comparable<Orders> {
     @JoinColumn(name = "idDiscount", referencedColumnName = "id")
     private Discount discount;
 
+    /**
+     * Instantiates a new Order.
+     */
     public Orders() {
     }
 
+    /**
+     * Instantiates a new Order.
+     *
+     * @param cart     the cart
+     * @param discount the discount
+     * @param date     the date
+     * @param customer the customer
+     * @param address  the address
+     */
     public Orders(Cart cart, Discount discount, Date date, Customer customer, Address address) {
         this.discount = discount;
         this.date = date;
@@ -53,22 +68,47 @@ public class Orders implements Comparable<Orders> {
         loadItemsFromCart(cart);
     }
 
+    /**
+     * Gets discount.
+     *
+     * @return the discount
+     */
     public Discount getDiscount() {
         return discount;
     }
 
+    /**
+     * Sets discount.
+     *
+     * @param discount the discount
+     */
     public void setDiscount(Discount discount) {
         this.discount = discount;
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets total.
+     *
+     * @return the total
+     */
     public float getTotal() {
         float total = 0.0f;
         if (orderItems != null) {
@@ -79,18 +119,38 @@ public class Orders implements Comparable<Orders> {
         return total + shippingFees;
     }
 
+    /**
+     * Gets date.
+     *
+     * @return the date
+     */
     public Date getDate() {
         return date;
     }
 
+    /**
+     * Sets date.
+     *
+     * @param date the date
+     */
     public void setDate(Date date) {
         this.date = date;
     }
 
+    /**
+     * Gets order status.
+     *
+     * @return the order status
+     */
     public OrderStatus getOrderStatus() {
         return orderStatus;
     }
 
+    /**
+     * Sets order status.
+     *
+     * @param orderStatus the order status
+     */
     public void setOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
     }
@@ -120,26 +180,56 @@ public class Orders implements Comparable<Orders> {
         return result;
     }
 
+    /**
+     * Gets order items.
+     *
+     * @return the order items
+     */
     public Set<OrderItem> getOrderItems() {
         return orderItems;
     }
 
+    /**
+     * Sets order items.
+     *
+     * @param orderItems the order items
+     */
     public void setOrderItems(Set<OrderItem> orderItems) {
         this.orderItems = orderItems;
     }
 
+    /**
+     * Gets customer.
+     *
+     * @return the customer
+     */
     public Customer getCustomer() {
         return customer;
     }
 
+    /**
+     * Sets customer.
+     *
+     * @param customer the customer
+     */
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
 
+    /**
+     * Gets delivery address.
+     *
+     * @return the address
+     */
     public Address getAddress() {
         return address;
     }
 
+    /**
+     * Sets delivery address.
+     *
+     * @param address the address
+     */
     public void setAddress(Address address) {
         this.address = address;
     }

@@ -22,6 +22,13 @@ import java.io.IOException;
 @WebServlet("/pay")
 public class GetPayPageController extends HttpServlet
 {
+    /**
+     * Get the page to pay for an order
+     * @param request Request object received by the servlet
+     * @param response Response to be sent
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Object obj = session.getAttribute("user");

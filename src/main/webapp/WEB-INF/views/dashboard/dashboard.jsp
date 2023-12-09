@@ -144,7 +144,7 @@
                             </c:if>
                         </div>
                     </c:if>
-                    <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_DISCOUNT)) || user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_LOYALTY))}">
+                    <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_DISCOUNT))}">
                         <div class="mt-5">
                             <span class="field-title">Offers</span>
                             <hr>
@@ -167,31 +167,6 @@
                                                 Discounts
                                             </span>
                                             <span class="material-symbols-outlined" id="span-chevron-discounts">
-                                                chevron_right
-                                            </span>
-                                        </span>
-                                    </button>
-                                </span>
-                            </c:if>
-                            <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_LOYALTY))}">
-                                <span class="d-flex justify-content-between flex-row">
-                                    <button onclick="changeURLParameter('loyalty-program')"
-                                        class="nav-link
-                                        <c:if test="${tab=='loyalty-program'}">
-                                            <c:out value="active"/>
-                                        </c:if>"
-                                        id="pills-loyalty-program-tab"
-                                        data-bs-toggle="pill"
-                                        data-bs-target="#pills-loyalty-program"
-                                        type="button"
-                                        role="tab"
-                                        aria-controls="pills-loyalty-program"
-                                        aria-selected="false">
-                                        <span class="d-flex justify-content-between flex-row">
-                                            <span>
-                                                Loyalty Program
-                                            </span>
-                                            <span class="material-symbols-outlined" id="span-chevron-loyalty-program">
                                                 chevron_right
                                             </span>
                                         </span>

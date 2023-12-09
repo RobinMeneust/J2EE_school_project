@@ -22,13 +22,20 @@ import java.sql.Date;
 import java.util.Calendar;
 
 /**
- * This class is a servlet use to confirm a payment. It's a controller in the MVC architecture of this project.
+ * This class is a servlet used to confirm a payment. It's a controller in the MVC architecture of this project.
  *
  * @author Robin MENEUST
  */
 @WebServlet("/confirm-payment")
 public class ConfirmPaymentController extends HttpServlet
 {
+    /**
+     * Confirm the payment and send a receipt via email if it's successful. Either redirect to the cart (discount expired) or to the order receipt. We also update the Order status.
+     * @param request Request object received by the servlet
+     * @param response Response to be sent
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         HttpSession session = request.getSession();
@@ -77,7 +84,15 @@ public class ConfirmPaymentController extends HttpServlet
         dispatch("order", request, response);
     }
 
-    private void dispatch(String route, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    /**
+     * Dispatch the given request to the route
+     * @param route String representing the route where the request will be dispatched
+     * @param request Request dispatched
+     * @param response Response associated to the request
+     * @throws IOException If sendError failed
+     * @throws ServletException If The forward failed
+     */
+    private void dispatch(String route, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
             RequestDispatcher view = request.getRequestDispatcher(route);
             view.forward(request, response);
@@ -88,6 +103,11 @@ public class ConfirmPaymentController extends HttpServlet
         }
     }
 
+    /**
+     * Send a receipt via email
+     * @param customer Customer to whom the receipt is sent
+     * @param order Order whose receipt is sent
+     */
     private void sendReceiptMail(Customer customer, Orders order) {
         Mail mail = new Mail();
         MailManager mailManager = MailManager.getInstance();

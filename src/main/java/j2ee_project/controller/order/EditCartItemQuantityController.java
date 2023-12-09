@@ -23,14 +23,14 @@ import java.util.Set;
 import j2ee_project.service.CartManager;
 
 /**
- * This class is a servlet used to add items to the cart. It's a controller in the MVC architecture of this project.
+ * This class is a servlet used to change the quantity of an item in a cart. It's a controller in the MVC architecture of this project.
  *
  * @author Robin MENEUST
  */
 @WebServlet("/edit-cart-item-quantity")
 public class EditCartItemQuantityController extends HttpServlet {
     /**
-     * Add an item to the user cart
+     * Edit the quantity of the cart item whose ID and new quantity are given
      * @param request Request object received by the servlet
      * @param response Response to be sent
      * @throws ServletException If the request for the GET could not be handled

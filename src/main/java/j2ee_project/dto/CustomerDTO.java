@@ -11,14 +11,34 @@ public class CustomerDTO extends UserDTO{
 
     private Address address;
 
+    /**
+     * Instantiates a new Customer dto.
+     *
+     * @param firstName       the first name
+     * @param lastName        the last name
+     * @param email           the email
+     * @param password        the password
+     * @param confirmPassword the confirm password (string that must match with the password)
+     * @param phoneNumber     the phone number
+     */
     public CustomerDTO(String firstName, String lastName, String email, String password, String confirmPassword, String phoneNumber) {
         super(firstName, lastName, email, password, confirmPassword, phoneNumber);
     }
 
+    /**
+     * Gets address.
+     *
+     * @return the address
+     */
     public Address getAddress() {
         return address;
     }
 
+    /**
+     * Sets address.
+     *
+     * @param address the address
+     */
     public void setAddress(Address address) {
         this.address = address;
     }

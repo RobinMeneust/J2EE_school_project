@@ -1,11 +1,15 @@
 package j2ee_project.model;
 
+import j2ee_project.dto.discount.DiscountDTO;
 import jakarta.persistence.*;
 
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Discount (reduce the price of one or many products at once)
+ */
 @Entity
 public class Discount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,42 +29,109 @@ public class Discount {
     @Column(name = "discountPercentage", nullable = false)
     private int discountPercentage;
 
+    /**
+     * Instantiates a new Discount.
+     */
+    public Discount(){}
+
+    /**
+     * Instantiates a new Discount.
+     *
+     * @param discountDTO the customer dto
+     */
+    public Discount(DiscountDTO discountDTO) {
+        this.name = discountDTO.getName();
+        this.startDate = discountDTO.getStartDate();
+        this.endDate = discountDTO.getEndDate();
+        this.discountPercentage = discountDTO.getDiscountPercentage();
+    }
+
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets name.
+     *
+     * @param name the name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Gets start date.
+     *
+     * @return the start date
+     */
     public Date getStartDate() {
         return startDate;
     }
 
+    /**
+     * Sets start date.
+     *
+     * @param startDate the start date
+     */
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
+    /**
+     * Gets end date.
+     *
+     * @return the end date
+     */
     public Date getEndDate() {
         return endDate;
     }
 
+    /**
+     * Sets end date.
+     *
+     * @param endDate the end date
+     */
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
+    /**
+     * Gets discount percentage.
+     *
+     * @return the discount percentage
+     */
     public int getDiscountPercentage() {
         return discountPercentage;
     }
 
+    /**
+     * Sets discount percentage.
+     *
+     * @param discountPercentage the discount percentage
+     */
     public void setDiscountPercentage(int discountPercentage) {
         this.discountPercentage = discountPercentage;
     }
@@ -91,6 +162,11 @@ public class Discount {
         return result;
     }
 
+    /**
+     * Has expired boolean.
+     *
+     * @return the boolean
+     */
     public boolean hasExpired() {
         Date today = new java.sql.Date(new java.util.Date().getTime());
         return getEndDate().compareTo(today) <= 0;

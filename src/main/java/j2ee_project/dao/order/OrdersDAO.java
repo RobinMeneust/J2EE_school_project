@@ -9,8 +9,19 @@ import org.hibernate.Session;
 
 import java.util.*;
 
+/**
+ * Class that interact with the database to edit the Orders table in the database
+ *
+ * @author Robin Meneust
+ */
 public class OrdersDAO {
 
+    /**
+     * Get orders list by customer id
+     *
+     * @param customerId the customer id whose orders are got
+     * @return the list of orders
+     */
     public static List<Orders> getOrders(int customerId){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -23,6 +34,11 @@ public class OrdersDAO {
         return orders;
     }
 
+    /**
+     * Add an order
+     *
+     * @param newOrder the new order
+     */
     public static void addOrder(Orders newOrder) {
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -34,6 +50,12 @@ public class OrdersDAO {
         entityManager.close();
     }
 
+    /**
+     * Get an order by id
+     *
+     * @param orderId the order's id
+     * @return the order fetched
+     */
     public static Orders getOrder(String orderId) {
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -46,6 +68,12 @@ public class OrdersDAO {
         return order;
     }
 
+    /**
+     * Sets the status of the given order
+     *
+     * @param order       the order whose status is changed
+     * @param orderStatus the new order status
+     */
     public static void setStatus(Orders order, OrderStatus orderStatus) {
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();

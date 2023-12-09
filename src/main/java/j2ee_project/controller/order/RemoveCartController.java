@@ -23,14 +23,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This class is a servlet used to remove the cart. It's a controller in the MVC architecture of this project.
+ * This class is a servlet used to remove the current user's cart. It's a controller in the MVC architecture of this project.
  *
  * @author Robin MENEUST
  */
 @WebServlet("/remove-cart")
 public class RemoveCartController extends HttpServlet {
     /**
-     * Remove the cart
+     * Remove the cart of the user in the session
      * @param request Request object received by the servlet
      * @param response Response to be sent
      * @throws ServletException If the request for the GET could not be handled

@@ -24,18 +24,45 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 
+/**
+ * This class is a servlet used to create a payment intent. It's a controller in the MVC architecture of this project.
+ *
+ * @author Robin Meneust
+ */
+
 @WebServlet("/create-payment-intent")
 public class CreatePaymentIntentController extends HttpServlet {
-
+    /**
+     * Gson reader
+     */
     private static Gson gson = new Gson();
 
+    /**
+     * Create payment response class (See Stripe documentation)
+     */
     static class CreatePaymentResponse {
+        /**
+         * Client's secret code
+         */
         private String clientSecret;
+
+        /**
+         * Instantiates a new Create payment response.
+         *
+         * @param clientSecret the client secret
+         */
         public CreatePaymentResponse(String clientSecret) {
             this.clientSecret = clientSecret;
         }
     }
 
+    /**
+     * Get payment intent in JSON format. Use the credentials.json file to get the API keys
+     * @param request Request object received by the servlet
+     * @param response Response to be sent
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
 

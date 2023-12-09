@@ -8,7 +8,17 @@ import jakarta.persistence.EntityTransaction;
 
 import java.util.List;
 
+/**
+ * Class that interact with the database to edit the Customer table in the database
+ *
+ * @author Robin Meneust
+ */
 public class CustomerDAO {
+    /**
+     * Get the list of all customers
+     *
+     * @return the list of customers
+     */
     public static List<Customer> getCustomers(){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -21,6 +31,12 @@ public class CustomerDAO {
         return customers;
     }
 
+    /**
+     * Get customer by ID
+     *
+     * @param customerId the customer's id
+     * @return the customer
+     */
     public static Customer getCustomer(int customerId){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -36,6 +52,11 @@ public class CustomerDAO {
         return customer;
     }
 
+    /**
+     * Delete customer by ID
+     *
+     * @param customerId the customer's id
+     */
     public static void deleteCustomer(int customerId){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -53,6 +74,11 @@ public class CustomerDAO {
         entityManager.close();
     }
 
+    /**
+     * Add a customer
+     *
+     * @param customer the customer
+     */
     public static void addCustomer(Customer customer){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -65,8 +91,9 @@ public class CustomerDAO {
     }
 
     /**
+     * Edit a customer
      *
-     * @param customer Customer new data (but with the same id)
+     * @param customer Customer's new data (but with the same id)
      */
     public static void modifyCustomer(Customer customer){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();

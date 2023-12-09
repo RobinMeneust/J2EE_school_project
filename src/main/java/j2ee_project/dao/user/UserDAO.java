@@ -6,7 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
 /**
- * This class is utility class for the methods that interacts with the database.
+ * This class is utility class for the methods that interacts with the database to manipulate users.
  *
  * @author Lucas VELAY
  */
@@ -64,7 +64,8 @@ public class UserDAO {
     /**
      * Check if an email and a phone number are in the database
      *
-     * @param email the email to check
+     * @param email       the email to check
+     * @param phoneNumber the phone number
      * @return the boolean indicating the presence of the email
      */
     public static boolean emailOrPhoneNumberIsInDb(String email, String phoneNumber){
@@ -85,30 +86,6 @@ public class UserDAO {
         return countEmail > 0;
     }
 
-    /*
-    /**
-     * Check if an email is in the database
-     *
-     * @param email the email to check
-     * @return the boolean indicating the presence of the email
-     */
-    /*
-    public static boolean emailIsInDb(String email){
-        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
-
-        int countEmail = 0;
-        try {
-            countEmail = entityManager.createQuery("SELECT COUNT(*) FROM User WHERE email=:email", Integer.class)
-                    .setParameter("email", email)
-                    .getSingleResult();
-        } catch (Exception ignore) {}
-
-        transaction.commit();
-        entityManager.close();
-        return countEmail > 0;
-    }*/
 
     /**
      * Get user from the database with his email
@@ -133,7 +110,13 @@ public class UserDAO {
         return  user;
     }
 
-	public static User getUser(int id) {
+    /**
+     * Get user by id
+     *
+     * @param id ID of the user
+     * @return User fetched
+     */
+    public static User getUser(int id) {
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();

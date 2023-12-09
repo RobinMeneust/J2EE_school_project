@@ -1,7 +1,5 @@
-package j2ee_project.controller;
+package j2ee_project.controller.order;
 
-import com.stripe.Stripe;
-import j2ee_project.service.MailManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,12 +13,19 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 
 /**
- * This class is a servlet used to get the context path. It's a controller in the MVC architecture of this project.
+ * This class is a servlet used to get Stripe API public key. It's a controller in the MVC architecture of this project.
  *
  * @author Robin MENEUST
  */
 @WebServlet("/get-stripe-publishable-key")
 public class GetStripePublishableKeyController extends HttpServlet {
+    /**
+     * Get Stripe API public key as a JSON object with the key "stripe-publishable-key"
+     * @param request Request object received by the servlet
+     * @param response Response to be sent
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

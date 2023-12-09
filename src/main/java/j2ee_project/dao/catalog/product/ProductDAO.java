@@ -14,18 +14,19 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 /**
- * Class that interact with the database to edit the Product table in the database or get data from it
+ * Class that interacts with the database to edit the Product table in the database or get data from it
  *
  * @author Robin Meneust
  */
 public class ProductDAO {
     /**
      * Create a query string from a list of filters for the Product table and its params
+     *
      * @param queryStrStart Beginning of the query to which filters are added
-     * @param name The products' name must match with this name (it's case-insensitive, and it can be just a part of a searched word: e.g. 'Ch' will return 'chess' products)
-     * @param category The products' category must match with it (exactly like the name filter)
-     * @param minPrice The products' price must be greater or equal to this value
-     * @param maxPrice The products' price must be lesser or equal to this value
+     * @param name          The products' name must match with this name (it's case-insensitive, and it can be just a part of a searched word: e.g. 'Ch' will return 'chess' products)
+     * @param category      The products' category must match with it (exactly like the name filter)
+     * @param minPrice      The products' price must be greater or equal to this value
+     * @param maxPrice      The products' price must be lesser or equal to this value
      * @return Hashmap containing the query (key "query") associated to the provided filters whose values are stored in a list in the hashmap in the same order as in the query string (key "params")
      */
     public static HashMap<String,Object> getQueryString(String queryStrStart, String name, String category, String minPrice, String maxPrice) {
@@ -77,9 +78,10 @@ public class ProductDAO {
 
     /**
      * Get a list of products that match the given filters
-     * @param begin Index of the first element (e.g. begin=4 will ignore the 3 first products)
-     * @param size Max number of elements returned
-     * @param name The products' name must match with this name (it's case-insensitive, and it can be just a part of a searched word: e.g. 'Ch' will return 'chess' products)
+     *
+     * @param begin    Index of the first element (e.g. begin=4 will ignore the 3 first products)
+     * @param size     Max number of elements returned
+     * @param name     The products' name must match with this name (it's case-insensitive, and it can be just a part of a searched word: e.g. 'Ch' will return 'chess' products)
      * @param category The products' category must match with it (exactly like the name filter)
      * @param minPrice The products' price must be greater or equal to this value
      * @param maxPrice The products' price must be lesser or equal to this value
@@ -117,6 +119,11 @@ public class ProductDAO {
         return products;
     }
 
+    /**
+     * Get products list
+     *
+     * @return the list of products
+     */
     public static List<Product> getProducts(){
         int size = Math.toIntExact(ProductDAO.getSize());
         return ProductDAO.getProducts(0,size,null,null,null,null);
@@ -124,6 +131,7 @@ public class ProductDAO {
 
     /**
      * Get a product from its ID
+     *
      * @param productId ID of the searched product
      * @return Product whose ID matched with the one provided
      */
@@ -144,6 +152,7 @@ public class ProductDAO {
 
     /**
      * Get the list of the featured products
+     *
      * @return Featured products
      */
     public static List<FeaturedProduct> getFeaturedProducts() {
@@ -160,7 +169,8 @@ public class ProductDAO {
 
     /**
      * Get the total number of products
-     * @param name The products' name must match with this name (it's case-insensitive, and it can be just a part of a searched word: e.g. 'Ch' will return 'chess' products)
+     *
+     * @param name     The products' name must match with this name (it's case-insensitive, and it can be just a part of a searched word: e.g. 'Ch' will return 'chess' products)
      * @param category The products' category must match with it (exactly like the name filter)
      * @param minPrice The products' price must be greater or equal to this value
      * @param maxPrice The products' price must be lesser or equal to this value
@@ -202,10 +212,20 @@ public class ProductDAO {
         return size;
     }
 
+    /**
+     * Get the total number of products.
+     *
+     * @return the number of products
+     */
     public static Long getSize(){
         return ProductDAO.getSize(null,null,null,null);
     }
 
+    /**
+     * Delete product whose ID is given
+     *
+     * @param productId the product id
+     */
     public static void deleteProduct(int productId){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -221,6 +241,11 @@ public class ProductDAO {
         entityManager.close();
     }
 
+    /**
+     * Add product
+     *
+     * @param product the product added
+     */
     public static void addProduct(Product product){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -232,6 +257,12 @@ public class ProductDAO {
         entityManager.close();
     }
 
+    /**
+     * Set the image path of the product whose id is given
+     *
+     * @param productId the product id
+     * @param path      the path
+     */
     public static void setProductImagePath(int productId, String path) {
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();

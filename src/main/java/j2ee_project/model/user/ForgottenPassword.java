@@ -8,6 +8,9 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * Forgotten password query
+ */
 @Entity
 public class ForgottenPassword {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +27,12 @@ public class ForgottenPassword {
     @Column(name = "expiryDate", nullable = false)
     private LocalDateTime expiryDate;
 
+    /**
+     * Instantiates a new Forgotten password.
+     *
+     * @param user  the user
+     * @param token the token
+     */
     public ForgottenPassword(User user, String token) {
         this.user = user;
         this.token = token;
@@ -31,38 +40,81 @@ public class ForgottenPassword {
         this.expiryDate = LocalDateTime.now().plusDays(1);
     }
 
+    /**
+     * Instantiates a new Forgotten password.
+     */
     public ForgottenPassword() {
 
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets user.
+     *
+     * @return the user
+     */
     public User getUser() {
         return user;
     }
 
+    /**
+     * Sets user.
+     *
+     * @param user the user
+     */
     public void setUser(User user) {
         this.user = user;
     }
 
+    /**
+     * Gets token.
+     *
+     * @return the token
+     */
     public String getToken() {
         return token;
     }
 
+    /**
+     * Sets token.
+     *
+     * @param token the token
+     */
     public void setToken(String token) {
         this.token = token;
     }
 
+    /**
+     * Gets expiry date.
+     *
+     * @return the expiry date
+     */
     public LocalDateTime getExpiryDate() {
         return expiryDate;
     }
 
+    /**
+     * Sets expiry date.
+     *
+     * @param expiryDate the expiry date
+     */
     public void setExpiryDate(LocalDateTime expiryDate) {
         this.expiryDate = expiryDate;
     }

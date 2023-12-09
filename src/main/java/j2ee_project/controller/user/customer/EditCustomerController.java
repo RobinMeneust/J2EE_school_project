@@ -51,7 +51,6 @@ public class EditCustomerController extends HttpServlet {
                 }
 
                 Customer customer = CustomerDAO.getCustomer(customerId);
-                System.out.println(request.getAttribute("customer"));
                 request.setAttribute("customerToEdit", customer);
 
                 RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/edit/editCustomer.jsp");
@@ -111,9 +110,6 @@ public class EditCustomerController extends HttpServlet {
                         request.getParameter("country")
                 );
                 customerDTO.setAddress(new Address(addressDTO));
-
-                System.out.println(customerDTO.getEmail());
-                System.out.println(UserDAO.emailOrPhoneNumberIsInDb(customerDTO.getEmail(), customerDTO.getPhoneNumber()));
 
                 Map<String, String> inputErrors = DTOService.userDataValidation(customerDTO);
 

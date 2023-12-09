@@ -110,9 +110,6 @@ public class EditModeratorController extends HttpServlet {
                         (request.getParameter("phoneNumber").isEmpty()) ? null : request.getParameter("phoneNumber")
                 );
 
-                System.out.println(moderatorDTO.getEmail());
-                System.out.println(UserDAO.emailOrPhoneNumberIsInDb(moderatorDTO.getEmail(), moderatorDTO.getPhoneNumber()));
-
                 for (String permissionStr : request.getParameterValues("permissions")) {
                     TypePermission permission = TypePermission.values()[Integer.parseInt(permissionStr)];
                     moderatorDTO.addPermission(getPermission(permission));

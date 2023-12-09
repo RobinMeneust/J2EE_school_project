@@ -47,7 +47,7 @@ public class UserDAO {
     /**
      * Update a user in the database
      *
-     * @param user the user to add
+     * @param user the user to update
      */
     public static void updateUser(User user){
 

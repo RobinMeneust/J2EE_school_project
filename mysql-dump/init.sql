@@ -303,7 +303,9 @@ INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, ima
 INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Exploding Kittens', 100, 11, 'Exploding Kittens is a card game designed by Matthew Inman, Elan Lee and Shane Small and began as a Kickstarter project in 2015.', 2, 'products/exploding_kittens.jpg');
 INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Spot it', 100, 15, 'Spot it is a game in which players have to find symbols in common between two cards.', 2, 'products/spot_it.jpg');
 INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Monopoly', 30, 20, 'Monopoly is a multiplayer themed board game hare players buy and trade properties with the goal of driving their opponents into bankruptcy.', 1, 'products/monopoly.jpg');
-
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Civilization the board game', 30, 75,'Sid Meier Civilization: The Board Game is a 2010 board game created by Kevin Wilson based on the Sid Meier Civilization series of video games.', 1, 'products/Civilization.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Battleship', 30, 20,'Battleship is a two players strategy game played on ruled grids on which each player fleet of warships are marked.\n The locations of the fleets are concealed from the other player and the objective of the game is to destroy the opposing player fleet', 1, 'products/battleship.jpg');
+INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Connect 4', 200, 11.99,'Connect 4 is a game in which players take turns dropping colored tokens into a six-row, seven-column vertically suspended grid. The objective of the game is to be the first one to form a horizontal, vertical or diagonal line of four of one own tokens.', 1, 'products/connect4.jpg');
 
 
 

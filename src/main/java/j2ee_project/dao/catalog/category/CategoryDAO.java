@@ -3,6 +3,7 @@ package j2ee_project.dao.catalog.category;
 import j2ee_project.dao.JPAUtil;
 import j2ee_project.model.catalog.Category;
 import j2ee_project.model.user.Customer;
+import j2ee_project.model.user.User;
 import org.hibernate.Session;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -82,4 +83,22 @@ public class CategoryDAO {
         transaction.commit();
         entityManager.close();
     }
+
+    /**
+     * Update a category in the database
+     *
+     * @param category the category to add
+     */
+    public static void updateCategory(Category category){
+
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        entityManager.merge(category);
+
+        transaction.commit();
+        entityManager.close();
+    }
+
 }

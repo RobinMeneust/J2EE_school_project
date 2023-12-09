@@ -50,8 +50,8 @@
                     <input type="password" class="form-control ${requestScope.InputError.confirmPassword != null? 'is-invalid' : ''}" id="confirm-password" name="confirmPassword" aria-describedby="confirmPasswordHelp" placeholder="Password confirmation" required>
                     <div class="invalid-feedback">
                         <c:out value="${requestScope.InputError.confirmPassword}"/>
+                    </div>
                 </div>
-            </div>
             </div>
             <div class="mb-3"  id="div-address">
                 <div class="row input-group">

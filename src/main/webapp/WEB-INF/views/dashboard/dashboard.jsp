@@ -218,7 +218,7 @@
                                         <td class="text-center"><c:out value = "${customer.email}"/></td>
                                         <td class="text-center"><c:out value = "${customer.phoneNumber}"/></td>
                                         <td class="text-center col-1">
-                                            <a href="">
+                                            <a href="edit-customer?id=<c:out value = '${customer.id}'/>">
                                                 <button class="btn rounded"><span class="material-symbols-outlined">edit</span></button>
                                             </a>
                                         </td>
@@ -277,7 +277,7 @@
                                     <td class="text-center"><c:out value = "${moderator.email}"/></td>
                                     <td class="text-center"><c:out value = "${moderator.phoneNumber}"/></td>
                                     <td class="text-center col-1">
-                                        <a href="">
+                                        <a href="edit-moderator?id=${moderator.id}">
                                             <button class="btn rounded"><span class="material-symbols-outlined">edit</span></button>
                                         </a>
                                     </td>
@@ -384,7 +384,7 @@
                                         </c:if>
                                     </td>
                                     <td class="text-center col-1">
-                                        <a href="">
+                                        <a href="edit-category?id=${category.id}">
                                             <button class="btn rounded"><span class="material-symbols-outlined">edit</span></button>
                                         </a>
                                     </td>
@@ -444,18 +444,6 @@
                             </c:forEach>
                             </tbody>
                         </table>
-                    </div>
-                </c:if>
-                <c:if test="${user.isAllowed(cf:getPermission(TypePermission.CAN_MANAGE_LOYALTY))}">
-                    <div class="tab-pane fade
-                                    <c:if test="${tab=='loyalty-program'}">
-                                        <c:out value="show"/>
-                                        <c:out value="active"/>
-                                    </c:if>"
-                         id="pills-loyalty-program"
-                         role="tabpanel"
-                         aria-labelledby="pills-loyalty-program-tab">
-                        <span>test</span>
                     </div>
                 </c:if>
             </div>

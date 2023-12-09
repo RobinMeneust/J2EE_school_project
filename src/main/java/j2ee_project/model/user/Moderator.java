@@ -50,6 +50,15 @@ public class Moderator extends User{
     }
 
     /**
+     * Sets permissions.
+     *
+     * @param permissions the permissions
+     */
+    public void setPermissions(Set<Permission> permissions) {
+        this.permissions = permissions;
+    }
+
+    /**
      * Add permission.
      *
      * @param permission the permission

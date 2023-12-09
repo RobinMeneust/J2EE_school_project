@@ -2,13 +2,22 @@ package j2ee_project.controller.catalog.product;
 
 import j2ee_project.dao.catalog.category.CategoryDAO;
 import j2ee_project.dao.catalog.product.ProductDAO;
+import j2ee_project.dao.discount.DiscountDAO;
+import j2ee_project.dto.catalog.ProductDTO;
+import j2ee_project.model.Discount;
 import j2ee_project.model.catalog.Category;
 import j2ee_project.model.catalog.Product;
+import j2ee_project.model.user.Moderator;
+import j2ee_project.model.user.TypePermission;
+import j2ee_project.service.DTOService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.Map;
+
+import static j2ee_project.dao.user.PermissionDAO.getPermission;
 
 /**
  * This class is a servlet used to add a product. It's a controller in the MVC architecture of this project.
@@ -25,9 +34,16 @@ public class AddProductController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            request.setAttribute("categories", CategoryDAO.getCategories());
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/add/addProduct.jsp");
-            view.forward(request,response);
+            HttpSession session = request.getSession();
+            Object obj = session.getAttribute("user");
+            if (obj instanceof Moderator moderator
+                    && moderator.isAllowed(getPermission(TypePermission.CAN_MANAGE_PRODUCT))) {
+                request.setAttribute("categories", CategoryDAO.getCategories());
+                RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/add/addProduct.jsp");
+                view.forward(request, response);
+            } else {
+                response.sendRedirect("dashboard");
+            }
         }catch (Exception err){
             System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -44,28 +60,46 @@ public class AddProductController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Product product = new Product();
-
-        product.setName(request.getParameter("name"));
-        product.setStockQuantity(Integer.parseInt(request.getParameter("stock-quantity")));
-        product.setUnitPrice(Integer.parseInt(request.getParameter("unit-price")));
-        product.setDescription(request.getParameter("description"));
-        String weight = request.getParameter("weight");
-        if (weight != null){
-            product.setWeight(Float.valueOf(weight));
-        }
-
         int categoryId = Integer.parseInt(request.getParameter("category"));
         Category category = CategoryDAO.getCategory(categoryId);
-        product.setCategory(category);
 
-        ProductDAO.addProduct(product);
-
-        try {
-            response.sendRedirect("dashboard?tab=products");
-        }catch (Exception err){
-            System.err.println(err.getMessage());
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        String weightStr = request.getParameter("weight");
+        Float weight = null;
+        if (weightStr != null && !weightStr.isEmpty()) {
+            weight = Float.valueOf(weightStr);
         }
+
+        ProductDTO productDTO = new ProductDTO(
+                request.getParameter("name"),
+                Integer.parseInt(request.getParameter("stockQuantity")),
+                Float.parseFloat(request.getParameter("unitPrice")),
+                request.getParameter("description"),
+                weight,
+                category
+        );
+
+        Map<String, String> inputErrors = DTOService.productDataValidation(productDTO);
+
+        String errorDestination = "WEB-INF/views/dashboard/add/addProduct.jsp";
+        RequestDispatcher dispatcher = null;
+
+        if (inputErrors.isEmpty()){
+            try {
+                ProductDAO.addProduct(new Product(productDTO));
+                response.sendRedirect("dashboard?tab=products");
+            } catch(Exception exception){
+                System.err.println(exception.getMessage());
+                request.setAttribute("RegisterProcessError","Error during register process");
+                dispatcher = request.getRequestDispatcher(errorDestination);
+                dispatcher.include(request, response);
+            }
+        } else {
+            request.setAttribute("InputError", inputErrors);
+            dispatcher = request.getRequestDispatcher(errorDestination);
+            dispatcher.include(request, response);
+        }
+
+        if (dispatcher != null) doGet(request, response);
+
     }
 }

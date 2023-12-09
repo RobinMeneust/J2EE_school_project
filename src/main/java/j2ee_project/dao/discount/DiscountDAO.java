@@ -2,6 +2,7 @@ package j2ee_project.dao.discount;
 
 import j2ee_project.dao.JPAUtil;
 import j2ee_project.model.Discount;
+import j2ee_project.model.user.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import org.hibernate.Session;
@@ -45,10 +46,7 @@ public class DiscountDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Discount discount = null;
-        try {
-            discount = entityManager.createQuery("FROM Discount WHERE id=:discountId",Discount.class).setParameter("discountId",discountId).getSingleResult();
-        } catch (Exception ignore) {}
+        Discount discount = entityManager.find(Discount.class,discountId);
 
         transaction.commit();
         entityManager.close();
@@ -65,14 +63,10 @@ public class DiscountDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        try {
-            Discount discount = entityManager.createQuery("FROM Discount WHERE id=:discountId",Discount.class).setParameter("discountId",discountId).getSingleResult();
-            entityManager.remove(discount);
-            transaction.commit();
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+        Discount discount = entityManager.find(Discount.class,discountId);
+        entityManager.remove(discount);
 
+        transaction.commit();
         entityManager.close();
     }
 

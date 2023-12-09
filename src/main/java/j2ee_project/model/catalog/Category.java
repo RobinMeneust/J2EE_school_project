@@ -1,5 +1,6 @@
 package j2ee_project.model.catalog;
 
+import j2ee_project.dto.catalog.CategoryDTO;
 import j2ee_project.model.Discount;
 import jakarta.persistence.*;
 
@@ -36,6 +37,12 @@ public class Category {
     public Category(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public Category(CategoryDTO categoryDTO){
+        this.name = categoryDTO.getName();
+        this.description = categoryDTO.getDescription();
+        this.discount = categoryDTO.getDiscount();
     }
 
     /**

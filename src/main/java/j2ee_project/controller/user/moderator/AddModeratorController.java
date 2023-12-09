@@ -1,18 +1,20 @@
 package j2ee_project.controller.user.moderator;
 
-import j2ee_project.dao.user.ModeratorDAO;
 import j2ee_project.dao.user.PermissionDAO;
+import j2ee_project.dao.user.UserDAO;
+import j2ee_project.dto.ModeratorDTO;
 import j2ee_project.model.user.Moderator;
-import j2ee_project.model.user.Permission;
 import j2ee_project.model.user.TypePermission;
-import j2ee_project.service.HashService;
+import j2ee_project.service.AuthService;
+import j2ee_project.service.DTOService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
+import java.util.Map;
+
+import static j2ee_project.dao.user.PermissionDAO.getPermission;
 
 /**
  * This class is a servlet used to add a moderator. It's a controller in the MVC architecture of this project.
@@ -29,9 +31,16 @@ public class AddModeratorController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/add/addModerator.jsp");
-            view.forward(request,response);
-        }catch (Exception err){
+            HttpSession session = request.getSession();
+            Object obj = session.getAttribute("user");
+            if (obj instanceof Moderator moderator
+                    && moderator.isAllowed(getPermission(TypePermission.CAN_MANAGE_MODERATOR))) {
+                RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/add/addModerator.jsp");
+                view.forward(request, response);
+            } else {
+                response.sendRedirect("dashboard");
+            }
+        } catch (Exception err) {
             System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
@@ -46,32 +55,49 @@ public class AddModeratorController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Moderator moderator = new Moderator();
-
-        moderator.setLastName(request.getParameter("last-name"));
-        moderator.setFirstName(request.getParameter("first-name"));
-        String password = request.getParameter("password");
-        try {
-            moderator.setPassword(HashService.generatePasswordHash(password));
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new RuntimeException(e);
-        }
+        ModeratorDTO moderatorDTO = new ModeratorDTO(
+                request.getParameter("firstName"),
+                request.getParameter("lastName"),
+                request.getParameter("email"),
+                request.getParameter("password"),
+                request.getParameter("confirmPassword"),
+                (request.getParameter("phoneNumber").isEmpty()) ? null : request.getParameter("phoneNumber")
+        );
 
         for (String permissionStr : request.getParameterValues("permissions")){
             TypePermission permission = TypePermission.values()[Integer.parseInt(permissionStr)];
-            moderator.addPermission(PermissionDAO.getPermission(permission));
+            moderatorDTO.addPermission(PermissionDAO.getPermission(permission));
         }
 
-        moderator.setEmail(request.getParameter("email"));
-        moderator.setPhoneNumber((request.getParameter("phone-number").isEmpty()) ? null : request.getParameter("phone-number"));
+        Map<String, String> inputErrors = DTOService.userDataValidation(moderatorDTO);
 
-        ModeratorDAO.addModerator(moderator);
+        String errorDestination = "WEB-INF/views/dashboard/add/addModerator.jsp";
+        RequestDispatcher dispatcher = null;
 
-        try {
-            response.sendRedirect("dashboard?tab=moderators");
-        }catch (Exception err){
-            System.err.println(err.getMessage());
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        if(inputErrors.isEmpty()){
+            if (!UserDAO.emailOrPhoneNumberIsInDb(moderatorDTO.getEmail(), moderatorDTO.getPhoneNumber())){
+                try {
+                    AuthService.registerModerator(moderatorDTO);
+                    response.sendRedirect("dashboard?tab=moderators");
+                } catch(Exception exception){
+                    System.err.println(exception.getMessage());
+                    request.setAttribute("RegisterProcessError","Error during register process");
+                    dispatcher = request.getRequestDispatcher(errorDestination);
+                    dispatcher.include(request, response);
+                }
+            }
+            else{
+                request.setAttribute("emailOrPhoneNumberInDbError","Email or phone number already used");
+                dispatcher = request.getRequestDispatcher(errorDestination);
+                dispatcher.include(request, response);
+            }
         }
+        else{
+            request.setAttribute("InputError", inputErrors);
+            dispatcher = request.getRequestDispatcher(errorDestination);
+            dispatcher.include(request, response);
+        }
+
+        if (dispatcher != null) doGet(request, response);
     }
 }

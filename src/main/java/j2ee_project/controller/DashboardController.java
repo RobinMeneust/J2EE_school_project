@@ -48,9 +48,6 @@ public class DashboardController extends HttpServlet {
                     RequestDispatcher dispatcherDiscounts = getServletContext().getRequestDispatcher("/get-discounts");
                     dispatcherDiscounts.include(request, response);
                 }
-                if (moderator.isAllowed(getPermission(TypePermission.CAN_MANAGE_LOYALTY))) {
-
-                }
                 RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/dashboard.jsp");
                 view.forward(request,response);
             } else {

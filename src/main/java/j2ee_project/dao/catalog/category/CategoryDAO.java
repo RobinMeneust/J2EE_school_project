@@ -2,6 +2,7 @@ package j2ee_project.dao.catalog.category;
 
 import j2ee_project.dao.JPAUtil;
 import j2ee_project.model.catalog.Category;
+import j2ee_project.model.user.Customer;
 import org.hibernate.Session;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -42,11 +43,7 @@ public class CategoryDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Category category = null;
-
-        try {
-            entityManager.createQuery("FROM Category WHERE id=:categoryId", Category.class).setParameter("categoryId", categoryId).getSingleResult();
-        } catch (Exception ignore) {}
+        Category category = entityManager.find(Category.class,categoryId);
 
         transaction.commit();
         entityManager.close();
@@ -63,12 +60,8 @@ public class CategoryDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        try {
-            Category category = entityManager.createQuery("FROM Category WHERE id=:categoryId", Category.class).setParameter("categoryId", categoryId).getSingleResult();
-            entityManager.remove(category);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+        Category category = entityManager.find(Category.class,categoryId);
+        entityManager.remove(category);
 
         transaction.commit();
         entityManager.close();

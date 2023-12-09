@@ -36,16 +36,14 @@ public class ProductDTO {
      * @param stockQuantity the stock quantity
      * @param unitPrice     the unit price
      * @param description   the description
-     * @param imagePath     the image path
      * @param weight        the weight
      * @param category      the category
      */
-    public ProductDTO(String name, Integer stockQuantity, float unitPrice, String description, String imagePath, Float weight, Category category) {
+    public ProductDTO(String name, Integer stockQuantity, float unitPrice, String description, Float weight, Category category) {
         this.name = name;
         this.stockQuantity = stockQuantity;
         this.unitPrice = unitPrice;
         this.description = description;
-        this.imagePath = imagePath;
         this.weight = weight;
         this.category = category;
     }

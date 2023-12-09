@@ -15,10 +15,10 @@ public class DiscountDTO {
     @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿ\\-']*$", message = "Name is not valid : only letters and -' are authorized.")
     private String name;
     @NotBlank(message = "Start date can not be blank.")
-    @Pattern(regexp = "^\\d{2}\\/\\d{2}\\/\\d{4}$", message = "Start date is not valid.")
+    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Start date is not valid.")
     private Date startDate;
     @NotBlank(message = "End date can not be blank.")
-    @Pattern(regexp = "^\\d{2}\\/\\d{2}\\/\\d{4}$", message = "End date is not valid.")
+    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "End date is not valid.")
     private Date endDate;
     @NotBlank(message = "Discount percentage can not be blank.")
     @Pattern(regexp = "^\\d+(\\.[05])?$", message = "Discount percentage is not valid.")

@@ -1,16 +1,24 @@
 package j2ee_project.controller.user.customer;
 
-import j2ee_project.dao.user.CustomerDAO;
+import j2ee_project.dao.user.UserDAO;
+import j2ee_project.dto.AddressDTO;
+import j2ee_project.dto.CustomerDTO;
 import j2ee_project.model.Address;
-import j2ee_project.model.user.Customer;
+import j2ee_project.model.user.Moderator;
+import j2ee_project.model.user.TypePermission;
+import j2ee_project.service.AuthService;
+import j2ee_project.service.DTOService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.Map;
+
+import static j2ee_project.dao.user.PermissionDAO.getPermission;
 
 /**
- * This class is a servlet used to add a customer. It's a controller in the MVC architecture of this project.
+ * This class is a servlet used to add a customer. It is a controller in the MVC architecture of this project.
  */
 @WebServlet("/add-customer")
 public class AddCustomerController extends HttpServlet {
@@ -19,13 +27,20 @@ public class AddCustomerController extends HttpServlet {
      * @param request Request object received by the servlet
      * @param response Response to be sent
      * @throws ServletException If the request for the GET could not be handled
-     * @throws IOException If an input or output error is detected when the servlet handles the GET request
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request.
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/add/addCustomer.jsp");
-            view.forward(request,response);
+            HttpSession session = request.getSession();
+            Object obj = session.getAttribute("user");
+            if (obj instanceof Moderator moderator
+                    && moderator.isAllowed(getPermission(TypePermission.CAN_MANAGE_CUSTOMER))) {
+                RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/add/addCustomer.jsp");
+                view.forward(request, response);
+            } else {
+                response.sendRedirect("dashboard");
+            }
         }catch (Exception err){
             System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -37,33 +52,59 @@ public class AddCustomerController extends HttpServlet {
      * @param request Request object received by the servlet
      * @param response Response to be sent
      * @throws ServletException If the request for the GET could not be handled
-     * @throws IOException If an input or output error is detected when the servlet handles the GET request
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request.
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Customer customer = new Customer();
 
-        customer.setLastName(request.getParameter("last-name"));
-        customer.setFirstName(request.getParameter("first-name"));
-        customer.setPassword(request.getParameter("password"));
+        CustomerDTO customerDTO = new CustomerDTO(
+                request.getParameter("firstName"),
+                request.getParameter("lastName"),
+                request.getParameter("email"),
+                request.getParameter("password"),
+                request.getParameter("confirmPassword"),
+                (request.getParameter("phoneNumber").isEmpty()) ? null : request.getParameter("phoneNumber")
+        );
 
-        Address address = new Address();
-        address.setStreetAddress(request.getParameter("street"));
-        address.setPostalCode(request.getParameter("postal-code"));
-        address.setCity(request.getParameter("city"));
-        address.setCountry(request.getParameter("country"));
-        customer.setAddress(address);
+        AddressDTO addressDTO = new AddressDTO(
+                request.getParameter("street"),
+                request.getParameter("postalCode"),
+                request.getParameter("city"),
+                request.getParameter("country")
+        );
+        customerDTO.setAddress(new Address(addressDTO));
 
-        customer.setEmail(request.getParameter("email"));
-        customer.setPhoneNumber((request.getParameter("phone-number").isEmpty()) ? null : request.getParameter("phone-number"));
 
-        CustomerDAO.addCustomer(customer);
+        Map<String, String> inputErrors = DTOService.userDataValidation(customerDTO);
 
-        try {
-            response.sendRedirect("dashboard?tab=customers");
-        }catch (Exception err){
-            System.err.println(err.getMessage());
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        String errorDestination = "WEB-INF/views/dashboard/add/addCustomer.jsp";
+        RequestDispatcher dispatcher = null;
+
+        if(inputErrors.isEmpty()){
+            if (!UserDAO.emailOrPhoneNumberIsInDb(customerDTO.getEmail(), customerDTO.getPhoneNumber())){
+                try {
+                    AuthService.registerCustomer(customerDTO);
+                    response.sendRedirect("dashboard?tab=customers");
+                } catch(Exception exception){
+                    System.err.println(exception.getMessage());
+                    request.setAttribute("RegisterProcessError","Error during register process");
+                    dispatcher = request.getRequestDispatcher(errorDestination);
+                    dispatcher.include(request, response);
+                }
+            }
+            else{
+                request.setAttribute("emailOrPhoneNumberInDbError","Email or phone number already used");
+                dispatcher = request.getRequestDispatcher(errorDestination);
+                dispatcher.include(request, response);
+            }
         }
+        else{
+            request.setAttribute("InputError", inputErrors);
+            dispatcher = request.getRequestDispatcher(errorDestination);
+            dispatcher.include(request, response);
+        }
+
+        if (dispatcher != null) doGet(request, response);
+
     }
 }

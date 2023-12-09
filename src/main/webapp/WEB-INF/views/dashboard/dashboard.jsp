@@ -277,7 +277,7 @@
                                     <td class="text-center"><c:out value = "${moderator.email}"/></td>
                                     <td class="text-center"><c:out value = "${moderator.phoneNumber}"/></td>
                                     <td class="text-center col-1">
-                                        <a href="">
+                                        <a href="edit-moderator?id=${moderator.id}">
                                             <button class="btn rounded"><span class="material-symbols-outlined">edit</span></button>
                                         </a>
                                     </td>

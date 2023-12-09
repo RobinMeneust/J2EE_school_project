@@ -16,10 +16,12 @@
 <%@ page import="j2ee_project.model.user.User" %>
 <%@ page import="java.util.TreeSet" %>
         <%@ page import="java.util.stream.Stream" %>
+        <%@ page import="j2ee_project.model.catalog.Product" %>
+        <%@ page import="j2ee_project.model.order.OrderItem" %>
         <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
-<head>
+<hevad>
     <meta http-equiv="Content-Type" name="viewport" content="width=device-width, initial-scale=1, text/html, charset=UTF-8">
     <jsp:include page="../../include.jsp" />
     <title>Profile</title>
@@ -76,7 +78,7 @@
             float: none;
         }
     </style>
-</head>
+</hevad>
 <body>
 <jsp:include page="../../layout/header.jsp" />
 
@@ -330,7 +332,13 @@
                                 <tr>
                                     <td><a href="order?order-id=<%=order.getId()%>"><%=order.getId()%></a></td>
                                     <td><%=order.getDate()%></td>
-                                    <td><%=order.getTotal()%></td>
+                                    <%int totalObjectBought = 0;
+                                        List<OrderItem> productList = order.getOrderItems().stream().toList();
+                                        for (OrderItem item: productList) {
+                                            totalObjectBought = totalObjectBought + item.getQuantity();
+                                        }
+                                    %>
+                                    <td><%=totalObjectBought%></td>
                                     <td><%=order.getOrderStatus()%></td>
                                 </tr>
                             <%}

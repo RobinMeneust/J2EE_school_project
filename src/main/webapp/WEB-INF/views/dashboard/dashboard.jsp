@@ -431,7 +431,7 @@
                                     <td class="text-center"><c:out value = "${discount.endDate}"/></td>
                                     <td class="text-center"><c:out value = "${discount.discountPercentage}"/></td>
                                     <td class="text-center col-1">
-                                        <a href="">
+                                        <a href="edit-discount?id=${discount.id}">
                                             <button class="btn rounded"><span class="material-symbols-outlined">edit</span></button>
                                         </a>
                                     </td>

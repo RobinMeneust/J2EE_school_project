@@ -138,12 +138,6 @@
                 oldPassword: {
                     required: true,
                     patternPassword: true
-                },
-                password: {
-                    patternPassword: true
-                },
-                confirmPassword: {
-                    patternPassword: true
                 }
             },
             messages: {
@@ -163,12 +157,6 @@
                 },
                 oldPassword: {
                     required: "Please provide a password",
-                    patternPassword : "Password is not valid : it needs letters, numbers, special characters @$!%*#?& and length between 8 and 24."
-                },
-                password: {
-                    patternPassword : "Password is not valid : it needs letters, numbers, special characters @$!%*#?& and length between 8 and 24."
-                },
-                confirmPassword: {
                     patternPassword : "Password is not valid : it needs letters, numbers, special characters @$!%*#?& and length between 8 and 24."
                 }
             },

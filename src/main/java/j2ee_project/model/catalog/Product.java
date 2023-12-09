@@ -1,9 +1,13 @@
 package j2ee_project.model.catalog;
 
+import j2ee_project.dto.catalog.ProductDTO;
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
+/**
+ * Product
+ */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Product {
@@ -24,8 +28,8 @@ public class Product {
     @Column(name = "description", nullable = true, length = 300)
     private String description;
     @Basic
-    @Column(name = "imageUrl", nullable = true, length = 500)
-    private String imageUrl;
+    @Column(name = "imagePath", nullable = true, length = 500)
+    private String imagePath;
     @Basic
     @Column(name = "weight", nullable = true, precision = 0)
     private Float weight;
@@ -33,79 +37,187 @@ public class Product {
     @JoinColumn(name = "idCategory", referencedColumnName = "id", nullable = false)
     private Category category;
 
+    /**
+     * Instantiates a new Product.
+     */
     public Product() {
     }
 
-    public Product(String name, int stockQuantity, float unitPrice, String description, String imageUrl, Float weight, Category category) {
+    /**
+     * Instantiates a new Product.
+     *
+     * @param name          the name
+     * @param stockQuantity the stock quantity
+     * @param unitPrice     the unit price
+     * @param description   the description
+     * @param imagePath     the image path
+     * @param weight        the weight
+     * @param category      the category
+     */
+    public Product(String name, int stockQuantity, float unitPrice, String description, String imagePath, Float weight, Category category) {
         this.name = name;
         this.stockQuantity = stockQuantity;
         this.unitPrice = unitPrice;
         this.description = description;
-        this.imageUrl = imageUrl;
+        this.imagePath = imagePath;
         this.weight = weight;
         this.category = category;
     }
 
+    /**
+     * Instantiates a new Product.
+     *
+     * @param productDTO the customer dto
+     */
+    public Product(ProductDTO productDTO){
+        this.name = productDTO.getName();
+        this.stockQuantity = productDTO.getStockQuantity();
+        this.unitPrice = productDTO.getUnitPrice();
+        this.description = productDTO.getDescription();
+        this.weight = productDTO.getWeight();
+        this.category = productDTO.getCategory();
+    }
+
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets name.
+     *
+     * @param name the name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Gets stock quantity.
+     *
+     * @return the stock quantity
+     */
     public Integer getStockQuantity() {
         return stockQuantity;
     }
 
+    /**
+     * Sets stock quantity.
+     *
+     * @param stockQuantity the stock quantity
+     */
     public void setStockQuantity(Integer stockQuantity) {
         this.stockQuantity = stockQuantity;
     }
 
+    /**
+     * Gets unit price.
+     *
+     * @return the unit price
+     */
     public float getUnitPrice() {
         return unitPrice;
     }
 
+    /**
+     * Sets unit price.
+     *
+     * @param unitPrice the unit price
+     */
     public void setUnitPrice(float unitPrice) {
         this.unitPrice = unitPrice;
     }
 
+    /**
+     * Gets description.
+     *
+     * @return the description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets description.
+     *
+     * @param description the description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    /**
+     * Gets image path.
+     *
+     * @return the image path
+     */
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    /**
+     * Sets image path.
+     *
+     * @param imagePath the image path
+     */
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
+    /**
+     * Gets weight.
+     *
+     * @return the weight
+     */
     public Float getWeight() {
         return weight;
     }
 
+    /**
+     * Sets weight.
+     *
+     * @param weight the weight
+     */
     public void setWeight(Float weight) {
         this.weight = weight;
     }
 
+    /**
+     * Gets category.
+     *
+     * @return the category
+     */
     public Category getCategory() {
         return category;
     }
 
+    /**
+     * Sets category.
+     *
+     * @param category the category
+     */
     public void setCategory(Category category) {
         this.category = category;
     }
@@ -115,12 +227,12 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id == product.id && Objects.equals(name, product.name) && Objects.equals(stockQuantity, product.stockQuantity) && Objects.equals(unitPrice, product.unitPrice) && Objects.equals(description, product.description) && Objects.equals(imageUrl, product.imageUrl) && Objects.equals(weight, product.weight) && Objects.equals(category, product.category);
+        return id == product.id && Objects.equals(name, product.name) && Objects.equals(stockQuantity, product.stockQuantity) && Objects.equals(unitPrice, product.unitPrice) && Objects.equals(description, product.description) && Objects.equals(imagePath, product.imagePath) && Objects.equals(weight, product.weight) && Objects.equals(category, product.category);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, stockQuantity, unitPrice, description, imageUrl, weight, category);
+        return Objects.hash(id, name, stockQuantity, unitPrice, description, imagePath, weight, category);
     }
 
     @Override

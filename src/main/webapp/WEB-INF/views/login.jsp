@@ -9,14 +9,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Register</title>
+    <title>Login</title>
     <jsp:include page="../../include.jsp"/>
     <script src="${pageContext.request.contextPath}/dependencies/jquery/jquery.validate.min.js"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/auth_pages.css">
 </head>
 <body>
     <jsp:include page="../../layout/header.jsp"/>
-<main>
-    <form id="loginForm" method="post" action="${pageContext.request.contextPath}/LogInController">
+<main class="container">
+    <h1>Login</h1>
+    <form id="loginForm" method="post" action="${pageContext.request.contextPath}/login-controller">
         <c:if test="${requestScope.LoggingProcessError != null}">
             <div class="alert alert-danger" role="alert">
                 <c:out value="${requestScope.LoggingProcessError}"/>
@@ -36,24 +38,18 @@
                 <c:out value="${requestScope.InputError.password}"/>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <div>
+            <a href="forgotten-password">Forgotten password</a>
+        </div>
+        <button id="submitButton" type="submit" class="btn btn-primary">Submit</button>
     </form>
 </main>
     <jsp:include page="../../layout/footer.jsp"/>
 <script>
-    $.validator.addMethod("pattern", function (value, element, param){
-        return $.validator.optional(element) || value.match(param) != null;
-    }, "Name not valid")
-    /*$.validator.addMethod("patternName", function (value){
-        return value.match(/^[a-zA-ZÀ-ÖØ-öø-ÿ\-']*$/) != null;
-    }, "Name not valid")
-    $.validator.addMethod("patternPassword", function (value){
-        return value.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,24}$/) != null;
-    }, "Password is not valid : it needs letters, numbers, special characters @$!%*#?& and length between 8 and 24.")
-    $.validator.addMethod("patternPhoneNumber", function (value){
-        return value.match(/^[0-9]{10}$/) != null;
-    }, "Phone number must be composed by 10 numbers with this format : 0000000000")*/
     $(document).ready(function(){
+        $.validator.addMethod("patternPassword", function (value){
+            return value.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,24}$/) != null;
+        }, "Password is not valid : it needs letters, numbers, special characters @$!%*#?& and length between 8 and 24.")
         $("#loginForm").validate({
             rules: {
                 email: {
@@ -61,7 +57,8 @@
                     email: true
                 },
                 password: {
-                    pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,24}$/
+                    required: true,
+                    patternPassword: true
                 },
             },
             messages: {
@@ -70,7 +67,7 @@
                     email: "Email is not valid."
                 },
                 password: {
-                    pattern: "Password is not valid : it needs letters, numbers, special characters @$!%*#?& and length between 8 and 24."
+                    required: "Please provide a password",
                 },
             },
             submitHandler: function(form) {

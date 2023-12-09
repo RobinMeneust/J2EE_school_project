@@ -1,27 +1,37 @@
 package j2ee_project.service;
 
+import j2ee_project.dao.loyalty.LoyaltyProgramDAO;
 import j2ee_project.dao.user.UserDAO;
 import j2ee_project.dto.CustomerDTO;
 import j2ee_project.dto.ModeratorDTO;
-import j2ee_project.dto.UserDTO;
+import j2ee_project.model.loyalty.LoyaltyAccount;
+import j2ee_project.model.loyalty.LoyaltyProgram;
 import j2ee_project.model.user.*;
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.sql.Date;
+import java.time.LocalDate;
 
+
+/**
+ * This is a service class which contains method for authentication
+ *
+ * @author Lucas VELAY
+ */
 public class AuthService {
 
+    /**
+     * Method used to check if the login information are in the database
+     *
+     * @param email email
+     * @param password password
+     * @return the found user
+     * @throws NoSuchAlgorithmException exception throws by password hash methods
+     * @throws InvalidKeySpecException exception throws by password hash methods
+     */
     public static User logIn(String email, String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
         User user = UserDAO.getUserFromEmail(email);
-        System.out.println(user);
         if(user == null){
             return null;
         }
@@ -31,19 +41,33 @@ public class AuthService {
         return user;
     }
 
-    public static void logOut(){
-
-    }
-
+    /**
+     * Register a customer in the database after hashed password generation
+     * @param customerDTO customer data transfer object
+     * @return the registered user
+     * @throws NoSuchAlgorithmException exception throws by password hash methods
+     * @throws InvalidKeySpecException exception throws by password hash methods
+     */
     public static User registerCustomer(CustomerDTO customerDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
         customerDTO.setPassword(HashService.generatePasswordHash(customerDTO.getPassword()));
-        System.out.println(customerDTO);
-        User customer = new Customer(customerDTO);
-        System.out.println(customer);
+        Customer customer = new Customer(customerDTO);
+        LoyaltyAccount loyaltyAccount = new LoyaltyAccount();
+        loyaltyAccount.setLoyaltyPoints(0);
+        LoyaltyProgram loyaltyProgram = LoyaltyProgramDAO.getLoyaltyProgram();
+        loyaltyAccount.setEndDate(Date.valueOf(LocalDate.now().plusDays(loyaltyProgram.getDurationNbDays())));
+        loyaltyAccount.setLoyaltyProgram(loyaltyProgram);
+        customer.setLoyaltyAccount(loyaltyAccount);
         UserDAO.addUser(customer);
         return customer;
     }
 
+    /**
+     * Register a moderator in the database after hashed password generation
+     * @param moderatorDTO moderator data transfer object
+     * @return the registered user
+     * @throws NoSuchAlgorithmException exception throws by password hash methods
+     * @throws InvalidKeySpecException exception throws by password hash methods
+     */
     public static User registerModerator(ModeratorDTO moderatorDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
         moderatorDTO.setPassword(HashService.generatePasswordHash(moderatorDTO.getPassword()));
         Moderator moderator = new Moderator(moderatorDTO);
@@ -51,24 +75,14 @@ public class AuthService {
         return moderator;
     }
 
-    public static Map<String, String> userDataValidation(UserDTO userDTO){
-        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-        Validator validator = validatorFactory.getValidator();
-        Set<ConstraintViolation<UserDTO>> violations = validator.validate(userDTO);
-        Map<String, String> violationsMap = new HashMap<>();
-        for(ConstraintViolation<UserDTO> violation : violations){
-            violationsMap.put(violation.getPropertyPath().toString(), violation.getMessage());
-        }
-        if(!userDTO.getPassword().equals(userDTO.getConfirmPassword())){
-            violationsMap.put("confirmPassword", "Password and Confirm Password must match.");
-        }
-        return violationsMap;
 
-      /*  for(ConstraintViolation<UserDTO> violation : constraintViolations){
-            System.out.printf(violation.getMessage());
-        }*/
-    }
-
+    /**
+     * Check if a moderator has a precise permission
+     *
+     * @param user the moderator to check
+     * @param typePermission the tested permission
+     * @return true or false if the moderator has or no the permission
+     */
     public static boolean checkModerator(User user, TypePermission typePermission){
         if(user == null){
             return false;
@@ -84,4 +98,31 @@ public class AuthService {
         return true;
     }
 
+    /**
+     * Get a customer object from a user object
+     *
+     * @param user the user
+     * @return the customer or null
+     */
+    public static Customer getCustomer(User user) {
+        if(user instanceof Customer) {
+            return (Customer) user;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get a moderator object from a user object
+     *
+     * @param user the user
+     * @return the moderator or null
+     */
+    public static Moderator getModerator(User user) {
+        if(user instanceof Moderator) {
+            return (Moderator) user;
+        } else {
+            return null;
+        }
+    }
 }

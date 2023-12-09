@@ -3,8 +3,11 @@ package j2ee_project.model.loyalty;
 import j2ee_project.model.Discount;
 import jakarta.persistence.*;
 
+/**
+ * Loyalty level associated to a loyalty program. It requires a specific amount of points to be claimed and is associated to a discount
+ */
 @Entity
-public class LoyaltyLevel {
+public class LoyaltyLevel implements Comparable<LoyaltyLevel> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
@@ -19,18 +22,38 @@ public class LoyaltyLevel {
     @JoinColumn(name = "idLoyaltyProgram", referencedColumnName = "id", nullable = false)
     private LoyaltyProgram loyaltyProgram;
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets required number of points.
+     *
+     * @return the required number of points
+     */
     public int getRequiredPoints() {
         return requiredPoints;
     }
 
+    /**
+     * Sets required number of points
+     *
+     * @param requiredPoints the required number of points
+     */
     public void setRequiredPoints(int requiredPoints) {
         this.requiredPoints = requiredPoints;
     }
@@ -55,11 +78,36 @@ public class LoyaltyLevel {
         return result;
     }
 
+    /**
+     * Gets discount.
+     *
+     * @return the discount
+     */
     public Discount getDiscount() {
         return discount;
     }
 
+    /**
+     * Sets discount.
+     *
+     * @param discount the discount
+     */
     public void setDiscount(Discount discount) {
         this.discount = discount;
+    }
+
+    @Override
+    public String toString() {
+        return "LoyaltyLevel{" +
+                "id=" + id +
+                ", requiredPoints=" + requiredPoints +
+                ", discount=" + discount +
+                ", loyaltyProgram=" + loyaltyProgram +
+                '}';
+    }
+
+    @Override
+    public int compareTo(LoyaltyLevel o) {
+        return Integer.compare(getRequiredPoints(), o.getRequiredPoints());
     }
 }

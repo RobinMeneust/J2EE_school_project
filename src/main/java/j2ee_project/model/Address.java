@@ -1,7 +1,11 @@
 package j2ee_project.model;
 
+import j2ee_project.dto.AddressDTO;
 import jakarta.persistence.*;
 
+/**
+ * Address
+ */
 @Entity
 public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,42 +25,124 @@ public class Address {
     @Column(name = "country", nullable = false, length = 60)
     private String country;
 
+    /**
+     * Instantiates a new Address.
+     */
+    public Address() {}
+
+    /**
+     * Instantiates a new Address.
+     *
+     * @param streetAddress the street address
+     * @param postalCode    the postal code
+     * @param city          the city
+     * @param country       the country
+     */
+    public Address(String streetAddress, String postalCode, String city, String country) {
+        this.streetAddress = streetAddress;
+        this.postalCode = postalCode;
+        this.city = city;
+        this.country = country;
+    }
+
+    /**
+     * Instantiates a new Address.
+     *
+     * @param addressDTO the address dto
+     */
+    public Address(AddressDTO addressDTO){
+        this.streetAddress = addressDTO.getStreetAddress();
+        this.postalCode = addressDTO.getPostalCode();
+        this.city = addressDTO.getCity();
+        this.country = addressDTO.getCountry();
+    }
+
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets street address.
+     *
+     * @return the street address
+     */
     public String getStreetAddress() {
         return streetAddress;
     }
 
+    /**
+     * Sets street address.
+     *
+     * @param streetAddress the street address
+     */
     public void setStreetAddress(String streetAddress) {
         this.streetAddress = streetAddress;
     }
 
+    /**
+     * Gets postal code.
+     *
+     * @return the postal code
+     */
     public String getPostalCode() {
         return postalCode;
     }
 
+    /**
+     * Sets postal code.
+     *
+     * @param postalCode the postal code
+     */
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
 
+    /**
+     * Gets city.
+     *
+     * @return the city
+     */
     public String getCity() {
         return city;
     }
 
+    /**
+     * Sets city.
+     *
+     * @param city the city
+     */
     public void setCity(String city) {
         this.city = city;
     }
 
+    /**
+     * Gets country.
+     *
+     * @return the country
+     */
     public String getCountry() {
         return country;
     }
 
+    /**
+     * Sets country.
+     *
+     * @param country the country
+     */
     public void setCountry(String country) {
         this.country = country;
     }
@@ -68,7 +154,6 @@ public class Address {
 
         Address address = (Address) o;
 
-        if (id != address.id) return false;
         if (streetAddress != null ? !streetAddress.equals(address.streetAddress) : address.streetAddress != null)
             return false;
         if (postalCode != null ? !postalCode.equals(address.postalCode) : address.postalCode != null) return false;

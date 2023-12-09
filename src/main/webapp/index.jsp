@@ -17,7 +17,7 @@
 	<c:set var="featuredProducts" value="${cf:getFeaturedProducts()}"/>
 	<c:set var="categories" value="${cf:getCategories()}"/>
 
-	<div class="container">
+	<div class="container p-3 mt-5" style="min-height:100vh">
 		<c:if test="${featuredProducts != null && featuredProducts.size() != 0}">
 		<div class="mb-5">
 			<h2 class="display-2 p-3">Featured products</h2>
@@ -31,7 +31,7 @@
 						</c:if>
 									<div class="col-sm text-center">
 										<a class="text-decoration-none text-body" href="get-product-page?id=${featuredProducts.get(i).getId()}">
-											<img style="width: 390px; height: 250px; object-fit: cover;" src="${featuredProducts.get(i).getImageUrl()}" class="d-block" alt="${featuredProducts.get(i).getName()}_img">
+											<img style="width: 390px; height: 250px; object-fit: contain;" src="product/image?id=${featuredProducts.get(i).getId()}" class="d-block" alt="${featuredProducts.get(i).getName()}_img">
 											<div>
 												<h5><c:out value="${featuredProducts.get(i).getName()}"/></h5>
 											</div>
@@ -59,8 +59,8 @@
 					<span class="visually-hidden">Next</span>
 				</button>
 			</div>
-		</c:if>
 		</div>
+		</c:if>
 		<div class="mb-5">
 			<h2 class="display-2 p-3">Categories</h2>
 			<ul>

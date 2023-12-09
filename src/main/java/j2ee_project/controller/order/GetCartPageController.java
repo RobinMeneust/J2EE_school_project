@@ -1,4 +1,4 @@
-package j2ee_project.controller.catalog;
+package j2ee_project.controller.order;
 
 import j2ee_project.dao.catalog.product.ProductDAO;
 import j2ee_project.model.catalog.Product;
@@ -38,4 +38,8 @@ public class GetCartPageController extends HttpServlet
         }
     }
 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        doGet(request,response);
+    }
 }

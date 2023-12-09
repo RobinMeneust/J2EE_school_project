@@ -1,4 +1,4 @@
-package j2ee_project.controller.catalog;
+package j2ee_project.controller.catalog.product;
 
 import j2ee_project.dao.catalog.product.ProductDAO;
 import j2ee_project.model.catalog.Product;
@@ -39,6 +39,7 @@ public class GetProductPageController extends HttpServlet
 
         if(productId<=0) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Product ID must be positive");
+            return;
         }
 
         try {

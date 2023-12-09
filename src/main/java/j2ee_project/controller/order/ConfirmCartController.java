@@ -1,8 +1,18 @@
 package j2ee_project.controller.order;
 
+import j2ee_project.dao.AddressDAO;
+import j2ee_project.dao.discount.DiscountDAO;
+import j2ee_project.dao.order.CartItemDAO;
+import j2ee_project.dao.order.OrdersDAO;
+import j2ee_project.dto.AddressDTO;
+import j2ee_project.model.Address;
+import j2ee_project.model.Discount;
 import j2ee_project.model.order.Cart;
 import j2ee_project.model.order.CartItem;
+import j2ee_project.model.order.OrderItem;
+import j2ee_project.model.order.Orders;
 import j2ee_project.service.CartManager;
+import j2ee_project.service.DTOService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,6 +23,9 @@ import jakarta.servlet.http.HttpSession;
 import j2ee_project.model.user.Customer;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -29,38 +42,60 @@ public class ConfirmCartController extends HttpServlet {
      * @throws ServletException If the request for the GET could not be handled
      * @throws IOException If an input or output error is detected when the servlet handles the GET request
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Customer customer = null; // TODO: check if the user is connected and if he is, set this var
-        Cart cart;
-
-        cart = CartManager.getCart(session, customer);
+        Object obj = session.getAttribute("user");
+        Customer customer = null;
+        if(obj instanceof Customer) {
+            customer = (Customer) obj;
+        } else {
+            response.sendRedirect("login");
+            return;
+        }
+        Cart cart = CartManager.getCart(session, customer);
 
         Set<CartItem> cartItems = cart.getCartItems();
 
-
-        if(customer == null) {
-            //TODO: Redirect to login page
+        if(cartItems == null || cartItems.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "the cart is empty");
+            return;
         }
-
-        if(cartItems == null) {
-            //TODO: Return error
-        }
-
         for(CartItem item : cartItems) {
             if(item.getQuantity() > item.getProduct().getStockQuantity()) {
-                //TODO: Return error
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "the stock quantities has been updated and are lesser than the quantity you ordered");
+                return;
             }
         }
 
-        try {
-            RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/pay.jsp");
-            view.forward(request, response);
-        } catch(Exception err) {
-            // The forward didn't work
-            System.err.println(err.getMessage());
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        String discountIdStr = request.getParameter("discount-id");
+
+        if(discountIdStr != null && !discountIdStr.trim().isEmpty()) {
+            try {
+                Discount discount = DiscountDAO.getDiscount(Integer.parseInt(discountIdStr));
+                cart.setDiscount(discount);
+            } catch (Exception ignore) {}
         }
+
+        String streetAddress = request.getParameter("street-address");
+        String city = request.getParameter("city");
+        String postalCode = request.getParameter("postal-code");
+        String country = request.getParameter("country");
+
+        AddressDTO deliveryAddressDTO = new AddressDTO(streetAddress, postalCode, city, country);
+        Map<String, String> inputErrors = DTOService.addressDataValidation(deliveryAddressDTO);
+        if(!inputErrors.isEmpty()){
+            RequestDispatcher dispatcher = request.getRequestDispatcher("cart?tab=confirmation");
+            request.setAttribute("InputError", inputErrors);
+            dispatcher.forward(request,response);
+            return;
+        }
+
+        Address deliveryAddress = new Address(deliveryAddressDTO);
+        deliveryAddress = AddressDAO.addAddressIfNotExists(deliveryAddress);
+
+        Orders newOrder = new Orders(cart, cart.getDiscount(), new Date(Calendar.getInstance().getTimeInMillis()), customer, deliveryAddress);
+        OrdersDAO.addOrder(newOrder);
+
+        response.sendRedirect("pay?order-id="+newOrder.getId());
     }
 }

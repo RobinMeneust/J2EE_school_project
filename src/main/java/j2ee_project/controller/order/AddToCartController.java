@@ -6,6 +6,7 @@ import j2ee_project.model.catalog.Product;
 import j2ee_project.model.order.Cart;
 import j2ee_project.model.order.CartItem;
 import j2ee_project.model.user.Customer;
+import j2ee_project.service.AuthService;
 import j2ee_project.service.CartManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -56,10 +57,23 @@ public class AddToCartController extends HttpServlet {
         }
 
         HttpSession session = request.getSession();
-        Customer customer = null; // TODO: check if the user is connected and if he is, set this var
+
+        Object obj = session.getAttribute("user");
+        Customer customer = null;
+        if(obj instanceof Customer) {
+            customer = (Customer) obj;
+        }
         Cart cart;
 
         cart = CartManager.getCart(session, customer);
+
+        if(cart == null) {
+            // We need to create a new cart
+            cart = new Cart();
+            cart.setCustomer(customer);
+
+            CartDAO.addCart(cart);
+        }
 
         Set<CartItem> cartItems = cart.getCartItems();
 
@@ -71,15 +85,6 @@ public class AddToCartController extends HttpServlet {
         CartItem newItem = new CartItem();
         newItem.setProduct(product);
         newItem.setQuantity(1);
-
-        int newId = 0;
-        for(CartItem item : cartItems) {
-            if(item.getId()>newId) {
-                newId = item.getId();
-            }
-        }
-        newId++;
-        newItem.setId(newId);
 
         if(cartItems.contains(newItem)) {
             response.setStatus(HttpServletResponse.SC_OK);
@@ -93,11 +98,14 @@ public class AddToCartController extends HttpServlet {
 
         // If the product is not already in the cart
         if(customer == null) {
+            newItem.setCart(cart);
             cart.getCartItems().add(newItem); // Add to the cart object (not saved in the db)
-            request.setAttribute("sessionCart", cart);
+            session.setAttribute("sessionCart", cart);
         } else {
             CartDAO.addItem(cart, newItem); // Add to the cart of the customer (saved in the db)
-            request.removeAttribute("sessionCart");
+            // Refresh the user's cart
+            customer.setCart(CartDAO.getCartFromCustomerId(customer.getId()));
+            session.setAttribute("user", customer);
         }
         response.setStatus(HttpServletResponse.SC_OK);
         PrintWriter out = response.getWriter();

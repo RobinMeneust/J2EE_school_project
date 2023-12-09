@@ -218,7 +218,7 @@
                                         <td class="text-center"><c:out value = "${customer.email}"/></td>
                                         <td class="text-center"><c:out value = "${customer.phoneNumber}"/></td>
                                         <td class="text-center col-1">
-                                            <a href="">
+                                            <a href="edit-customer?id=<c:out value = '${customer.id}'/>">
                                                 <button class="btn rounded"><span class="material-symbols-outlined">edit</span></button>
                                             </a>
                                         </td>

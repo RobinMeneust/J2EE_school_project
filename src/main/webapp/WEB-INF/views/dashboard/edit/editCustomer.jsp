@@ -12,7 +12,7 @@
 <c:set var="customer" value="${requestScope.customerToEdit}"/>
 <div class="d-flex flex-column align-items-center div-form">
     <h2>Edit Customer</h2>
-    <form id="edit-customer-form" name="edit-customer-form" action="edit-customer?id=${customer.id}" method="post">
+    <form class="w-50 d-flex align-items-center flex-column flex-wrap" id="edit-customer-form" name="edit-customer-form" action="edit-customer?id=${customer.id}" method="post">
         <c:if test="${requestScope.emailOrPhoneNumberInDbError != null}">
             <div class="alert alert-danger" role="alert">
                 <c:out value="${requestScope.emailOrPhoneNumberInDbError}"/>

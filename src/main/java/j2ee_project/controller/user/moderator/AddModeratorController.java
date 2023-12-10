@@ -75,7 +75,7 @@ public class AddModeratorController extends HttpServlet {
         RequestDispatcher dispatcher = null;
 
         if(inputErrors.isEmpty()){
-            if (!UserDAO.emailOrPhoneNumberIsInDb(moderatorDTO.getEmail(), moderatorDTO.getPhoneNumber())){
+            if (!UserDAO.emailOrPhoneNumberIsInDb(null, moderatorDTO.getEmail(), moderatorDTO.getPhoneNumber())){
                 try {
                     AuthService.registerModerator(moderatorDTO);
                     response.sendRedirect("dashboard?tab=moderators");

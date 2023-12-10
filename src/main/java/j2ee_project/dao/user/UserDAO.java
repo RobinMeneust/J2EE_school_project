@@ -5,6 +5,8 @@ import j2ee_project.model.user.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
+import java.util.List;
+
 /**
  * This class is utility class for the methods that interacts with the database to manipulate users.
  *
@@ -68,22 +70,31 @@ public class UserDAO {
      * @param phoneNumber the phone number
      * @return the boolean indicating the presence of the email
      */
-    public static boolean emailOrPhoneNumberIsInDb(String email, String phoneNumber){
+    public static boolean emailOrPhoneNumberIsInDb(Integer userId, String email, String phoneNumber){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        int countEmail = 0;
+        int countAccounts = 0;
+        List<User> usersSameEmailOrPhone;
         try {
-            countEmail = entityManager.createQuery("SELECT COUNT(*) FROM User WHERE email=:email OR phoneNumber=:phoneNumber", Integer.class)
+            usersSameEmailOrPhone = entityManager.createQuery("FROM User WHERE email=:email OR phoneNumber=:phoneNumber", User.class)
                     .setParameter("email", email)
                     .setParameter("phoneNumber", phoneNumber)
-                    .getSingleResult();
+                    .getResultList();
+            countAccounts = usersSameEmailOrPhone.size();
+            if (userId != null) {
+                for (User user : usersSameEmailOrPhone) {
+                    if (user.getId() == userId) {
+                        countAccounts--;
+                    }
+                }
+            }
         } catch (Exception ignore) {}
 
         transaction.commit();
         entityManager.close();
-        return countEmail > 0;
+        return countAccounts > 0;
     }
 
 

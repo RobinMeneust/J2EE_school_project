@@ -69,7 +69,7 @@ public class RegisterCustomerController extends HttpServlet {
         String noErrorDestination = "/index.jsp";
         RequestDispatcher dispatcher = null;
         if(inputErrors.isEmpty()){
-            if (!UserDAO.emailOrPhoneNumberIsInDb(customerDTO.getEmail(), customerDTO.getPhoneNumber())){
+            if (!UserDAO.emailOrPhoneNumberIsInDb(null, customerDTO.getEmail(), customerDTO.getPhoneNumber())){
                 try {
                     User user = AuthService.registerCustomer(customerDTO);
 

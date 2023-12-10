@@ -284,7 +284,7 @@ INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(5,5,3);
 
 INSERT INTO Cart(idCustomer) VALUES(3);
 
-INSERT INTO Category(name, description, idDiscount) VALUES('strategy', 'A strategy game or strategic game is a game (e.g. a board game) in which the players\' uncoerced, and often autonomous, decision-making skills have a high significance in determining the outcome.', 1);
+INSERT INTO Category(name, description, idDiscount) VALUES('strategy', 'A strategy game or strategic game is a game (e.g. a board game) in which the players\' uncoerced, and often autonomous, decision-making skills have a high significance in determining the outcome.', 3);
 INSERT INTO Category(name, description) VALUES('card game', 'A card game is any game using playing cards as the primary device with which the game is played, be they traditional or game-specific.');
 
 INSERT INTO Product(name, stockQuantity, unitPrice, description, idCategory, imagePath) VALUES('Chess Board', 0, 15, 'A chessboard is a gameboard used to play chess. It consists of 64 squares, 8 rows by 8 columns, on which the chess pieces are placed. It is square in shape and uses two colours of squares, one light and one dark, in a chequered pattern. During play, the board is oriented such that each player\'s near-right corner square is a light square.', 1, 'products/chess.jpg');

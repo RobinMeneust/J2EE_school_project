@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="cf" uri="/WEB-INF/functions.tld"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page import="j2ee_project.model.user.TypePermission" %>
 <html>
 <head>
@@ -379,8 +380,9 @@
                                     <td class="text-center"><c:out value = "${category.name}"/></td>
                                     <td class="td-description"><c:out value = "${category.description}"/></td>
                                     <td class="text-center">
+
                                         <c:if test="${category.discount!=null}">
-                                            <c:out value = "${category.discount.name}"/>
+                                            <c:out value = "${category.discount.name} : ${category.discount.discountPercentage}%"/>
                                         </c:if>
                                     </td>
                                     <td class="text-center col-1">

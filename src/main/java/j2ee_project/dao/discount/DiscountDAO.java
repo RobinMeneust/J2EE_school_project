@@ -65,7 +65,8 @@ public class DiscountDAO {
         transaction.begin();
 
 
-        Discount discount = entityManager.find(Discount.class,discountId);List<Category> categoriesWithDiscount = entityManager.createQuery("FROM Category WHERE discount=:discount", Category.class)
+        Discount discount = entityManager.find(Discount.class,discountId);
+        List<Category> categoriesWithDiscount = entityManager.createQuery("FROM Category WHERE discount=:discount", Category.class)
                 .setParameter("discount", discount)
                 .getResultList();
         for (Category category: categoriesWithDiscount) {

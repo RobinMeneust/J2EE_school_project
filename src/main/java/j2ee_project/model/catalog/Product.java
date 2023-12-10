@@ -67,7 +67,7 @@ public class Product {
     /**
      * Instantiates a new Product.
      *
-     * @param productDTO the customer dto
+     * @param productDTO the product dto
      */
     public Product(ProductDTO productDTO){
         this.name = productDTO.getName();

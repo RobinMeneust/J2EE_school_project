@@ -22,6 +22,14 @@ import static j2ee_project.dao.user.PermissionDAO.getPermission;
 
 @WebServlet("/edit-category")
 public class EditCategoryController extends HttpServlet {
+
+    /**
+     * Get the page to edit a category
+     * @param request Request object received by the servlet
+     * @param response Response to be sent
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
@@ -57,6 +65,13 @@ public class EditCategoryController extends HttpServlet {
         }
     }
 
+    /**
+     * Edit a category to the DB
+     * @param request Request object received by the servlet
+     * @param response Response to be sent
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String categoryIdStr = request.getParameter("id");

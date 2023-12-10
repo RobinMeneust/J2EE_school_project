@@ -20,8 +20,18 @@ import java.util.Map;
 
 import static j2ee_project.dao.user.PermissionDAO.getPermission;
 
+/**
+ * This class is a servlet used to edit a category. It's a controller in the MVC architecture of this project.
+ */
 @WebServlet("/edit-category")
 public class EditCategoryController extends HttpServlet {
+    /**
+     * Get the page used to edit the category whose id is given in the param "id"
+     * @param request Request object received by the servlet
+     * @param response Response to be sent
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
@@ -57,6 +67,13 @@ public class EditCategoryController extends HttpServlet {
         }
     }
 
+    /**
+     * Edit the category whose id is given in the param "id" with the provided data
+     * @param request Request object received by the servlet
+     * @param response Response to be sent
+     * @throws ServletException If the request for the GET could not be handled
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String categoryIdStr = request.getParameter("id");

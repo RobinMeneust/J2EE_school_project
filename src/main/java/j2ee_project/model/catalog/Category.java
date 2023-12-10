@@ -39,6 +39,12 @@ public class Category {
         this.description = description;
     }
 
+    /**
+     * Instantiates a new Category.
+     *
+     * @param categoryDTO Category Data Transfer Object
+     */
+
     public Category(CategoryDTO categoryDTO){
         this.name = categoryDTO.getName();
         this.description = categoryDTO.getDescription();

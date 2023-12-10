@@ -2,6 +2,7 @@ package j2ee_project.dao.discount;
 
 import j2ee_project.dao.JPAUtil;
 import j2ee_project.model.Discount;
+import j2ee_project.model.catalog.Category;
 import j2ee_project.model.user.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -63,7 +64,14 @@ public class DiscountDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        Discount discount = entityManager.find(Discount.class,discountId);
+
+        Discount discount = entityManager.find(Discount.class,discountId);List<Category> categoriesWithDiscount = entityManager.createQuery("FROM Category WHERE discount=:discount", Category.class)
+                .setParameter("discount", discount)
+                .getResultList();
+        for (Category category: categoriesWithDiscount) {
+            category.setDiscount(null);
+            entityManager.persist(category);
+        }
         entityManager.remove(discount);
 
         transaction.commit();

@@ -14,7 +14,7 @@
 <c:set var="discount" value="${requestScope.discount}"/>
 <div class="d-flex flex-column align-items-center div-form">
     <h2>Edit Discount</h2>
-    <form id="edit-discount-form" name="edit-discount-form" action="edit-discount?id=${discount.id}" method="post">
+    <form class="d-flex align-items-center flex-column flex-wrap" id="edit-discount-form" name="edit-discount-form" action="edit-discount?id=${discount.id}" method="post">
         <div class="row mb-3 input-group" id="div-name">
             <div class="col">
                 <label class="form-label" for="name">Name :</label>
@@ -43,8 +43,8 @@
         <div class="row mb-3 input-group"  id="div-discount-percentage">
             <input type="hidden" id="discount-percentage" name="discountPercentage" aria-describedby="discountPercentageHelp" value="${discount.discountPercentage}"/>
             <div class="col">
-                <fieldset class="p-1">
-                    <legend class="w-auto float-none">Discount Percentage</legend>
+                <fieldset class="p-1 mb-5">
+                    <legend class="w- float-none">Discount Percentage</legend>
                     <tc-range-slider
                             id="discountPercentageSlider"
 
@@ -55,7 +55,7 @@
                             round="0"
 
                             moving-tooltip="true"
-                            moving-tooltip-distance-to-pointer="40"
+                            moving-tooltip-distance-to-pointer="-40"
                             moving-tooltip-width="35"
                             moving-tooltip-height="30"
                             moving-tooltip-bg="#721d82"

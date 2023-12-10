@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Size;
 public class CategoryDTO {
     @NotBlank(message = "Name can not be blank.")
     @Size(max = 30, message = "Name can not exceed 30 characters.")
-    @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿ\\-']*$", message = "Name is not valid : only letters and -' are authorized.")
+    @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿ\\-' ]*$", message = "Name is not valid : only letters and -' are authorized.")
     private String name;
     @NotBlank(message = "Description can not be blank.")
     @Size(max = 300, message = "Description can not exceed 300 characters.")

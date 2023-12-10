@@ -1,8 +1,13 @@
 package j2ee_project.dao.catalog.product;
 
 import j2ee_project.dao.JPAUtil;
+import j2ee_project.dao.catalog.category.CategoryDAO;
+import j2ee_project.dao.order.CartDAO;
+import j2ee_project.dao.order.CartItemDAO;
 import j2ee_project.model.catalog.FeaturedProduct;
 import j2ee_project.model.catalog.Product;
+import j2ee_project.model.order.Cart;
+import j2ee_project.model.order.CartItem;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
@@ -232,6 +237,15 @@ public class ProductDAO {
         transaction.begin();
         try {
             Product product = entityManager.createQuery("FROM Product WHERE id=:productId", Product.class).setParameter("productId", productId).getSingleResult();
+
+
+            List<CartItem> productInAllCarts = entityManager.createQuery("FROM CartItem WHERE product=:product", CartItem.class)
+                    .setParameter("product", product)
+                    .getResultList();
+            for (CartItem cartItem: productInAllCarts) {
+                CartItemDAO.editItemQuantity(cartItem.getCart().getCustomer(), cartItem.getId(), 0);
+            }
+
             entityManager.remove(product);
 
             transaction.commit();

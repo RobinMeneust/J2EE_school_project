@@ -89,7 +89,9 @@
     List<LoyaltyLevel> loyaltyLevels;
     Stream<LoyaltyLevel> loyaltyLevelStream;
     Set<LoyaltyLevel> loyaltyLevelsSet;
+    int isNotCustomer = 0;
     if (customer == null){
+        isNotCustomer = 1;
         loyaltyAccount = null;
         loyaltyLevelsSet = null;
         loyaltyLevelStream = null;
@@ -131,6 +133,7 @@
         customerPhoneNumber = user.getPhoneNumber();
         customerEmail = user.getEmail();
     } %>
+<c:set var="isNotCustomer" value="<%=isNotCustomer%>"/>
 <c:set var="orders" value="<%=orders%>"/>
 <c:set var="customer" value="<%=customer%>"/>
 <c:set var="loyaltyLevels" value="<%=loyaltyLevels%>"/>
@@ -189,7 +192,7 @@
                             <input type="text" class="form-control" id="userCountry" name="userCountry" value="<%=customerCountry%>">
                         </div>
                         <p></p>
-                        <button type="submit" class="btn btn-primary">Update profile</button>
+                        <c:if test="${isNotCustomer == 0}"><button type="submit" class="btn btn-primary">Update profile</button> </c:if>
                     </form>
                 </div>
                 <div class="tab-pane fade <c:if test="${activeTab == 2}">show active</c:if>" id="nav-loyalty-account" role="tabpanel" aria-labelledby="nav-loyalty-account-tab"> <h2>Loyalty account</h2>

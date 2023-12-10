@@ -280,7 +280,7 @@ INSERT INTO ModeratorPermission(idModerator, idPermission) VALUES(8,6); -- Can m
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(2,1,1);
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(3,2,2);
 INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(4,3,4);
-INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(5,NULL,3);
+INSERT INTO Customer(idUser, idAddress, idLoyaltyAccount) VALUES(5,5,3);
 
 INSERT INTO Cart(idCustomer) VALUES(3);
 

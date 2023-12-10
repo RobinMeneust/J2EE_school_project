@@ -87,11 +87,10 @@ public class ProfileInformationsController extends HttpServlet {
                 userAdressId = Integer.parseInt(userAddressIdStr);
             } catch(Exception ignore) {}
         }
-
         Customer customer = new Customer();
 
         customer.setId(userId);
-        if(request.getParameter("userPassword")!=null){
+        if(!request.getParameter("userPassword").isBlank()){
             String passwordNotHashed = request.getParameter("userPassword");
             String hashedPassword;
             try {

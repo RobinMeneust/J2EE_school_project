@@ -1,5 +1,6 @@
 package j2ee_project.dao.user;
 
+import j2ee_project.dao.AddressDAO;
 import j2ee_project.dao.JPAUtil;
 import j2ee_project.model.Address;
 import j2ee_project.model.user.Customer;
@@ -110,7 +111,7 @@ public class CustomerDAO {
             if (!customer.getLastName().isEmpty()){
                 customerToBeEdited.setLastName(customer.getLastName());
             }
-            if (!customer.getPassword().isEmpty()){
+            if (customer.getPassword()!=null){
                 customerToBeEdited.setPassword(customer.getPassword());
             }
             if (!customer.getEmail().isEmpty()){
@@ -121,24 +122,23 @@ public class CustomerDAO {
             }
 
             Address oldAddress = customerToBeEdited.getAddress();
-            Address newAddress = oldAddress;
+            Address newAddress;
             boolean isDetached = false;
 
-            long nbAddressRefsInCustomer = entityManager.createQuery("SELECT COUNT(*) FROM Customer WHERE address.id = :addressId", Long.class)
-                    .setParameter("addressId", oldAddress.getId())
-                    .getSingleResult();
-
-            long nbAddressRefsInOrders = entityManager.createQuery("SELECT COUNT(*) FROM Orders WHERE address.id = :addressId", Long.class)
-                    .setParameter("addressId", oldAddress.getId())
-                    .getSingleResult();
-
-            // Check if any referencing entities exist
-            if (nbAddressRefsInCustomer+nbAddressRefsInOrders > 1) {
-                // Refs exist so we create a new Address entry
+            if (oldAddress!=null) {
                 newAddress = oldAddress;
-                entityManager.detach(newAddress);
-                newAddress.setId(0); // Reset the ID to add a new Address with a new auto-generated ID
-                isDetached = true;
+                List<Customer> nbCustomerWithSameAddress = entityManager.createQuery("FROM Customer WHERE address.id = :addressId", Customer.class)
+                        .setParameter("addressId", oldAddress.getId())
+                        .getResultList();
+
+                if (nbCustomerWithSameAddress.size() > 1) {
+                    // Refs exist so we create a new Address entry
+                    entityManager.detach(newAddress);
+                    newAddress.setId(0); // Reset the ID to add a new Address with a new auto-generated ID
+                    isDetached = true;
+                }
+            }else{
+                newAddress = new Address();
             }
 
             if (!customer.getAddress().getStreetAddress().isEmpty()){

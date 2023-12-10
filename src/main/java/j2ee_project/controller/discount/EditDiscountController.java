@@ -16,15 +16,17 @@ import java.util.Map;
 
 import static j2ee_project.dao.user.PermissionDAO.getPermission;
 
+/**
+ * This class is a servlet used to edit a discount. It's a controller in the MVC architecture of this project.
+ */
 @WebServlet("/edit-discount")
 public class EditDiscountController extends HttpServlet {
-
     /**
-     * Get the page to edit a discount
+     * Get the page used to edit the discount whose id is given in the param "id"
      * @param request Request object received by the servlet
      * @param response Response to be sent
      * @throws ServletException If the request for the GET could not be handled
-     * @throws IOException If an input or output error is detected when the servlet handles the GET request.
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -61,11 +63,11 @@ public class EditDiscountController extends HttpServlet {
     }
 
     /**
-     * Edit a discount to the DB
+     * Edit the discount whose id is given in the param "id" with the provided data
      * @param request Request object received by the servlet
      * @param response Response to be sent
      * @throws ServletException If the request for the GET could not be handled
-     * @throws IOException If an input or output error is detected when the servlet handles the GET request.
+     * @throws IOException If an input or output error is detected when the servlet handles the GET request
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

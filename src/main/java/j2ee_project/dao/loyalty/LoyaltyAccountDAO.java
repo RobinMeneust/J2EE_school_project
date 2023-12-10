@@ -34,4 +34,24 @@ public class LoyaltyAccountDAO {
         transaction.commit();
         entityManager.close();
     }
+
+    /**
+     * Add points to the given loyalty account
+     *
+     * @param loyaltyAccount the loyalty account
+     * @param nbPointsAdded  the nb points added
+     */
+    public static void addPoints(LoyaltyAccount loyaltyAccount, int nbPointsAdded) {
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        LoyaltyAccount loyaltyAccountDBObj = entityManager.find(LoyaltyAccount.class, loyaltyAccount.getId());
+        if(loyaltyAccountDBObj != null && nbPointsAdded>0) {
+            loyaltyAccountDBObj.addLoyaltyPoints(nbPointsAdded);
+        }
+
+        transaction.commit();
+        entityManager.close();
+    }
 }

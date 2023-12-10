@@ -19,6 +19,9 @@ import java.util.Map;
 
 import static j2ee_project.dao.user.PermissionDAO.getPermission;
 
+/**
+ * This class is a servlet used to edit a moderator. It's a controller in the MVC architecture of this project.
+ */
 @WebServlet("/edit-moderator")
 public class EditModeratorController extends HttpServlet {
 

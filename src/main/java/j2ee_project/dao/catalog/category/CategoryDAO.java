@@ -2,6 +2,7 @@ package j2ee_project.dao.catalog.category;
 
 import j2ee_project.dao.JPAUtil;
 import j2ee_project.model.catalog.Category;
+import j2ee_project.model.catalog.Product;
 import j2ee_project.model.user.Customer;
 import j2ee_project.model.user.User;
 import org.hibernate.Session;
@@ -62,6 +63,13 @@ public class CategoryDAO {
         transaction.begin();
 
         Category category = entityManager.find(Category.class,categoryId);
+        List<Product> productsWithDiscount = entityManager.createQuery("FROM Product WHERE category=:category", Product.class)
+                .setParameter("category", category)
+                .getResultList();
+        for (Product product: productsWithDiscount) {
+            product.setCategory(CategoryDAO.getCategory(1));
+            entityManager.persist(category);
+        }
         entityManager.remove(category);
 
         transaction.commit();

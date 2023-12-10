@@ -187,4 +187,8 @@ public class LoyaltyAccount {
     public void resetLoyaltyLevelUsed(){
         this.loyaltyLevelsUsed = new HashSet<>();
     }
+
+    public void addLoyaltyPoints(int nbPointsAdded) {
+        if(nbPointsAdded>0) setLoyaltyPoints(getLoyaltyPoints()+nbPointsAdded);
+    }
 }

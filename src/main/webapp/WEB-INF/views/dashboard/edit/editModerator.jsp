@@ -15,7 +15,7 @@
 <c:set var="permissionNameList" value="${requestScope.permissionNameList}"/>
 <div class="d-flex flex-column align-items-center div-form">
     <h2>Edit Moderator</h2>
-    <form id="edit-moderator-form" name="edit-moderator-form" action="edit-moderator?id=${moderator.id}" method="post">
+    <form class="w-50 d-flex align-items-center flex-column flex-wrap" id="edit-moderator-form" name="edit-moderator-form" action="edit-moderator?id=${moderator.id}" method="post">
         <c:if test="${requestScope.emailOrPhoneNumberInDbError != null}">
             <div class="alert alert-danger" role="alert">
                 <c:out value="${requestScope.emailOrPhoneNumberInDbError}"/>

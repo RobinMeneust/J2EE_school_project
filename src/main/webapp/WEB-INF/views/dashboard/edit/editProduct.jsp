@@ -38,7 +38,7 @@
             <input class="custom-file-input" type="file" id="file" name="file" accept="image/*" onchange="updateProductImage(this)">
         </form>
     </div>
-    <form class="d-flex align-items-center flex-column flex-wrap" id="edit-product-form" name="edit-product-form" action="edit-product?id=${product.id}" method="post">
+    <form class="w-50 d-flex align-items-center flex-column flex-wrap" id="edit-product-form" name="edit-product-form" action="edit-product?id=${product.id}" method="post">
         <div class="row mb-3 input-group" id="div-main-informations">
             <div class="col">
                 <label class="form-label" for="name">Name :</label>

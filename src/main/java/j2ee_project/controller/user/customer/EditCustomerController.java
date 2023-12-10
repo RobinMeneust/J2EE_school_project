@@ -20,6 +20,9 @@ import java.util.Map;
 
 import static j2ee_project.dao.user.PermissionDAO.getPermission;
 
+/**
+ * This class is a servlet used to edit a customer. It's a controller in the MVC architecture of this project.
+ */
 @WebServlet("/edit-customer")
 public class EditCustomerController extends HttpServlet {
     /**

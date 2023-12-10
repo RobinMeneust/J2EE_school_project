@@ -10,7 +10,7 @@
     <jsp:include page="../../../../layout/header.jsp"/>
     <div class="d-flex flex-column align-items-center div-form">
         <h2>Add Product</h2>
-        <form id="add-product-form" name="add-product-form" action="add-product" method="post">
+        <form class="d-flex align-items-center flex-column flex-wrap" id="add-product-form" name="add-product-form" action="add-product" method="post">
             <div class="row mb-3 input-group" id="div-main-informations">
                 <div class="col">
                     <label class="form-label" for="name">Name :</label>

@@ -1,32 +1,28 @@
-package j2ee_project.controller.catalog.category;
+package j2ee_project.controller.discount;
 
-
-
-import j2ee_project.dao.catalog.category.CategoryDAO;
 import j2ee_project.dao.discount.DiscountDAO;
-import j2ee_project.dto.catalog.CategoryDTO;
+import j2ee_project.dto.discount.DiscountDTO;
 import j2ee_project.model.Discount;
-import j2ee_project.model.catalog.Category;
 import j2ee_project.model.user.Moderator;
 import j2ee_project.model.user.TypePermission;
 import j2ee_project.service.DTOService;
-import j2ee_project.service.HashService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.Map;
 
 import static j2ee_project.dao.user.PermissionDAO.getPermission;
 
 /**
- * This class is a servlet used to edit a category. It's a controller in the MVC architecture of this project.
+ * This class is a servlet used to edit a discount. It's a controller in the MVC architecture of this project.
  */
-@WebServlet("/edit-category")
-public class EditCategoryController extends HttpServlet {
+@WebServlet("/edit-discount")
+public class EditDiscountController extends HttpServlet {
     /**
-     * Get the page used to edit the category whose id is given in the param "id"
+     * Get the page used to edit the discount whose id is given in the param "id"
      * @param request Request object received by the servlet
      * @param response Response to be sent
      * @throws ServletException If the request for the GET could not be handled
@@ -38,25 +34,24 @@ public class EditCategoryController extends HttpServlet {
             HttpSession session = request.getSession();
             Object obj = session.getAttribute("user");
             if (obj instanceof Moderator user
-                    && user.isAllowed(getPermission(TypePermission.CAN_MANAGE_CATEGORY))) {
-                String categoryIdStr = request.getParameter("id");
-                int categoryId = -1;
+                    && user.isAllowed(getPermission(TypePermission.CAN_MANAGE_DISCOUNT))) {
+                String discountIdStr = request.getParameter("id");
+                int discountId = -1;
 
-                if (categoryIdStr != null && !categoryIdStr.trim().isEmpty()) {
+                if (discountIdStr != null && !discountIdStr.trim().isEmpty()) {
                     try {
-                        categoryId = Integer.parseInt(categoryIdStr);
+                        discountId = Integer.parseInt(discountIdStr);
                     } catch (Exception ignore) {
                     }
                 }
 
-                if (categoryId <= 0) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Category ID must be positive");
+                if (discountId <= 0) {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Discount ID must be positive");
                 }
 
-                Category category = CategoryDAO.getCategory(categoryId);
-                request.setAttribute("category", category);
-                request.setAttribute("discounts", DiscountDAO.getDiscounts());
-                RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/edit/editCategory.jsp");
+                Discount discount = DiscountDAO.getDiscount(discountId);
+                request.setAttribute("discount", discount);
+                RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/dashboard/edit/editDiscount.jsp");
                 view.forward(request, response);
             } else {
                 response.sendRedirect("dashboard");
@@ -68,7 +63,7 @@ public class EditCategoryController extends HttpServlet {
     }
 
     /**
-     * Edit the category whose id is given in the param "id" with the provided data
+     * Edit the discount whose id is given in the param "id" with the provided data
      * @param request Request object received by the servlet
      * @param response Response to be sent
      * @throws ServletException If the request for the GET could not be handled
@@ -76,58 +71,53 @@ public class EditCategoryController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String categoryIdStr = request.getParameter("id");
-        int categoryId = -1;
+        String discountIdStr = request.getParameter("id");
+        int discountId = -1;
 
-        if (categoryIdStr != null && !categoryIdStr.trim().isEmpty()) {
+        if (discountIdStr != null && !discountIdStr.trim().isEmpty()) {
             try {
-                categoryId = Integer.parseInt(categoryIdStr);
+                discountId = Integer.parseInt(discountIdStr);
             } catch (Exception ignore) {
             }
         }
 
-        if (categoryId <= 0) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Category ID must be positive");
+        if (discountId <= 0) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Discount ID must be positive");
         }
 
-        Category category = CategoryDAO.getCategory(categoryId);
-
-        String discountStr = (request.getParameter("discount").isEmpty()) ? null : request.getParameter(("discount"));
-        Discount discount = null;
-        if (discountStr != null) {
-            int discountId = Integer.parseInt(discountStr);
-            discount = DiscountDAO.getDiscount(discountId);
-        }
+        Discount discount = DiscountDAO.getDiscount(discountId);
 
         try {
 
-            CategoryDTO categoryDTO = new CategoryDTO(
+            DiscountDTO discountDTO = new DiscountDTO(
                     request.getParameter("name"),
-                    request.getParameter("description"),
-                    discount
+                    Date.valueOf(request.getParameter("startDate")),
+                    Date.valueOf(request.getParameter("endDate")),
+                    Integer.parseInt(request.getParameter("discountPercentage"))
             );
 
-            Map<String, String> inputErrors = DTOService.categoryDataValidation(categoryDTO);
+            Map<String, String> inputErrors = DTOService.discountDataValidation(discountDTO);
 
-            String errorDestination = "WEB-INF/views/dashboard/add/editCategory.jsp";
+            String errorDestination = "WEB-INF/views/dashboard/edit/editDiscount.jsp";
             RequestDispatcher dispatcher = null;
 
             if (inputErrors.isEmpty()) {
                 try {
 
-                    if (categoryDTO.getName() != null && !categoryDTO.getName().isEmpty()) {
-                        category.setName(categoryDTO.getName());
+                    if (discountDTO.getName() != null && !discountDTO.getName().isEmpty()) {
+                        discount.setName(discountDTO.getName());
                     }
-                    if (categoryDTO.getDescription() != null && !categoryDTO.getDescription().isEmpty()) {
-                        category.setDescription(categoryDTO.getDescription());
+                    if (discountDTO.getStartDate() != null) {
+                        discount.setStartDate(discountDTO.getStartDate());
                     }
-                    if (categoryDTO.getDiscount() != null) {
-                        category.setDiscount(categoryDTO.getDiscount());
+                    if (discountDTO.getEndDate() != null) {
+                        discount.setEndDate(discountDTO.getEndDate());
                     }
+                    discount.setDiscountPercentage(discountDTO.getDiscountPercentage());
 
 
-                    CategoryDAO.updateCategory(category);
-                    response.sendRedirect("dashboard?tab=categories");
+                    DiscountDAO.updateDiscount(discount);
+                    response.sendRedirect("dashboard?tab=discounts");
                 } catch (Exception exception) {
                     System.err.println(exception.getMessage());
                     request.setAttribute("ModificationProcessError", "Error during Modification process");

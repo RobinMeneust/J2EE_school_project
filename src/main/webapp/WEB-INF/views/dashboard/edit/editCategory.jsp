@@ -11,7 +11,7 @@
 <c:set var="category" value="${requestScope.category}"/>
 <div class="d-flex flex-column align-items-center div-form">
     <h2>Edit Category</h2>
-    <form class="w-50" id="edit-category-form" name="edit-category-form" action="edit-category?id=${category.id}" method="post">
+    <form class="d-flex align-items-center flex-column flex-wrap" id="edit-category-form" name="edit-category-form" action="edit-category?id=${category.id}" method="post">
         <div class="row mb-3 input-group" id="div-information">
             <div class="col">
                 <label class="form-label" for="name">Name :</label>
@@ -50,7 +50,7 @@
     $(function()
     {
         $.validator.addMethod("patternName", function (value, element){
-            return this.optional(element) || /^[a-zA-ZÀ-ÖØ-öø-ÿ\-']*$/.test(value);
+            return this.optional(element) || /^[a-zA-ZÀ-ÖØ-öø-ÿ\-' ]*$/.test(value);
         }, "Name not valid.")
 
         $("form[name='edit-category-form']").validate({

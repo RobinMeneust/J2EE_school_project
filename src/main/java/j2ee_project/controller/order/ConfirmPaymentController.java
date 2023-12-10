@@ -5,6 +5,7 @@ import j2ee_project.dao.loyalty.LoyaltyAccountDAO;
 import j2ee_project.dao.order.OrdersDAO;
 import j2ee_project.model.Discount;
 import j2ee_project.model.Mail;
+import j2ee_project.model.loyalty.LoyaltyAccount;
 import j2ee_project.model.order.OrderStatus;
 import j2ee_project.model.order.Orders;
 import j2ee_project.model.user.Customer;
@@ -77,6 +78,7 @@ public class ConfirmPaymentController extends HttpServlet
             OrdersDAO.setStatus(order, OrderStatus.PREPARING);
             order.setOrderStatus(OrderStatus.PREPARING);
             request.setAttribute("order",order);
+            LoyaltyAccountDAO.addPoints(customer.getLoyaltyAccount(), (int) Math.floor(order.getTotal()*0.1));
 
             sendReceiptMail(customer, order);
         }

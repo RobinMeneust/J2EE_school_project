@@ -13,7 +13,7 @@
     <jsp:include page="../../../../layout/header.jsp" />
     <div class="d-flex flex-column align-items-center div-form">
         <h2>Add Discount</h2>
-        <form id="add-discount-form" name="add-discount-form" action="add-discount" method="post">
+        <form class="d-flex align-items-center flex-column flex-wrap" id="add-discount-form" name="add-discount-form" action="add-discount" method="post">
             <div class="row mb-3 input-group" id="div-name">
                 <div class="col">
                     <label class="form-label" for="name">Name :</label>
@@ -42,7 +42,7 @@
             <div class="row mb-3 input-group"  id="div-discount-percentage">
                 <input type="hidden" id="discount-percentage" name="discountPercentage" aria-describedby="discountPercentageHelp" value="50"/>
                 <div class="col">
-                    <fieldset class="p-1">
+                    <fieldset class="p-1 mb-5">
                         <legend class="w-auto float-none">Discount Percentage</legend>
                         <tc-range-slider
                                 id="discountPercentageSlider"
@@ -54,7 +54,7 @@
                                 round="0"
 
                                 moving-tooltip="true"
-                                moving-tooltip-distance-to-pointer="40"
+                                moving-tooltip-distance-to-pointer="-40"
                                 moving-tooltip-width="35"
                                 moving-tooltip-height="30"
                                 moving-tooltip-bg="#721d82"
@@ -90,7 +90,7 @@
                 return value.match(/^\d{4}-\d{2}-\d{2}$/) != null;
             }, "End Date not valid.")
             $.validator.addMethod("compareDate", function (value){
-                let startDate = $("start-date").val();
+                let startDate = document.getElementById("start-date").value;
                 return Date.parse(startDate) <= Date.parse(value);
             }, "End date must be after start date.")
 

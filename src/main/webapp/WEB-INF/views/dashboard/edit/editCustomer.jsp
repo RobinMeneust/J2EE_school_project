@@ -12,7 +12,7 @@
 <c:set var="customer" value="${requestScope.customerToEdit}"/>
 <div class="d-flex flex-column align-items-center div-form">
     <h2>Edit Customer</h2>
-    <form id="edit-customer-form" name="edit-customer-form" action="edit-customer?id=${customer.id}" method="post">
+    <form class="d-flex align-items-center flex-column flex-wrap" id="edit-customer-form" name="edit-customer-form" action="edit-customer?id=${customer.id}" method="post">
         <c:if test="${requestScope.emailOrPhoneNumberInDbError != null}">
             <div class="alert alert-danger" role="alert">
                 <c:out value="${requestScope.emailOrPhoneNumberInDbError}"/>
@@ -55,37 +55,37 @@
                 </div>
             </div>
         </div>
-        <div class="mb-3"  id="div-address">
-            <div class="row input-group">
-                <div class="col">
-                    <label class="form-label" for="street">Street :</label>
-                    <input type="text" class="form-control ${requestScope.InputError.street != null? 'is-invalid' : ''}" id="street" name="street" aria-describedby="streetHelp" placeholder="Enter street" value="${customer.address.streetAddress}">
-                    <div class="invalid-feedback">
-                        <c:out value="${requestScope.InputError.street}"/>
-                    </div>
+        <div class="row input-group"  id="div-street">
+            <div class="col">
+                <label class="form-label" for="street">Street :</label>
+                <input type="text" class="form-control ${requestScope.InputError.street != null? 'is-invalid' : ''}" id="street" name="street" aria-describedby="streetHelp" placeholder="Enter street" value="${customer.address.streetAddress}">
+                <div class="invalid-feedback">
+                    <c:out value="${requestScope.InputError.street}"/>
                 </div>
             </div>
-            <div class="row input-group">
-                <div class="col">
-                    <label class="form-label" for="postal-code">Postal Code :</label>
-                    <input type="text" class="form-control ${requestScope.InputError.postalCode != null? 'is-invalid' : ''}" id="postal-code" name="postalCode" aria-describedby="postalCodeHelp" placeholder="Enter postal code" value="${customer.address.postalCode}">
-                    <div class="invalid-feedback">
-                        <c:out value="${requestScope.InputError.postalCode}"/>
-                    </div>
+        </div>
+        <div class="row input-group" id="div-city">
+            <div class="col">
+                <label class="form-label" for="postal-code">Postal Code :</label>
+                <input type="text" class="form-control ${requestScope.InputError.postalCode != null? 'is-invalid' : ''}" id="postal-code" name="postalCode" aria-describedby="postalCodeHelp" placeholder="Enter postal code" value="${customer.address.postalCode}">
+                <div class="invalid-feedback">
+                    <c:out value="${requestScope.InputError.postalCode}"/>
                 </div>
-                <div class="col">
-                    <label class="form-label" for="city">City :</label>
-                    <input type="text" class="form-control ${requestScope.InputError.city != null? 'is-invalid' : ''}" id="city" name="city" aria-describedby="cityHelp" placeholder="Enter city" value="${customer.address.city}">
-                    <div class="invalid-feedback">
-                        <c:out value="${requestScope.InputError.city}"/>
-                    </div>
+            </div>
+            <div class="col">
+                <label class="form-label" for="city">City :</label>
+                <input type="text" class="form-control ${requestScope.InputError.city != null? 'is-invalid' : ''}" id="city" name="city" aria-describedby="cityHelp" placeholder="Enter city" value="${customer.address.city}">
+                <div class="invalid-feedback">
+                    <c:out value="${requestScope.InputError.city}"/>
                 </div>
-                <div class="col">
-                    <label class="form-label" for="country">Country :</label>
-                    <input type="text" class="form-control ${requestScope.InputError.country != null? 'is-invalid' : ''}" id="country" name="country" aria-describedby="countryHelp" placeholder="Enter country" value="${customer.address.country}">
-                    <div class="invalid-feedback">
-                        <c:out value="${requestScope.InputError.country}"/>
-                    </div>
+            </div>
+        </div>
+        <div class="mb-3 row input-group"  id="div-country">
+            <div class="col">
+                <label class="form-label" for="country">Country :</label>
+                <input type="text" class="form-control ${requestScope.InputError.country != null? 'is-invalid' : ''}" id="country" name="country" aria-describedby="countryHelp" placeholder="Enter country" value="${customer.address.country}">
+                <div class="invalid-feedback">
+                    <c:out value="${requestScope.InputError.country}"/>
                 </div>
             </div>
         </div>
@@ -108,7 +108,7 @@
         <div class="row mb-3 input-group" id="div-password">
             <div class="col">
                 <label class="form-label" for="old-password">Password :</label>
-                <input type="password" class="form-control ${requestScope.InputError.oldPassword != null? 'is-invalid' : ''}" id="old-password" name="oldPassword" aria-describedby="oldPasswordHelp" placeholder="Enter your password" required>
+                <input type="password" class="form-control ${requestScope.InputError.oldPassword != null? 'is-invalid' : ''}" id="old-password" name="oldPassword" aria-describedby="oldPasswordHelp" placeholder="Enter customer's password" required>
                 <div class="invalid-feedback">
                     <c:out value="${requestScope.InputError.oldPassword}"/>
                 </div>

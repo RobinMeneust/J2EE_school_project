@@ -85,4 +85,21 @@ public class DiscountDAO {
         transaction.commit();
         entityManager.close();
     }
+
+
+    /**
+     * Update discount.
+     *
+     * @param discount the discount updated that will be merged with the existing one
+     */
+    public static void updateDiscount(Discount discount) {
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        entityManager.merge(discount);
+
+        transaction.commit();
+        entityManager.close();
+    }
 }

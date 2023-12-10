@@ -282,4 +282,19 @@ public class ProductDAO {
 
         entityManager.close();
     }
+    /**
+     * Update a product in the database
+     *
+     * @param product the product to add
+     */
+    public static void updateProduct(Product product) {
+        EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        entityManager.merge(product);
+
+        transaction.commit();
+        entityManager.close();
+    }
 }

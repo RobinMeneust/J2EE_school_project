@@ -12,7 +12,7 @@
     <c:set var="permissions" value="<%=TypePermission.values()%>"/>
     <div class="d-flex flex-column align-items-center div-form">
         <h2>Add Moderator</h2>
-        <form id="add-moderator-form" name="add-moderator-form" action="add-moderator" method="post">
+        <form class="d-flex align-items-center flex-column flex-wrap" id="add-moderator-form" name="add-moderator-form" action="add-moderator" method="post">
             <c:if test="${requestScope.emailOrPhoneNumberInDbError != null}">
                 <div class="alert alert-danger" role="alert">
                     <c:out value="${requestScope.emailOrPhoneNumberInDbError}"/>

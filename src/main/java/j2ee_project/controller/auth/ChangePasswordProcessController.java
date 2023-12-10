@@ -38,7 +38,7 @@ public class ChangePasswordProcessController extends HttpServlet {
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/changePassword.jsp");
             view.forward(request,response);
         }catch (Exception err){
-            System.out.println(err.getMessage());
+            System.err.println(err.getMessage());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
@@ -61,13 +61,10 @@ public class ChangePasswordProcessController extends HttpServlet {
         String noErrorDestination = "/index.jsp";
         RequestDispatcher dispatcher = null;
 
-        System.out.println(forgottenPassword);
 
         if(forgottenPassword != null){
             if(password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,24}$") && password.equals(confirmPassword)){
-                System.out.println(forgottenPassword);
                 User user = ForgottenPasswordDAO.getUser(forgottenPassword);
-                System.out.println(user);
                 if(user != null){
                     try {
                         user.setPassword(HashService.generatePasswordHash(password));
@@ -75,7 +72,6 @@ public class ChangePasswordProcessController extends HttpServlet {
                         ForgottenPasswordDAO.removeForgottenPassword(forgottenPassword);
                         response.sendRedirect(request.getContextPath() + noErrorDestination);
                     }catch (Exception e) {
-                        System.out.println(e);
                         request.setAttribute("forgottenPasswordToken", forgottenPassword.getToken());
                         request.setAttribute("errorMessage", "An error occur");
                         dispatcher = request.getRequestDispatcher(errorDestination);

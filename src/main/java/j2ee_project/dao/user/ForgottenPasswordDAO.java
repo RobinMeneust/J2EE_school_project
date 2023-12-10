@@ -81,9 +81,7 @@ public class ForgottenPasswordDAO {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
         ForgottenPassword forgottenPasswordManaged = entityManager.merge(forgottenPassword);
-        System.out.println(forgottenPasswordManaged);
         User user = forgottenPasswordManaged.getUser();
-        System.out.println(user);
         transaction.commit();
         entityManager.close();
         return user;

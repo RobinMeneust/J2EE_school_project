@@ -15,7 +15,7 @@
 <c:set var="permissionNameList" value="${requestScope.permissionNameList}"/>
 <div class="d-flex flex-column align-items-center div-form">
     <h2>Edit Moderator</h2>
-    <form class="w-50 d-flex align-items-center flex-column flex-wrap" id="edit-moderator-form" name="edit-moderator-form" action="edit-moderator?id=${moderator.id}" method="post">
+    <form class="d-flex align-items-center flex-column flex-wrap" id="edit-moderator-form" name="edit-moderator-form" action="edit-moderator?id=${moderator.id}" method="post">
         <c:if test="${requestScope.emailOrPhoneNumberInDbError != null}">
             <div class="alert alert-danger" role="alert">
                 <c:out value="${requestScope.emailOrPhoneNumberInDbError}"/>
@@ -93,7 +93,7 @@
         <div class="row mb-3 input-group" id="div-password">
             <div class="col">
                 <label class="form-label" for="old-password">Password :</label>
-                <input type="password" class="form-control ${requestScope.InputError.oldPassword != null? 'is-invalid' : ''}" id="old-password" name="oldPassword" aria-describedby="oldPasswordHelp" placeholder="Enter your password" required>
+                <input type="password" class="form-control ${requestScope.InputError.oldPassword != null? 'is-invalid' : ''}" id="old-password" name="oldPassword" aria-describedby="oldPasswordHelp" placeholder="Enter moderator's password" required>
                 <div class="invalid-feedback">
                     <c:out value="${requestScope.InputError.oldPassword}"/>
                 </div>

@@ -6,6 +6,8 @@ import j2ee_project.model.catalog.Product;
 import j2ee_project.model.user.Moderator;
 import j2ee_project.model.user.TypePermission;
 import j2ee_project.service.FileService;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -86,9 +88,7 @@ public class ProductImageController extends HttpServlet {
             }
         }
 
-        Part productIdStrPart = request.getPart("id");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(productIdStrPart.getInputStream()));
-        String productIdStr = reader.readLine();
+        String productIdStr = request.getParameter("id");
 
         int productId = -1;
 
@@ -134,11 +134,12 @@ public class ProductImageController extends HttpServlet {
             while ((nbBytesRead = fileContent.read(bytes)) != -1) {
                 out.write(bytes, 0, nbBytesRead);
             }
-
-            response.sendError(HttpServletResponse.SC_OK);
+            response.sendRedirect("../dashboard?tab=products");
         } catch (FileNotFoundException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST,"You did not specify a file to upload or the file could not be uploaded");
             System.err.println(e.getMessage());
+            request.setAttribute("UploadProcessError", "You did not specify a file to upload or the file could not be uploaded");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("../edit-product?id="+productId);
+            dispatcher.forward(request, response);
         } finally {
             if (out != null) {
                 out.close();

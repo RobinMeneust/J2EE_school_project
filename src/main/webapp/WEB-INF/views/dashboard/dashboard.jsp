@@ -325,7 +325,7 @@
                                         <td>
                                             <img style="width: 78px; height: 50px; object-fit: contain;"
                                                  alt="product_img"
-                                                 src="<c:out value="product/image?id=${product.getId()}" />"
+                                                 src="<c:out value="product/image?id=${product.id}" />"
                                                  class="card-img-top">
                                         </td>
                                         <td class="text-center"><c:out value="${product.name}"/></td>
@@ -335,7 +335,7 @@
                                         <td class="text-center"><c:out value="${product.weight}"/></td>
                                         <td class="text-center"><c:out value="${product.category.name}"/></td>
                                         <td class="text-center col-1">
-                                            <a href="">
+                                            <a href="edit-product?id=${product.id}">
                                                 <button class="btn rounded"><span class="material-symbols-outlined">edit</span></button>
                                             </a>
                                         </td>

@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Size;
 public class ProductDTO {
     @NotBlank(message = "Name can not be blank.")
     @Size(max = 30, message = "Name can not exceed 30 characters.")
-    @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿ\\-']*$", message = "Name is not valid : only letters and -' are authorized.")
+    @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿ\\-' ]*$", message = "Name is not valid : only letters and -' are authorized.")
     private String name;
     @NotBlank(message = "Stock quantity can not be blank.")
     @Pattern(regexp = "^[0-9]*$", message = "Stock quantity is not valid.")
@@ -28,9 +28,29 @@ public class ProductDTO {
     @NotBlank(message = "Category can not be blank.")
     private Category category;
 
-
     /**
      * Instantiates a new Product dto.
+     *
+     * @param name          the name
+     * @param stockQuantity the stock quantity
+     * @param unitPrice     the unit price
+     * @param description   the description
+     * @param imagePath     the image path
+     * @param weight        the weight
+     * @param category      the category
+     */
+    public ProductDTO(String name, Integer stockQuantity, float unitPrice, String description, String imagePath, Float weight, Category category) {
+        this.name = name;
+        this.stockQuantity = stockQuantity;
+        this.unitPrice = unitPrice;
+        this.description = description;
+        this.imagePath = imagePath;
+        this.weight = weight;
+        this.category = category;
+    }
+
+    /**
+     * Instantiates a new Product dto without the image path.
      *
      * @param name          the name
      * @param stockQuantity the stock quantity
@@ -40,12 +60,7 @@ public class ProductDTO {
      * @param category      the category
      */
     public ProductDTO(String name, Integer stockQuantity, float unitPrice, String description, Float weight, Category category) {
-        this.name = name;
-        this.stockQuantity = stockQuantity;
-        this.unitPrice = unitPrice;
-        this.description = description;
-        this.weight = weight;
-        this.category = category;
+        this(name, stockQuantity, unitPrice, description, null, weight, category);
     }
 
     /**

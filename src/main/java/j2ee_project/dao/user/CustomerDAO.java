@@ -154,6 +154,12 @@ public class CustomerDAO {
                 newAddress.setCountry(customer.getAddress().getCountry());
             }
 
+            if (oldAddress==null){
+                AddressDAO.addAddress(newAddress);
+                customerToBeEdited.setAddress(newAddress);
+                UserDAO.updateUser(customerToBeEdited);
+            }
+
             if(isDetached) {
                 entityManager.persist(newAddress);
             }
@@ -164,4 +170,6 @@ public class CustomerDAO {
         }
         entityManager.close();
     }
+
+
 }

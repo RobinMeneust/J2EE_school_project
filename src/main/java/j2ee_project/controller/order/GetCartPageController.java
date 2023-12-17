@@ -1,13 +1,18 @@
 package j2ee_project.controller.order;
 
 import j2ee_project.dao.catalog.product.ProductDAO;
+import j2ee_project.dao.user.CustomerDAO;
+import j2ee_project.dao.user.UserDAO;
+import j2ee_project.dto.CustomerDTO;
 import j2ee_project.model.catalog.Product;
+import j2ee_project.model.user.Customer;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
@@ -28,6 +33,14 @@ public class GetCartPageController extends HttpServlet
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        HttpSession session = request.getSession();
+        Object obj = session.getAttribute("user");
+        if(obj instanceof Customer) {
+            // Refresh user's session variable
+            Customer customer = (Customer) obj;
+            session.setAttribute("user", CustomerDAO.getCustomer(customer.getId()));
+        }
+
         try {
             RequestDispatcher view = request.getRequestDispatcher("WEB-INF/views/cart.jsp");
             view.forward(request, response);

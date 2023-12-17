@@ -72,6 +72,7 @@ public class ChangePasswordProcessController extends HttpServlet {
                         ForgottenPasswordDAO.removeForgottenPassword(forgottenPassword);
                         response.sendRedirect(request.getContextPath() + noErrorDestination);
                     }catch (Exception e) {
+                        System.out.println(e);
                         request.setAttribute("forgottenPasswordToken", forgottenPassword.getToken());
                         request.setAttribute("errorMessage", "An error occur");
                         dispatcher = request.getRequestDispatcher(errorDestination);
@@ -79,7 +80,7 @@ public class ChangePasswordProcessController extends HttpServlet {
                 }
                 else{
                     request.setAttribute("forgottenPasswordToken", forgottenPassword.getToken());
-                    request.setAttribute("errorMessage", "An error occur");
+                    request.setAttribute("errorMessage", "An error occur, this link is not linked to an account.");
                     dispatcher = request.getRequestDispatcher(errorDestination);
                 }
             }

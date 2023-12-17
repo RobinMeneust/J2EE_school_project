@@ -196,7 +196,7 @@ CREATE EVENT cleaningForgottenPassword
         EVERY 1 MINUTE ENABLE
     DO
         DELETE FROM ForgottenPassword f
-        WHERE f.expiryDate > SYSDATE();
+        WHERE f.expiryDate < SYSDATE();
 
 delimiter |
 

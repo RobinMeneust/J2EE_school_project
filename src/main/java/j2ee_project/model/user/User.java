@@ -31,7 +31,7 @@ public abstract class User {
     @Column(name = "phoneNumber", nullable = true, length = 15)
     private String phoneNumber;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private ForgottenPassword forgottenPassword;
 
     /**

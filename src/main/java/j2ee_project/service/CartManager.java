@@ -2,6 +2,7 @@ package j2ee_project.service;
 
 import j2ee_project.dao.order.CartDAO;
 import j2ee_project.model.order.Cart;
+import j2ee_project.model.order.CartItem;
 import j2ee_project.model.user.Customer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -74,6 +75,9 @@ public class CartManager {
 			Cart cart = CartManager.getSessionCart(session);
 
 			if(cart != null && cart.getCartItems() != null && !cart.getCartItems().isEmpty()) {
+				for(CartItem item : cart.getCartItems()) {
+					item.setId(0);
+				}
 				// Copy the cart
 				CartDAO.updateCart(customer, cart);
 			}

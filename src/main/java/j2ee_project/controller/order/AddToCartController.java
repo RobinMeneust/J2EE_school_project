@@ -71,8 +71,9 @@ public class AddToCartController extends HttpServlet {
             // We need to create a new cart
             cart = new Cart();
             cart.setCustomer(customer);
-
-            CartDAO.addCart(cart);
+            if(customer != null) {
+                CartDAO.addCart(cart);
+            }
         }
 
         Set<CartItem> cartItems = cart.getCartItems();
@@ -98,6 +99,7 @@ public class AddToCartController extends HttpServlet {
 
         // If the product is not already in the cart
         if(customer == null) {
+            newItem.setId(cartItems.size());
             newItem.setCart(cart);
             cart.getCartItems().add(newItem); // Add to the cart object (not saved in the db)
             session.setAttribute("sessionCart", cart);

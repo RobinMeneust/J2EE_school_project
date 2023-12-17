@@ -4,6 +4,7 @@ import j2ee_project.dao.loyalty.LoyaltyProgramDAO;
 import j2ee_project.dao.user.UserDAO;
 import j2ee_project.dto.CustomerDTO;
 import j2ee_project.dto.ModeratorDTO;
+import j2ee_project.model.Address;
 import j2ee_project.model.loyalty.LoyaltyAccount;
 import j2ee_project.model.loyalty.LoyaltyProgram;
 import j2ee_project.model.user.*;

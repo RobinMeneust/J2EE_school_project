@@ -1,15 +1,20 @@
 package j2ee_project.dao.profile;
 
 import j2ee_project.dao.JPAUtil;
+import j2ee_project.dao.discount.DiscountDAO;
+import j2ee_project.dto.discount.DiscountDTO;
+import j2ee_project.model.Discount;
 import j2ee_project.model.loyalty.LoyaltyAccount;
 import j2ee_project.model.loyalty.LoyaltyLevel;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /**
- * Class that interact with the database to edit the Loyalty table in the database
+ * Class that interact with the database to edit the Loyalty tables for the profile in the database
  *
  * @author Robin Meneust
  */
@@ -90,8 +95,18 @@ public class LoyaltyDAO {
         LoyaltyAccount loyaltyAccount = entityManager.find(LoyaltyAccount.class, idLoyaltyAccount);
         loyaltyAccount.addLoyaltyLevelUsed(loyaltyLevelUsed);
 
+        Date startDate = new java.sql.Date(new java.util.Date().getTime());
+        Calendar c = Calendar.getInstance();
+        c.setTime(startDate);
+        c.add(Calendar.DATE, 30);
+        Date endDate = new Date(c.getTimeInMillis());
+
+        Discount newDiscount = new Discount(new DiscountDTO(loyaltyLevelUsed.getDiscount().getName(),startDate,endDate,loyaltyLevelUsed.getDiscount().getDiscountPercentage()));
+        int newDiscountId = DiscountDAO.addDiscount(newDiscount);
+        newDiscount = DiscountDAO.getDiscount(newDiscountId);
+        loyaltyAccount.getAvailableDiscounts().add(newDiscount);
+
         transaction.commit();
         entityManager.close();
     }
-
 }

@@ -2,10 +2,12 @@ package j2ee_project.controller.order;
 
 import j2ee_project.dao.MailDAO;
 import j2ee_project.dao.loyalty.LoyaltyAccountDAO;
+import j2ee_project.dao.order.CartDAO;
 import j2ee_project.dao.order.OrdersDAO;
 import j2ee_project.model.Discount;
 import j2ee_project.model.Mail;
 import j2ee_project.model.loyalty.LoyaltyAccount;
+import j2ee_project.model.order.Cart;
 import j2ee_project.model.order.OrderStatus;
 import j2ee_project.model.order.Orders;
 import j2ee_project.model.user.Customer;
@@ -73,6 +75,7 @@ public class ConfirmPaymentController extends HttpServlet
                 if (customer.getLoyaltyAccount() != null && customer.getLoyaltyAccount().getAvailableDiscounts() != null && customer.getLoyaltyAccount().getAvailableDiscounts().contains(discount)) {
                     // Use the discount (remove it from the user discounts list)
                     LoyaltyAccountDAO.removeDiscount(customer.getLoyaltyAccount(), discount);
+                    if(customer.getCart() != null) CartDAO.setDiscount(customer.getCart().getId(), null);
                 }
             }
             OrdersDAO.setStatus(order, OrderStatus.PREPARING);

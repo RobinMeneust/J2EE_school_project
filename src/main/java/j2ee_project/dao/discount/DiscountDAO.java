@@ -83,16 +83,20 @@ public class DiscountDAO {
      * Add discount.
      *
      * @param discount the discount added
+     * @return ID of the new discount
      */
-    public static void addDiscount(Discount discount){
+    public static int addDiscount(Discount discount){
         EntityManager entityManager = JPAUtil.getInstance().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
         entityManager.persist(discount);
+        entityManager.flush();
+        int id = discount.getId();
 
         transaction.commit();
         entityManager.close();
+        return id;
     }
 
 

@@ -431,22 +431,24 @@
                             </thead>
                             <tbody class="align-middle">
                             <c:forEach var = "discount" items = "${discounts}">
-                                <tr>
-                                    <td class="text-center"><c:out value = "${discount.name}"/></td>
-                                    <td class="text-center"><c:out value = "${discount.startDate}"/></td>
-                                    <td class="text-center"><c:out value = "${discount.endDate}"/></td>
-                                    <td class="text-center"><c:out value = "${discount.discountPercentage}"/></td>
-                                    <td class="text-center col-1">
-                                        <a href="edit-discount?id=${discount.id}">
-                                            <button class="btn rounded"><span class="material-symbols-outlined">edit</span></button>
-                                        </a>
-                                    </td>
-                                    <td class="text-center col-1">
-                                        <button onclick="confirmDelete('discount', ${discount.id})" class="btn rounded">
-                                            <span class="material-symbols-outlined">delete</span>
-                                        </button>
-                                    </td>
-                                </tr>
+                                <c:if test="${not fn:contains(discount.name, 'Loyalty') || fn:contains(discount.name, 'loyalty')}">
+                                    <tr>
+                                        <td class="text-center"><c:out value = "${discount.name}"/></td>
+                                        <td class="text-center"><c:out value = "${discount.startDate}"/></td>
+                                        <td class="text-center"><c:out value = "${discount.endDate}"/></td>
+                                        <td class="text-center"><c:out value = "${discount.discountPercentage}"/></td>
+                                        <td class="text-center col-1">
+                                            <a href="edit-discount?id=${discount.id}">
+                                                <button class="btn rounded"><span class="material-symbols-outlined">edit</span></button>
+                                            </a>
+                                        </td>
+                                        <td class="text-center col-1">
+                                            <button onclick="confirmDelete('discount', ${discount.id})" class="btn rounded">
+                                                <span class="material-symbols-outlined">delete</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </c:if>
                             </c:forEach>
                             </tbody>
                         </table>
